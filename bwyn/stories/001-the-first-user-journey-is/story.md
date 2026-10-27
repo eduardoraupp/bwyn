@@ -1,7 +1,7 @@
 # Story: Create a new account
 
 - **Story**: 001-the-first-user-journey-is
-- **Created**: 2026-10-26
+- **Created**: 2026-10-27
 - **Status**: Draft
 
 ## Story
