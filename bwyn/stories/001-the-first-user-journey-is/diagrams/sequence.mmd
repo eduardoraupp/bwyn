@@ -1,0 +1,18 @@
+sequenceDiagram
+  actor user as "New User<br/>[Person]"
+  box rgba(17,104,189,0.12) Cinema System (Software System boundary)
+    participant ui as "Frontend App<br/>[Container: TypeScript]"
+    participant api as "Backend API<br/>[Container: Spring Boot]"
+  end
+  user->>ui: Navigates to account creation page
+  ui-->>user: Displays registration form
+  user->>ui: Enters name, surname, age and presses Register
+  alt valid input
+    ui->>ui: Validates fields client-side
+    ui->>api: Submits registration data
+    api-->>ui: Returns success response
+    ui-->>user: Confirms account created
+  else invalid or missing fields
+    ui->>ui: Validates fields client-side
+    ui-->>user: Indicates invalid or missing fields
+  end
