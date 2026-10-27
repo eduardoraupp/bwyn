@@ -1,0 +1,38 @@
+classDiagram
+  direction LR
+  class AccountController:::component {
+    <<Component>>
+    +createAccount(request: CreateAccountRequest) ResponseEntity
+  }
+  class AccountService:::component {
+    <<Component>>
+    +createAccount(email: String, password: String) Account
+  }
+  class AccountRepository:::component {
+    <<Interface>>
+    +findByEmail(email: String) Optional~Account~
+    +save(account: Account) Account
+  }
+  class Account:::entity {
+    <<Entity>>
+    +id: Long
+    +email: String
+    +password: String
+  }
+  class CreateAccountRequest:::entity {
+    <<Entity>>
+    +email: String
+    +password: String
+  }
+  class EmailAlreadyTakenException:::component {
+    <<Component>>
+    +message: String
+  }
+  AccountController --> AccountService : Delegates account creation
+  AccountService --> AccountRepository : Reads and writes accounts
+  AccountService ..> Account : Creates
+  AccountService ..> EmailAlreadyTakenException : Throws
+  AccountController ..> CreateAccountRequest : Receives
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
