@@ -2,7 +2,7 @@
 
 - **Story**: 001-the-first-user-journey-is
 - **Created**: 2026-10-27
-- **Status**: Draft
+- **Status**: Completed
 
 ## Story
 As a new user, I want to fill in my name, surname and age and press a Register button so that I can create an account.
