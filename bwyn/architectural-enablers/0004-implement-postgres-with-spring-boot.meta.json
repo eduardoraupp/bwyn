@@ -1,0 +1,9 @@
+{
+  "title": "Integrate PostgreSQL with Spring Boot via JPA and Hibernate",
+  "prompt": "Implement postgres with spring boot jpa and use hibernate",
+  "createdAt": "2026-10-27",
+  "derivesFrom": [
+    "adr:0001"
+  ],
+  "links": []
+}
