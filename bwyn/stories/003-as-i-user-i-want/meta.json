@@ -1,0 +1,8 @@
+{
+  "title": "Create a new Jira project",
+  "prompt": "As I user I want to create new jira projects\n\nthe limit is 30 projects by user for free users and 70 for premium users.",
+  "createdAt": "2026-10-27",
+  "links": [
+    "enabler:0004-implement-postgres-with-spring-boot"
+  ]
+}
