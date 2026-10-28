@@ -1,0 +1,15 @@
+{
+  "title": "Backend Service Technology Scaffold",
+  "prompt": "Use spring boot and also spring boot ai with maven for the entire project\nalso as part of the scafolding for the backend prepare the fitness tests with archunit that will check the architecture,  flyway for database schema versioning with spring jpa, test containers for integration tests of the adapters. the database is postgresql (but here is only the configuration with spring boot)\nlombok for reducing boilerplate and swagger/open api",
+  "createdAt": "2026-10-28",
+  "derivesFrom": [
+    "adr:0008",
+    "adr:0009",
+    "adr:0010",
+    "adr:0011",
+    "adr:0012",
+    "adr:0013",
+    "adr:0014"
+  ],
+  "links": []
+}
