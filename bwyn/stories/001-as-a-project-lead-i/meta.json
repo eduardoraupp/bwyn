@@ -1,0 +1,9 @@
+{
+  "title": "Register a new project",
+  "prompt": "As a Project Lead,\n\nI want to register a new project with its basic details,\n\nSo that team members have a shared workspace to track our upcoming deliverables.\n\n2. Acceptance Criteria (The \"Confirmation\" / ATDD)\nThis is where your UI specifics and navigation rules live:\n\nScenario: Successfully creating a valid project\n\nGiven I am on the project creation screen,\n\nWhen I submit a project with a valid Name and optional Description,\n\nThen the project is saved to the system,\n\nAnd I am redirected to the landing page,\n\nAnd a confirmation message confirms the project was created.\n\nScenario: Validation failure\n\nGiven I am on the project creation screen,\n\nWhen I attempt to submit without entering a Name,\n\nThen the submission is prevented and an inline validation error indicates that Name is required.",
+  "createdAt": "2026-10-28",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ]
+}
