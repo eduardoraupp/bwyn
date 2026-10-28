@@ -1,9 +1,0 @@
-{
-  "title": "Initialise Spring Boot backend project with Maven",
-  "prompt": "the system will be a fully spring boot project with maven",
-  "createdAt": "2026-10-27",
-  "derivesFrom": [
-    "adr:0001"
-  ],
-  "links": []
-}
