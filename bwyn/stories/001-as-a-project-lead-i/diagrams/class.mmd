@@ -1,0 +1,45 @@
+classDiagram
+  direction LR
+
+  class ProjectCreationForm:::component {
+    <<Component>>
+    +render() TSX
+  }
+
+  class ProjectViewModel:::component {
+    <<Component>>
+    +name: string
+    +description: string
+    +validationError: string
+    +submit() void
+  }
+
+  class CreateProjectUseCase:::component {
+    <<Interface>>
+    +execute(name: string, description: string) void
+  }
+
+  class CreateProjectUseCaseImpl:::component {
+    <<Component>>
+    +execute(name: string, description: string) void
+  }
+
+  class ProjectApiGateway:::component {
+    <<Interface>>
+    +createProject(name: string, description: string) Promise
+  }
+
+  class ProjectApiGatewayImpl:::component {
+    <<Component>>
+    +createProject(name: string, description: string) Promise
+  }
+
+  ProjectCreationForm --> ProjectViewModel : Binds to and invokes
+  ProjectViewModel --> CreateProjectUseCase : Calls execute
+  CreateProjectUseCaseImpl ..|> CreateProjectUseCase : Implements
+  CreateProjectUseCaseImpl --> ProjectApiGateway : Calls createProject
+  ProjectApiGatewayImpl ..|> ProjectApiGateway : Implements
+
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
