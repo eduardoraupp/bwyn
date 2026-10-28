@@ -1,0 +1,60 @@
+classDiagram
+  direction LR
+
+  class ProjectCreationForm:::component {
+    <<Component>>
+    +render() ReactElement
+  }
+
+  class ProjectViewModel:::component {
+    <<Component>>
+    +name: string
+    +description: string
+    +validationError: string
+    +submit() void
+  }
+
+  class CreateProjectUseCase:::component {
+    <<Interface>>
+    +execute(command: CreateProjectCommand) void
+  }
+
+  class CreateProjectCommand:::entity {
+    <<Entity>>
+    +name: string
+    +description: string
+  }
+
+  class Project:::entity {
+    <<Entity>>
+    +id: ProjectId
+    +name: string
+    +description: string
+  }
+
+  class ProjectRepository:::component {
+    <<Interface>>
+    +save(project: Project) void
+  }
+
+  class CreateProjectCommandHandler:::component {
+    <<Component>>
+    +handle(command: CreateProjectCommand) void
+  }
+
+  class ProjectRepositoryAdapter:::component {
+    <<Component>>
+    +save(project: Project) void
+  }
+
+  ProjectCreationForm --> ProjectViewModel : Delegates to
+  ProjectViewModel --> CreateProjectUseCase : Calls
+  CreateProjectUseCase ..> CreateProjectCommand : Accepts
+  CreateProjectCommandHandler ..|> CreateProjectUseCase : Implements
+  CreateProjectCommandHandler ..> Project : Creates
+  CreateProjectCommandHandler --> ProjectRepository : Saves via
+  ProjectRepositoryAdapter ..|> ProjectRepository : Implements
+
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff

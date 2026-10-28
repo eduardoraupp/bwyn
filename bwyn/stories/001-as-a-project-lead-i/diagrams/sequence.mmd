@@ -1,0 +1,33 @@
+sequenceDiagram
+  actor lead as "Project Lead<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant form as "Project Creation Form<br/>[Container: React/TypeScript]"
+    participant vm as "Create Project ViewModel<br/>[Container: TypeScript/Inversify]"
+    participant uc as "Create Project Use Case<br/>[Container: TypeScript]"
+    participant ctrl as "Project Controller<br/>[Container: Spring MVC]"
+    participant handler as "Create Project Handler<br/>[Container: Spring Boot]"
+    participant repo as "Project Repository Adapter<br/>[Container: Spring Data JPA]"
+  end
+  participant db as "PostgreSQL<br/>[External Software System]"
+
+  lead->>form: Submits project name and description
+  form->>vm: Calls createProject(name, description)
+  vm->>uc: Executes create project use case
+  uc->>ctrl: POST /api/projects
+  ctrl->>handler: Dispatches CreateProjectCommand
+  handler->>repo: Saves Project aggregate
+  repo->>db: Inserts project row
+  db-->>repo: Returns persisted record
+  repo-->>handler: Returns saved Project
+  handler-->>ctrl: Returns created project id
+  ctrl-->>uc: Returns 201 Created
+  uc-->>vm: Returns success result
+  vm-->>form: Updates state with confirmation
+  form-->>lead: Redirects to landing page with confirmation message
+
+  alt Name is empty
+    lead->>form: Submits with no name
+    form->>vm: Calls createProject("", description)
+    vm-->>form: Returns validation error
+    form-->>lead: Shows inline name required error
+  end
