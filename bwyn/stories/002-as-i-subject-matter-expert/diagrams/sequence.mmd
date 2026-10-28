@@ -1,0 +1,38 @@
+sequenceDiagram
+  actor sme as "Subject Matter Expert<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant ui as "P&P Screen<br/>[Container: React/TypeScript]"
+    participant vm as "PrinciplesViewModel<br/>[Component: TypeScript/Inversify]"
+    participant uc as "AddPrincipleUseCase<br/>[Component: TypeScript]"
+    participant ctrl as "PrincipleController<br/>[Component: Spring MVC]"
+    participant handler as "AddPrincipleCommandHandler<br/>[Component: Spring Boot]"
+    participant repo as "PrincipleRepositoryAdapter<br/>[Component: Spring Data JPA]"
+  end
+  sme->>ui: Clicks "P&P" in left-hand menu
+  ui->>vm: Loads Principles tab
+  vm->>uc: Fetches existing principles
+  uc->>ctrl: GET /api/principles
+  ctrl->>handler: Queries principles
+  handler->>repo: Reads all principles
+  repo-->>handler: Returns principle list
+  handler-->>ctrl: Returns principle list
+  ctrl-->>uc: Returns 200 with principles
+  uc-->>vm: Returns principle list
+  vm-->>ui: Exposes principles state
+  sme->>ui: Submits new principle text
+  ui->>vm: Calls addPrinciple(text)
+  alt text is empty
+    vm-->>ui: Returns validation error
+    ui-->>sme: Shows inline validation error
+  else text is valid
+    vm->>uc: Executes AddPrincipleUseCase
+    uc->>ctrl: POST /api/principles
+    ctrl->>handler: Dispatches AddPrincipleCommand
+    handler->>repo: Persists new Principle
+    repo-->>handler: Confirms saved
+    handler-->>ctrl: Returns saved principle
+    ctrl-->>uc: Returns 201 with principle
+    uc-->>vm: Returns saved principle
+    vm-->>ui: Updates principles state
+    ui-->>sme: Shows principle in list and confirmation
+  end
