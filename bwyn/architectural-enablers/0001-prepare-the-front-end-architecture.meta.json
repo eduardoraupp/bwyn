@@ -1,0 +1,12 @@
+{
+  "title": "Frontend Architecture Scaffold",
+  "prompt": "Prepare the front end architecture with layers, dependencies, frameworks, libs as scaffolding for the front end development",
+  "createdAt": "2026-10-28",
+  "derivesFrom": [
+    "adr:0005",
+    "adr:0006",
+    "adr:0007",
+    "adr:0015"
+  ],
+  "links": []
+}
