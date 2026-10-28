@@ -1,0 +1,9 @@
+{
+  "title": "Clean Architecture Folder Structure for the Frontend",
+  "prompt": "Clean architecture folder structure for the frontend",
+  "createdAt": "2026-10-28",
+  "derivesFrom": [
+    "adr:0007"
+  ],
+  "links": []
+}
