@@ -1,0 +1,10 @@
+{
+  "title": "Hexagonal Architecture and DDD Package Structure for the Backend",
+  "prompt": "Hexagonal with DDD package Structure for the backend",
+  "createdAt": "2026-10-28",
+  "derivesFrom": [
+    "adr:0017"
+  ],
+  "links": [],
+  "cross": true
+}
