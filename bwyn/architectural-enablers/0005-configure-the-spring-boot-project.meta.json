@@ -1,9 +1,0 @@
-{
-  "title": "Configure Spring Boot with JPA, Security, and Redis starters",
-  "prompt": "configure the spring boot project with jpa, security and redis. use maven",
-  "createdAt": "2026-10-27",
-  "derivesFrom": [
-    "adr:0002"
-  ],
-  "links": []
-}
