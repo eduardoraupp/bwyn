@@ -1,0 +1,10 @@
+{
+  "title": "ArchUnitTS Fitness Functions for Frontend Layer Boundaries",
+  "prompt": "I want to ensure the packages have no violation and also follow the principles related to code",
+  "createdAt": "2026-10-28",
+  "derivesFrom": [
+    "adr:0007",
+    "adr:0016"
+  ],
+  "links": []
+}
