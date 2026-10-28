@@ -1,4 +1,6 @@
- Overall style                                                                                                                                                                     
+IT IS NON NEGOTIOABLE 
+
+Overall style                                                                                                                                                                     
                                                                                                                                                                                     
   - Modular monolith. Modules expose only explicit public APIs, and cross-module access to internals is prohibited.                                                                 
   - Frontend and backend: a Single Page Application frontend with a backend API. The backend serves the frontend only as static resources with SPA route fallback, and never renders views server-side.                                                                                                                                                              
@@ -12,7 +14,7 @@
   Backend
 
 - Hexagonal Architecture (ports and adapters) with CQRS. Commands and queries use separate models and handlers.                                                                                                                   
-  - Domain-Driven Design, isolating the core (domain and use cases) from adapters:                                                                                                                                                  
+- Domain-Driven Design, isolating the core (domain and use cases) from adapters:                                                                                                                                                  
     - Domain layer: no dependency on frameworks or infrastructure.                                                                                                                                                                  
     - Application layer (command and query handlers, the use cases):                                                                                                                                                                
       - Allowed: it may use Spring in general, for example @Component, transactions and events.                                                                                                                                     
