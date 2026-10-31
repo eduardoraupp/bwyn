@@ -1,0 +1,74 @@
+classDiagram
+  direction LR
+
+  class PrinciplesAndPracticesScreen:::component {
+    <<Component>>
+    +activeTab: string
+    +render()
+  }
+
+  class PrinciplesAndPracticesViewModel:::component {
+    <<Component>>
+    +principles: Principle[]
+    +validationError: string
+    +addPrinciple(text: string) void
+    +loadPrinciples() void
+  }
+
+  class AddPrincipleUseCase:::component {
+    <<Interface>>
+    +execute(text: string) Promise~void~
+  }
+
+  class Principle:::entity {
+    <<Entity>>
+    +id: string
+    +text: string
+  }
+
+  class PrincipleRepository:::component {
+    <<Interface>>
+    +save(principle: Principle) Promise~void~
+    +findAll() Promise~Principle[]~
+  }
+
+  class AddPrincipleController:::component {
+    <<Component>>
+    +addPrinciple(request: AddPrincipleRequest) ResponseEntity
+  }
+
+  class AddPrincipleCommandHandler:::component {
+    <<Component>>
+    +handle(command: AddPrincipleCommand) void
+  }
+
+  class AddPrincipleCommand:::entity {
+    <<Entity>>
+    +text: string
+  }
+
+  class PrincipleRepositoryPort:::component {
+    <<Interface>>
+    +save(principle: Principle) void
+    +findAll() List~Principle~
+  }
+
+  class PrincipleJpaAdapter:::component {
+    <<Component>>
+    +save(principle: Principle) void
+    +findAll() List~Principle~
+  }
+
+  PrinciplesAndPracticesScreen --> PrinciplesAndPracticesViewModel : Delegates to
+  PrinciplesAndPracticesViewModel --> AddPrincipleUseCase : Calls
+  AddPrincipleUseCase --> PrincipleRepository : Uses
+  PrincipleRepository ..> Principle : Returns
+  AddPrincipleController --> AddPrincipleCommandHandler : Dispatches command to
+  AddPrincipleCommandHandler --> AddPrincipleCommand : Handles
+  AddPrincipleCommandHandler --> PrincipleRepositoryPort : Saves via
+  PrincipleJpaAdapter ..|> PrincipleRepositoryPort : Implements
+  PrincipleJpaAdapter ..> Principle : Persists
+
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff

@@ -1,0 +1,10 @@
+{
+  "title": "View and manage principles on the P&P screen",
+  "prompt": "As I subject matter expert I want to add practices and principles \n\nOnce the user opens the landing page, from the story 001, on the left side is a expansable menu and the first item is P&P once clicked is a screen with two tabs, principles where the user can add principles and the screen with practices which is read only and will be given the content later",
+  "createdAt": "2026-10-28",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure",
+    "story:001-as-a-project-lead-i"
+  ]
+}
