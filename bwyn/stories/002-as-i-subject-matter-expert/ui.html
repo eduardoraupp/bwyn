@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bwyn – Principles & Practices</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #020817;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Layout ── */
+  .app {
+    display: flex;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #0f172a;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar-logo span {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-section {
+    padding: 0 0.75rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: #cbd5e1;
+  }
+
+  .nav-item.active {
+    background: rgba(99,102,241,0.15);
+    color: #fff;
+  }
+
+  .nav-item svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .nav-item.active svg {
+    opacity: 1;
+  }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── Main content ── */
+  .main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page {
+    flex: 1;
+    padding: 2rem;
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1.75rem;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+    color: #64748b;
+    border-radius: 0;
+  }
+
+  .tab-btn:hover { color: #cbd5e1; }
+
+  .tab-btn[aria-selected="true"] {
+    color: #fff;
+    border-bottom-color: #818cf8;
+  }
+
+  .tab-btn svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .tab-count {
+    background: rgba(255,255,255,0.08);
+    border-radius: 9999px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+    color: #cbd5e1;
+  }
+
+  .tab-lock {
+    opacity: 0.4;
+  }
+
+  /* ── Principles tab ── */
+  .principles-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .principles-desc {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    max-width: 36rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(99,102,241,0.25);
+    transition: filter 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover { filter: brightness(1.1); }
+
+  .btn-primary svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ── Principle cards ── */
+  .principles-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .principle-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 8rem;
+    padding: 1.25rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+
+  .principle-card:hover {
+    border-color: rgba(129,140,248,0.4);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .principle-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .principle-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem; height: 2.25rem;
+    border-radius: 0.625rem;
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    flex-shrink: 0;
+  }
+
+  .principle-icon svg {
+    width: 18px; height: 18px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .pencil-icon {
+    color: #475569;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .principle-card:hover .pencil-icon { color: #a5b4fc; }
+
+  .pencil-icon svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .principle-name {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.9375rem;
+  }
+
+  .principle-text {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1.25rem;
+    border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .empty-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem; height: 3rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
+    color: #c7d2fe;
+  }
+
+  .empty-icon svg {
+    width: 24px; height: 24px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .empty-title {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .empty-desc {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    max-width: 28rem;
+  }
+
+  /* ── Practices tab ── */
+  .readonly-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.04);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+  }
+
+  .readonly-notice svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .practice-group { margin-bottom: 2.5rem; }
+
+  .practice-group-header {
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .practice-group-header.xp {
+    border: 1px solid rgba(251,191,36,0.25);
+    background: rgba(245,158,11,0.07);
+  }
+
+  .practice-group-header.ea {
+    border: 1px solid rgba(52,211,153,0.25);
+    background: rgba(16,185,129,0.07);
+  }
+
+  .practice-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .practice-group-title svg {
+    width: 18px; height: 18px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .practice-group-title.xp svg { color: #fcd34d; }
+  .practice-group-title.ea svg { color: #6ee7b7; }
+
+  .practice-group-rule {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .practice-group-rule.xp { color: #fde68a; }
+  .practice-group-rule.ea { color: #a7f3d0; }
+
+  .practice-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .practice-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+
+  .practice-item-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .practice-num {
+    display: grid;
+    place-items: center;
+    width: 1.75rem; height: 1.75rem;
+    border-radius: 0.5rem;
+    background: rgba(99,102,241,0.15);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #a5b4fc;
+    flex-shrink: 0;
+  }
+
+  .practice-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .badge {
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-xp { background: rgba(14,165,233,0.15); color: #7dd3fc; }
+  .badge-ea { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .badge-nn { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+  .practice-text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+  }
+
+  .practice-inbwyn {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #94a3b8;
+  }
+
+  .practice-inbwyn strong { color: #cbd5e1; }
+
+  .practice-note {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #64748b;
+  }
+
+  /* ── Modal ── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    background: rgba(2,8,23,0.7);
+    backdrop-filter: blur(4px);
+    padding: 1rem;
+  }
+
+  .modal {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 38rem;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .btn-icon {
+    display: grid;
+    place-items: center;
+    width: 2rem; height: 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: none;
+    color: #64748b;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-icon:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+  .btn-icon svg {
+    width: 18px; height: 18px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    margin-bottom: 0.375rem;
+  }
+
+  .form-field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    color: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+  }
+
+  .form-field::placeholder { color: #334155; }
+
+  .form-field:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129,140,248,0.2);
+  }
+
+  .form-field[aria-invalid="true"] {
+    border-color: #f43f5e;
+  }
+
+  textarea.form-field { resize: vertical; }
+
+  .field-error {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: #fb7185;
+  }
+
+  .form-group { margin-bottom: 1.25rem; }
+
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .btn-ghost {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    background: none;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: none;
+    box-shadow: none;
+  }
+
+  /* ── Confirmation / success message ── */
+  .success-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #6ee7b7;
+    margin-bottom: 1.25rem;
+  }
+
+  .success-bar svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  /* ── State labels ── */
+  .state-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #818cf8;
+    background: rgba(99,102,241,0.12);
+    border-radius: 0.375rem;
+    padding: 0.125rem 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .sidebar { width: 56px; }
+    .sidebar-logo, .nav-item span { display: none; }
+    .nav-item { justify-content: center; padding: 0.625rem; }
+    .page { padding: 1.25rem 1rem; }
+    .principles-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Main navigation">
+    <div class="sidebar-logo"><span>bwyn</span></div>
+    <div class="nav-section">
+      <button class="nav-item active" aria-current="page">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+          <path d="M7 21h10"/><path d="M12 3v18"/>
+          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+        </svg>
+        <span>P&amp;P</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="page">
+
+      <!-- ══════════════════════════════════════════
+           STATE 1 – Main screen: Principles tab active, with principles
+           ══════════════════════════════════════════ -->
+      <div class="state-label">State 1 — Principles tab (with principles)</div>
+
+      <div class="tab-bar">
+        <div role="tablist" aria-label="Principles and Practices" class="tabs">
+          <button role="tab" aria-selected="true" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="M7 21h10"/><path d="M12 3v18"/>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            </svg>
+            Principles
+            <span class="tab-count">2</span>
+          </button>
+          <button role="tab" aria-selected="false" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+            Practices
+            <svg class="tab-lock" viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;" aria-hidden="true">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div role="tabpanel" aria-label="Principles">
+        <div class="principles-header">
+          <p class="principles-desc">What this team holds to when the rules run out. Write your own, and ask the AI to improve them. They should agree with the practices.</p>
+          <button class="btn-primary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add principle
+          </button>
+        </div>
+
+        <div class="principles-grid">
+          <button class="principle-card" type="button" aria-label="Edit Decide with evidence">
+            <div class="principle-card-top">
+              <span class="principle-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="M7 21h10"/><path d="M12 3v18"/>
+                  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                </svg>
+              </span>
+              <span class="pencil-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                  <path d="m15 5 4 4"/>
+                </svg>
+              </span>
+            </div>
+            <div class="principle-name">Decide with evidence</div>
+            <div class="principle-text">We make decisions based on data and observation rather than assumption. When evidence is missing, we run the smallest experiment that will give us what we need.</div>
+          </button>
+
+          <button class="principle-card" type="button" aria-label="Edit Simple before clever">
+            <div class="principle-card-top">
+              <span class="principle-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="M7 21h10"/><path d="M12 3v18"/>
+                  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                </svg>
+              </span>
+              <span class="pencil-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                  <path d="m15 5 4 4"/>
+                </svg>
+              </span>
+            </div>
+            <div class="principle-name">Simple before clever</div>
+            <div class="principle-text">We choose the simplest solution that works. Complexity is only added when the simple solution is demonstrably insufficient, and we document why.</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STATE 2 – Principles tab active, empty list
+           ══════════════════════════════════════════ -->
+      <div class="state-label" style="margin-top:3rem;">State 2 — Principles tab (empty list)</div>
+
+      <div class="tab-bar">
+        <div role="tablist" aria-label="Principles and Practices" class="tabs">
+          <button role="tab" aria-selected="true" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="M7 21h10"/><path d="M12 3v18"/>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            </svg>
+            Principles
+          </button>
+          <button role="tab" aria-selected="false" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+            Practices
+            <svg class="tab-lock" viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;" aria-hidden="true">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div role="tabpanel" aria-label="Principles">
+        <div class="principles-header">
+          <p class="principles-desc">What this team holds to when the rules run out. Write your own, and ask the AI to improve them. They should agree with the practices.</p>
+          <button class="btn-primary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add principle
+          </button>
+        </div>
+        <div class="empty-state">
+          <span class="empty-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="M7 21h10"/><path d="M12 3v18"/>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            </svg>
+          </span>
+          <div class="empty-title">No principles yet</div>
+          <p class="empty-desc">A principle is a short statement the team stands by, such as how it decides or what it never compromises.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STATE 3 – Add principle modal (valid)
+           ══════════════════════════════════════════ -->
+      <div class="state-label" style="margin-top:3rem;">State 3 — Add principle modal (valid, ready to save)</div>
+
+      <div style="position:relative;border:1px dashed rgba(255,255,255,0.1);border-radius:1rem;padding:1rem;background:rgba(2,8,23,0.7);">
+        <div class="modal" style="position:relative;max-width:100%;">
+          <div class="modal-header">
+            <h2 class="modal-title">Add a principle</h2>
+            <button class="btn-icon" type="button" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="principle-name-s3">Name</label>
+            <input id="principle-name-s3" class="form-field" type="text" value="Decide with evidence" placeholder="e.g. Decide with evidence">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="principle-text-s3">Description</label>
+            <textarea id="principle-text-s3" class="form-field" rows="5" placeholder="What the team holds to, and why.">We make decisions based on data and observation rather than assumption. When evidence is missing, we run the smallest experiment that will give us what we need.</textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-ghost" type="button">Cancel</button>
+            <button class="btn-primary" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STATE 4 – Add principle modal (validation error: name required)
+           ══════════════════════════════════════════ -->
+      <div class="state-label" style="margin-top:3rem;">State 4 — Add principle modal (validation error: name required)</div>
+
+      <div style="position:relative;border:1px dashed rgba(255,255,255,0.1);border-radius:1rem;padding:1rem;background:rgba(2,8,23,0.7);">
+        <div class="modal" style="position:relative;max-width:100%;">
+          <div class="modal-header">
+            <h2 class="modal-title">Add a principle</h2>
+            <button class="btn-icon" type="button" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="principle-name-s4">Name</label>
+            <input id="principle-name-s4" class="form-field" type="text" value="" placeholder="e.g. Decide with evidence" aria-invalid="true" aria-describedby="principle-name-error-s4">
+            <p id="principle-name-error-s4" role="alert" class="field-error">Give the principle a name.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="principle-text-s4">Description</label>
+            <textarea id="principle-text-s4" class="form-field" rows="5" placeholder="What the team holds to, and why."></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-ghost" type="button">Cancel</button>
+            <button class="btn-primary" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STATE 5 – Principle saved: confirmation message
+           ══════════════════════════════════════════ -->
+      <div class="state-label" style="margin-top:3rem;">State 5 — Principle saved (confirmation message)</div>
+
+      <div class="tab-bar">
+        <div role="tablist" aria-label="Principles and Practices" class="tabs">
+          <button role="tab" aria-selected="true" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="M7 21h10"/><path d="M12 3v18"/>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            </svg>
+            Principles
+            <span class="tab-count">1</span>
+          </button>
+          <button role="tab" aria-selected="false" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+            Practices
+            <svg class="tab-lock" viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;" aria-hidden="true">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div role="tabpanel" aria-label="Principles">
+        <div class="success-bar" role="status">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Principle "Decide with evidence" was saved.
+        </div>
+
+        <div class="principles-header">
+          <p class="principles-desc">What this team holds to when the rules run out. Write your own, and ask the AI to improve them. They should agree with the practices.</p>
+          <button class="btn-primary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add principle
+          </button>
+        </div>
+
+        <div class="principles-grid">
+          <button class="principle-card" type="button" aria-label="Edit Decide with evidence">
+            <div class="principle-card-top">
+              <span class="principle-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="M7 21h10"/><path d="M12 3v18"/>
+                  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                </svg>
+              </span>
+              <span class="pencil-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                  <path d="m15 5 4 4"/>
+                </svg>
+              </span>
+            </div>
+            <div class="principle-name">Decide with evidence</div>
+            <div class="principle-text">We make decisions based on data and observation rather than assumption. When evidence is missing, we run the smallest experiment that will give us what we need.</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STATE 6 – Practices tab (read-only)
+           ══════════════════════════════════════════ -->
+      <div class="state-label" style="margin-top:3rem;">State 6 — Practices tab (read-only, no add/edit controls)</div>
+
+      <div class="tab-bar">
+        <div role="tablist" aria-label="Principles and Practices" class="tabs">
+          <button role="tab" aria-selected="false" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+              <path d="M7 21h10"/><path d="M12 3v18"/>
+              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            </svg>
+            Principles
+            <span class="tab-count">2</span>
+          </button>
+          <button role="tab" aria-selected="true" class="tab-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+            Practices
+            <svg class="tab-lock" viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;" aria-hidden="true">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div role="tabpanel" aria-label="Practices">
+        <div class="readonly-notice">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Read-only. These practices are part of BWYN and are the same for every project, so they cannot be edited or removed.
+        </div>
+
+        <!-- XP group -->
+        <div class="practice-group">
+          <div class="practice-group-header xp">
+            <h2 class="practice-group-title xp">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 7v14"/>
+                <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+              </svg>
+              Extreme Programming practices
+            </h2>
+            <p class="practice-group-rule xp">Non-negotiable. The team MUST practise every one of them.</p>
+          </div>
+
+          <ol class="practice-list">
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">1</span>
+                <span class="practice-name">Stories</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Work is told in small stories that are easy to iterate on and test, giving a fast feedback loop. A story is small enough for a pair to finish in one iteration, and what does not fit is left out of it.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> Every story starts from acceptance criteria written as Given/When/Then, and the builder drafts the smallest valuable slice and names what it leaves out under Out of scope.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">2</span>
+                <span class="practice-name">Continuous integration</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Changes are integrated and the full test suite is run many times a day, so integration problems show up within hours and not at the end.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> A change merges only when the build passes. Changes reach the main branch through pull requests.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">3</span>
+                <span class="practice-name">Ten-Minute Build</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">The full build and tests finish in about ten minutes. Regressions beyond that are fixed before new feature work.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> The ten-minute budget is one of the gates a change has to pass before it merges.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">4</span>
+                <span class="practice-name">Pair programming</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Two people work on the code together. In BWYN, the AI depends on the human for review and feedback on each iteration.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> The AI proposes and the human decides: a drafted story, enabler or ADR is only kept when the human approves it, and nothing is accepted without that review.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">5</span>
+                <span class="practice-name">Incremental design</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Design grows in small steps, iteratively, as the stories need it, not all upfront.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> Architecture grows through ADRs and the architectural enablers that implement them, added when a story needs them and not before.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">6</span>
+                <span class="practice-name">Single code base</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">One code base for the system, with no long-lived forks or copies.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> The drivers, stories, enablers, ADRs and diagrams of a project live in one repository.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">7</span>
+                <span class="practice-name">Code review</span>
+                <span class="badge badge-xp">Extreme Programming</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Every pull request is reviewed before it is merged, to check that it follows the principles and practices of the team.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> Syncing opens pull requests, so every change has a place to be reviewed before it reaches the main branch.</p>
+              <p class="practice-note">Not a classic XP practice, but it is kept here among the Extreme Programming practices of the team.</p>
+            </li>
+          </ol>
+        </div>
+
+        <!-- EA group -->
+        <div class="practice-group">
+          <div class="practice-group-header ea">
+            <h2 class="practice-group-title ea">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+              </svg>
+              Evolutionary architecture practices
+            </h2>
+            <p class="practice-group-rule ea">Applied through ADRs and architectural enablers. Architectural fitness functions are non-negotiable.</p>
+          </div>
+
+          <ol class="practice-list">
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">1</span>
+                <span class="practice-name">Build the skeleton first</span>
+                <span class="badge badge-ea">Evolutionary architecture</span>
+              </div>
+              <p class="practice-text">Implement a vertical slice of real functionality that crosses all the technical tiers, instead of building horizontal layers in isolation. A thin end-to-end slice proves the architecture works and exposes the surprises early, while they are cheap.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> Architectural enablers put the skeleton in place and stories are built on it.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">2</span>
+                <span class="practice-name">Use architectural fitness functions</span>
+                <span class="badge badge-ea">Evolutionary architecture</span>
+                <span class="badge badge-nn">Non-negotiable</span>
+              </div>
+              <p class="practice-text">Write automated, objective checks into the build pipeline that measure whether the architecture still has the qualities it must keep. They guide change safely, because a change that breaks an architectural property fails the build.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> ArchUnit rules encode the module, layer and dependency constraints of the backend. A change merges only when all fitness functions pass.</p>
+              <p class="practice-note">Architectural fitness functions MUST encode the architectural constraints and run in the build.</p>
+            </li>
+            <li class="practice-item">
+              <div class="practice-item-header">
+                <span class="practice-num">3</span>
+                <span class="practice-name">Grow incrementally</span>
+                <span class="badge badge-ea">Evolutionary architecture</span>
+              </div>
+              <p class="practice-text">Expand the skeleton by adding features one at a time, keeping the system continuously executable and deployed. At every step there is a working system, never a pile of unfinished parts that only work together at the end.</p>
+              <p class="practice-inbwyn"><strong>In BWYN:</strong> Each story adds one slice on top of the skeleton, and the architecture changes only through the ADRs and enablers that a story needs.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /page -->
+  </main>
+</div>
+
+</body>
+</html>
