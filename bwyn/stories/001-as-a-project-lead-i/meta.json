@@ -14,6 +14,58 @@
     {
       "id": "mvwibtl5kaxuks",
       "text": "The API is REST"
+    },
+    {
+      "id": "mvws7v59ojnwz2",
+      "text": "Create the `Project` domain entity and repository port in the domain layer with name and optional description fields, enforcing the 255-character name constraint (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvws7v59ag5c9y",
+      "text": "Write a Flyway migration script that creates the `project` table with `id`, `name`, and `description` columns (ADR-0010)"
+    },
+    {
+      "id": "mvws7v593ahhlj",
+      "text": "Implement the `CreateProjectCommand` and its application-layer command handler, delegating persistence through the repository port (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvws7v59jphs2p",
+      "text": "Implement the outbound JPA adapter that maps between the `Project` domain entity and its JPA persistence class, and implements the repository port (ADR-0011, ADR-0017)"
+    },
+    {
+      "id": "mvws7v59ezxxdo",
+      "text": "Write a Testcontainers integration test that verifies the Flyway migration applies cleanly and the outbound adapter persists and retrieves a project correctly (ADR-0012)"
+    },
+    {
+      "id": "mvws7v59t1crv2",
+      "text": "Implement the Spring MVC inbound adapter (controller) with a `POST` endpoint, annotated with OpenAPI annotations; translate the request body into the command and return a confirmation response (ADR-0008, ADR-0014)"
+    },
+    {
+      "id": "mvws7v59lstqzo",
+      "text": "Write a unit test for the command handler using a test-double repository port"
+    },
+    {
+      "id": "mvws7v59zmns3c",
+      "text": "Write a unit test for the inbound adapter using MockMvc, covering the valid-name, valid-name-with-description, missing-name, and name-too-long cases"
+    },
+    {
+      "id": "mvws7v59fe16b9",
+      "text": "Define the `CreateProjectUseCase` port and `CreateProjectViewModel` in the frontend `use-cases` and `interface-adapters` layers respectively, wiring the ViewModel to call the backend API (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvws7v59gi54xc",
+      "text": "Implement the project creation React component in the `ui` layer, delegating all logic to the ViewModel; include inline validation for the required name and 255-character limit (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvws7v59cyq43p",
+      "text": "Write Jest unit tests for the ViewModel covering the four acceptance-test scenarios"
+    },
+    {
+      "id": "mvws7v595kvzi4",
+      "text": "Write a Jest rendering test for the React component covering the validation error states"
+    },
+    {
+      "id": "mvws7v59elf1mp",
+      "text": "Verify the full build and test suite passes in CI within ten minutes (Practice: Ten-Minute Build, Practice: Continuous Integration)"
     }
   ]
 }
