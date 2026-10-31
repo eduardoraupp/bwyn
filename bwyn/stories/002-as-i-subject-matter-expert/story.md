@@ -1,4 +1,4 @@
-# Story: View and manage principles on the P&P screen
+# Story: View and manage principles and practices on the P&P screen
 
 - **Story**: 002-as-i-subject-matter-expert
 - **Created**: 2026-10-28
