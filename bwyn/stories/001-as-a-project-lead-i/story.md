@@ -18,6 +18,7 @@ As a project lead, I want to register a new project with its name and an optiona
 - The ViewModel calls a use case in the `use-cases` layer; the use case does not reference any React or infrastructure concern (ADR-0007, Architecture).
 - On the backend, the command to create a project is handled by an application-layer command handler; the handler does not depend on any adapter-layer class (ADR-0017, Architecture).
 - The domain layer contains the Project entity; it has no dependency on Spring, JPA, or any adapter (ADR-0017, Architecture).
+- The inbound adapter is a Spring MVC controller provided by `spring-boot-starter-web`; it translates the HTTP request into a command and delegates to the application-layer command handler (ADR-0008, ADR-0017, Architecture).
 - Persistence is handled by an outbound adapter that implements the repository port defined in the domain layer; the adapter uses Spring Data JPA with Hibernate and Flyway manages the schema (ADR-0011, ADR-0010).
 - The backend API endpoint is documented with OpenAPI annotations on the inbound adapter (Spring MVC controller); no domain class appears directly in the API schema (ADR-0014).
 - The backend API base URL is configurable so the same frontend build works in both development and production deployment modes (Architecture).
