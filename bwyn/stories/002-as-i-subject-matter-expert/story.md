@@ -32,3 +32,20 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - Ordering or categorising principles.
 - Authentication and authorisation.
 - The landing page itself and the left-hand menu beyond the P&P navigation item (assumed to be delivered by story 001 or a separate story).
+
+## Tasks
+- [ ] Write a Flyway migration script that creates the `principles` table with `id`, `text`, and `created_at` columns (ADR-0010)
+- [ ] Add the `Principle` domain entity to the domain layer with no Spring or JPA dependency (ADR-0017, Architecture)
+- [ ] Define the `PrincipleRepository` port interface in the domain layer (ADR-0017, Architecture)
+- [ ] Implement the `AddPrincipleCommand` and its application-layer command handler, enforcing the 1 000-character text constraint (ADR-0017, Architecture)
+- [ ] Implement the outbound adapter: a Spring Data JPA repository and JPA entity that fulfils the `PrincipleRepository` port; keep the JPA `@Entity` out of the domain layer (ADR-0011, ADR-0017, Architecture)
+- [ ] Implement the inbound adapter: a Spring MVC controller with an `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)
+- [ ] Write a Testcontainers integration test that verifies the Flyway migration applies cleanly and the outbound adapter persists and retrieves a principle (ADR-0012)
+- [ ] Add the `AddPrinciple` use case to the `use-cases` layer; inject the repository port via Inversify (ADR-0006, ADR-0007, Architecture)
+- [ ] Add the `PrinciplesViewModel` to the `interface-adapters` layer; it exposes the principle list, the add command, and validation state (ADR-0007, Architecture)
+- [ ] Build the `PrinciplesTab` React component in the `ui` layer: renders the principle list, the add form with inline validation, and a confirmation message on success (ADR-0005, ADR-0007, Architecture)
+- [ ] Build the `PracticesTab` React component in the `ui` layer as a read-only placeholder with no add or edit controls (ADR-0007, Architecture)
+- [ ] Build the `PrinciplesAndPracticesScreen` React component in the `ui` layer: two tabs defaulting to "Principles", containing `PrinciplesTab` and `PracticesTab` (ADR-0007, Architecture)
+- [ ] Add the P&P navigation item to the left-hand expandable menu in the `ui` layer and wire it to the `PrinciplesAndPracticesScreen` (ADR-0007, Architecture)
+- [ ] Write Jest unit tests for the `PrinciplesViewModel` covering valid submission, empty-text rejection, and confirmation state (ADR-0005)
+- [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)

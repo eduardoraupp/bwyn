@@ -6,5 +6,67 @@
     "enabler:0002-clean-architecture-folder-structure-for",
     "enabler:0005-hexagonal-with-ddd-package-structure",
     "story:001-as-a-project-lead-i"
+  ],
+  "tasks": [
+    {
+      "id": "mvwrgir9mqck5y",
+      "text": "Write a Flyway migration script that creates the `principles` table with `id`, `text`, and `created_at` columns (ADR-0010)"
+    },
+    {
+      "id": "mvwrgir9mqac8g",
+      "text": "Add the `Principle` domain entity to the domain layer with no Spring or JPA dependency (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvwrgir9fbusti",
+      "text": "Define the `PrincipleRepository` port interface in the domain layer (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvwrgir9fpez0k",
+      "text": "Implement the `AddPrincipleCommand` and its application-layer command handler, enforcing the 1 000-character text constraint (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvwrgir9ua3kkl",
+      "text": "Implement the outbound adapter: a Spring Data JPA repository and JPA entity that fulfils the `PrincipleRepository` port; keep the JPA `@Entity` out of the domain layer (ADR-0011, ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvwrgir9b858bl",
+      "text": "Implement the inbound adapter: a Spring MVC controller with an `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)"
+    },
+    {
+      "id": "mvwrgir998c8us",
+      "text": "Write a Testcontainers integration test that verifies the Flyway migration applies cleanly and the outbound adapter persists and retrieves a principle (ADR-0012)"
+    },
+    {
+      "id": "mvwrgir9kmlqla",
+      "text": "Add the `AddPrinciple` use case to the `use-cases` layer; inject the repository port via Inversify (ADR-0006, ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir9ngl7ft",
+      "text": "Add the `PrinciplesViewModel` to the `interface-adapters` layer; it exposes the principle list, the add command, and validation state (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir9m0941p",
+      "text": "Build the `PrinciplesTab` React component in the `ui` layer: renders the principle list, the add form with inline validation, and a confirmation message on success (ADR-0005, ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir9lc3clj",
+      "text": "Build the `PracticesTab` React component in the `ui` layer as a read-only placeholder with no add or edit controls (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir96c23x5",
+      "text": "Build the `PrinciplesAndPracticesScreen` React component in the `ui` layer: two tabs defaulting to \"Principles\", containing `PrinciplesTab` and `PracticesTab` (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir9uhx1u7",
+      "text": "Add the P&P navigation item to the left-hand expandable menu in the `ui` layer and wire it to the `PrinciplesAndPracticesScreen` (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mvwrgir9xmql01",
+      "text": "Write Jest unit tests for the `PrinciplesViewModel` covering valid submission, empty-text rejection, and confirmation state (ADR-0005)"
+    },
+    {
+      "id": "mvwrgir96iievo",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    }
   ]
 }
