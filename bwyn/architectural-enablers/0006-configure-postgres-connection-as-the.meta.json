@@ -1,0 +1,10 @@
+{
+  "title": "PostgreSQL and Spring Data JPA Baseline Configuration",
+  "prompt": "Configure postgres connection as the main database/datasource with spring starter data jpa",
+  "createdAt": "2026-10-31",
+  "derivesFrom": [
+    "adr:0010",
+    "adr:0011"
+  ],
+  "links": []
+}
