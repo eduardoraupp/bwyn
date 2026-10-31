@@ -5,5 +5,15 @@
   "links": [
     "enabler:0002-clean-architecture-folder-structure-for",
     "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mvwib3dk6abzmw",
+      "text": "The project is stored in the postgres database"
+    },
+    {
+      "id": "mvwibtl5kaxuks",
+      "text": "The API is REST"
+    }
   ]
 }
