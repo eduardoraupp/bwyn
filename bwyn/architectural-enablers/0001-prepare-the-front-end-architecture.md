@@ -3,45 +3,53 @@
 - **Status**: Proposed
 - **Created**: 2026-10-28
 - **Completed**:
-- **Implements ADR(s)**: ADR-0005 (Webpack, React, Jest), ADR-0006 (Inversify), ADR-0015 (TypeScript)
+- **Implements ADR(s)**: ADR-0005 (Webpack, React, Jest), ADR-0006 (Inversify), ADR-0015 (TypeScript), ADR-0019 (Maven frontend module)
 
 ## Goal
-Put in place the frontend build toolchain, TypeScript compiler configuration, and Inversify DI container so that every subsequent feature story has a working, correctly wired foundation to build on. No feature story may be started until this enabler is complete.
+Put in place the frontend Maven module, build toolchain, TypeScript compiler configuration, and Inversify DI container so that every subsequent feature story has a working, correctly wired foundation to build on. No feature story may be started until this enabler is complete.
 
 ## Scope
 
 **In scope**
-- `package.json` with all required runtime and development dependencies (React, TypeScript, Webpack, Babel, Jest, Inversify, `reflect-metadata`) (ADR-0005, ADR-0006, ADR-0015)
-- `tsconfig.json` with `strict`, `experimentalDecorators`, and `emitDecoratorMetadata` enabled, and module resolution aligned with Webpack (ADR-0015, ADR-0006)
-- Shared Webpack configuration split into `webpack.common.js`, `webpack.dev.js`, and `webpack.prod.js`, with a TypeScript loader and a Babel/JSX transform (ADR-0005, ADR-0015)
-- Jest configuration that handles `.ts` and `.tsx` files using the same transpilation choice as Webpack (ADR-0005, ADR-0015)
-- Application entry point (`src/index.tsx`) that imports `reflect-metadata` before any other module (ADR-0006)
-- Composition root (`src/composition-root.ts`) that creates and exports the Inversify container, with no bindings yet (ADR-0006)
-- A placeholder React component in `src/ui` and a placeholder injectable class that together prove the end-to-end wiring compiles and renders (ADR-0005, ADR-0006)
+- A `bwyn-frontend/` Maven module added to the root multi-module project, with a `pom.xml` that declares the `frontend-maven-plugin`, pins the Node.js and npm versions, and binds `npm install`, `npm test`, and `npm run build` to the correct Maven lifecycle phases (ADR-0019)
+- The root parent `pom.xml` updated to include `bwyn-frontend` as a module (ADR-0019)
+- `bwyn-frontend/package.json` with all required runtime and development dependencies (React, TypeScript, Webpack, Babel, Jest, Inversify, `reflect-metadata`) (ADR-0005, ADR-0006, ADR-0015)
+- `bwyn-frontend/tsconfig.json` with `strict`, `experimentalDecorators`, and `emitDecoratorMetadata` enabled, and module resolution aligned with Webpack (ADR-0015, ADR-0006)
+- Shared Webpack configuration split into `webpack.common.js`, `webpack.dev.js`, and `webpack.prod.js`, with a TypeScript loader and a Babel/JSX transform, located under `bwyn-frontend/` (ADR-0005, ADR-0015)
+- Jest configuration that handles `.ts` and `.tsx` files using the same transpilation choice as Webpack, located under `bwyn-frontend/` (ADR-0005, ADR-0015)
+- Application entry point (`bwyn-frontend/src/index.tsx`) that imports `reflect-metadata` before any other module (ADR-0006)
+- Composition root (`bwyn-frontend/src/composition-root.ts`) that creates and exports the Inversify container, with no bindings yet (ADR-0006)
+- A placeholder React component in `bwyn-frontend/src/ui` and a placeholder injectable class that together prove the end-to-end wiring compiles and renders (ADR-0005, ADR-0006)
 - A passing Jest smoke test for the placeholder injectable that resolves it via the container using a test double (ADR-0005, ADR-0006)
 
 **Out of scope**
 - Clean Architecture folder structure and layer conventions (covered by a follow-up architectural enabler)
 - ViewModel pattern and MVVM wiring (covered by a follow-up architectural enabler)
 - Any feature bindings in the composition root
+- Decisions about how the packaged frontend bundle is served (ADR-0019)
 
 ## Tasks
-- [ ] Initialise `package.json`; add React, ReactDOM, Inversify, and `reflect-metadata` as runtime dependencies
+- [ ] Add a `bwyn-frontend/` directory and create `bwyn-frontend/pom.xml` declaring the `frontend-maven-plugin` with explicit Node.js and npm versions (ADR-0019)
+- [ ] Update the root parent `pom.xml` to include `bwyn-frontend` as a module and manage the `frontend-maven-plugin` version in `<pluginManagement>` (ADR-0019)
+- [ ] Bind `npm install` to the `generate-resources` phase, `npm test` to the `test` phase, and `npm run build` to the `prepare-package` phase in `bwyn-frontend/pom.xml` (ADR-0019)
+- [ ] Initialise `bwyn-frontend/package.json`; add React, ReactDOM, Inversify, and `reflect-metadata` as runtime dependencies
 - [ ] Add TypeScript, Webpack, Babel (with `@babel/preset-typescript`, `@babel/preset-react`, and decorator plugin), `ts-loader` or `babel-loader`, Jest, and `@types/*` packages as development dependencies
-- [ ] Create `tsconfig.json` with `strict: true`, `experimentalDecorators: true`, `emitDecoratorMetadata: true`, and module resolution consistent with Webpack output (ADR-0015)
-- [ ] Create `webpack.common.js` with entry point, TypeScript/Babel loader, and resolve extensions; create `webpack.dev.js` and `webpack.prod.js` extending it (ADR-0005)
-- [ ] Configure Jest (`jest.config.ts`) to transform `.ts`/`.tsx` files using the same transpiler chosen for Webpack, and set up module resolution to match (ADR-0005, ADR-0015)
-- [ ] Create `src/index.tsx` with `import 'reflect-metadata'` as the first statement, mounting the placeholder React component (ADR-0006)
-- [ ] Create `src/composition-root.ts` with an empty Inversify `Container` exported as the composition root (ADR-0006)
-- [ ] Create a placeholder injectable class decorated with `@injectable()` and a placeholder React component in `src/ui` that consumes it (ADR-0006)
+- [ ] Create `bwyn-frontend/tsconfig.json` with `strict: true`, `experimentalDecorators: true`, `emitDecoratorMetadata: true`, and module resolution consistent with Webpack output (ADR-0015)
+- [ ] Create `bwyn-frontend/webpack.common.js` with entry point, TypeScript/Babel loader, and resolve extensions; create `webpack.dev.js` and `webpack.prod.js` extending it (ADR-0005)
+- [ ] Configure `bwyn-frontend/jest.config.ts` to transform `.ts`/`.tsx` files using the same transpiler chosen for Webpack, and set up module resolution to match (ADR-0005, ADR-0015)
+- [ ] Create `bwyn-frontend/src/index.tsx` with `import 'reflect-metadata'` as the first statement, mounting the placeholder React component (ADR-0006)
+- [ ] Create `bwyn-frontend/src/composition-root.ts` with an empty Inversify `Container` exported as the composition root (ADR-0006)
+- [ ] Create a placeholder injectable class decorated with `@injectable()` and a placeholder React component in `bwyn-frontend/src/ui` that consumes it (ADR-0006)
 - [ ] Write a Jest smoke test that binds the placeholder injectable in a test container, resolves it, and asserts it is defined (ADR-0005, ADR-0006)
-- [ ] Verify `npm run build` (production Webpack) and `npm test` (Jest) both pass with no errors
+- [ ] Verify `mvn verify` from the repository root runs `npm install`, `npm test`, and `npm run build` for the `bwyn-frontend` module with no errors (ADR-0019)
 
 ## Definition of done
-- [ ] `npm run build` produces a production bundle with no TypeScript or Webpack errors
-- [ ] `npm test` runs the full Jest suite (including the injectable smoke test) and all tests pass
-- [ ] `tsc --noEmit` exits with code 0, confirming `strict` mode and decorator options are correctly configured (ADR-0015)
-- [ ] `src/index.tsx` imports `reflect-metadata` before any other import, verified by code review (ADR-0006)
+- [ ] `mvn verify` from the repository root completes successfully, executing the `bwyn-frontend` `npm install`, `npm test`, and `npm run build` steps in the correct Maven lifecycle phases (ADR-0019)
+- [ ] `npm run build` (invoked directly under `bwyn-frontend/`) produces a production bundle with no TypeScript or Webpack errors
+- [ ] `npm test` (invoked directly under `bwyn-frontend/`) runs the full Jest suite (including the injectable smoke test) and all tests pass
+- [ ] `tsc --noEmit` (run under `bwyn-frontend/`) exits with code 0, confirming `strict` mode and decorator options are correctly configured (ADR-0015)
+- [ ] `bwyn-frontend/src/index.tsx` imports `reflect-metadata` before any other import, verified by code review (ADR-0006)
 - [ ] The composition root exports an Inversify `Container` and is the only place in production code where the container is constructed (ADR-0006)
 - [ ] The placeholder injectable smoke test passes, confirming decorator metadata and container resolution work end-to-end (ADR-0006)
+- [ ] The root parent `pom.xml` lists `bwyn-frontend` as a module and manages the `frontend-maven-plugin` version centrally (ADR-0019)
 - [ ] A code-review sign-off confirms the scaffold contains no premature layer structure (Practice: Code review)
