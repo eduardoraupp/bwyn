@@ -64,12 +64,12 @@ As a team member, I want a persistent left bar with a project selector and a pag
 
 - [X] **Given** the header, **Then** a Dark / Light toggle (two buttons, the active one in the pressed state) and a "New project" button are visible on its right.
 - [X] **Given** the user activates a theme, **Then** the whole application changes immediately and the choice is remembered across reloads; Dark is the default.
-- [ ] **Given** the user reloads the browser, **Then** the projects are loaded from the backend, the remembered active project is restored and the app opens on the Builder page; if the remembered active project no longer exists, the first project is used instead.
-- [ ] **Given** projects were saved from another browser or device, **When** the app opens, **Then** those projects are listed too, oldest first, with the same colours.
-- [ ] **Given** the projects are still being fetched and none is remembered in the browser, **Then** the left bar reads "Loading projects" and the welcome page is not shown yet.
-- [ ] **Given** the backend cannot save the new project, **When** the user activates "Create project", **Then** the dialog stays open with the message "The project could not be created. Please try again.", nothing is added to the list, and the user can try again.
-- [ ] **Given** the backend cannot be reached when the app opens, **Then** the projects remembered in the browser are shown, or the empty state if there are none, and no error is shown to the user.
-- [ ] **Given** the browser's storage is blocked or contains invalid data, **Then** the remembered projects and active project are ignored, the projects from the backend are still shown (the empty state if there are none), and no error is shown to the user.
+- [X] **Given** the user reloads the browser, **Then** the projects are loaded from the backend, the remembered active project is restored and the app opens on the Builder page; if the remembered active project no longer exists, the first project is used instead.
+- [X] **Given** projects were saved from another browser or device, **When** the app opens, **Then** those projects are listed too, oldest first, with the same colours.
+- [X] **Given** the projects are still being fetched and none is remembered in the browser, **Then** the left bar reads "Loading projects" and the welcome page is not shown yet.
+- [X] **Given** the backend cannot save the new project, **When** the user activates "Create project", **Then** the dialog stays open with the message "The project could not be created. Please try again.", nothing is added to the list, and the user can try again.
+- [X] **Given** the backend cannot be reached when the app opens, **Then** the projects remembered in the browser are shown, or the empty state if there are none, and no error is shown to the user.
+- [X] **Given** the browser's storage is blocked or contains invalid data, **Then** the remembered projects and active project are ignored, the projects from the backend are still shown (the empty state if there are none), and no error is shown to the user.
 
 ## Business rules and constraints
 
@@ -100,9 +100,9 @@ As a team member, I want a persistent left bar with a project selector and a pag
 ## Tasks
 
 - [X] Define the `Project` entity (id, name, description, createdAt, paletteIndex) and its name-uniqueness rule in the `entities` layer (ADR-0007, AE-0002)
-- [ ] Implement a `ProjectViewModel` in the `interface-adapters` layer with load, create, and select operations, backed by the backend API and a browser cache (ADR-0007)
+- [X] Implement a `ProjectViewModel` in the `interface-adapters` layer with load, create, and select operations, backed by the backend API and a browser cache (ADR-0007)
 - [X] Add `GET /api/projects` (use case, controller with OpenAPI annotations, repository `findAll`) and a Flyway migration adding `created_at` to `project`, with MockMvc, handler and Testcontainers tests (ADR-0008, ADR-0010, ADR-0012, ADR-0014, ADR-0017)
-- [ ] Extend `ProjectGateway` and `HttpProjectGateway` with `list` and make `create` return the new id; remove the Story 001 `CreateProjectUseCase` and `CreateProjectViewModel` that this story supersedes
+- [X] Extend `ProjectGateway` and `HttpProjectGateway` with `list` and make `create` return the new id; remove the Story 001 `CreateProjectUseCase` and `CreateProjectViewModel` that this story supersedes
 - [X] Build the "Create project" dialog component with empty-name and duplicate-name validation
 - [X] Build the project selector component with the avatar, the listbox, and keyboard and outside-click handling; add `aria-haspopup="listbox"` and `aria-expanded`
 - [X] Declare the eight menu-item descriptors (id, label, title, description, icon) as a single data structure and render the menu from it, with selected and disabled states
@@ -112,4 +112,4 @@ As a team member, I want a persistent left bar with a project selector and a pag
 - [X] Implement the collapsed icon rail and the rules that expand and collapse it
 - [X] Apply the theme to the document root and persist the preference to browser storage; default to Dark
 - [X] Verify that all ArchUnitTS fitness-function tests still pass (ADR-0016)
-- [ ] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+- [X] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
