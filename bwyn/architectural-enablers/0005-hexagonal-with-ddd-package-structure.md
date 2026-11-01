@@ -45,7 +45,7 @@ Establish the reference package structure that separates the domain core, applic
 - [ ] Add ArchUnit rules asserting that classes in `*.domain.*` have no dependency on `org.springframework`, `javax.persistence`, `jakarta.persistence`, or `*.adapter.*`.
 - [ ] Add ArchUnit rules asserting that classes in `*.application.*` have no dependency on `*.adapter.*`.
 - [ ] Add ArchUnit rules asserting that classes in `*.adapter.in.*` and `*.adapter.out.*` depend only on types in `*.domain.*` or `*.application.*`.
-- [ ] Verify that `spring.jpa.hibernate.ddl-auto` is set to `validate` or `none` in `application.properties` / `application.yml` and in any test configuration.
+- [ ] Verify that `spring.jpa.hibernate.ddl-auto` is set to `validate` or `none` in `application.yml` and in any test configuration `.yml` files.
 - [ ] Run the full backend test suite and confirm all ArchUnit rules pass and the build completes within the ten-minute budget (Practice: Ten-Minute Build).
 
 ## Definition of done
@@ -53,6 +53,6 @@ Establish the reference package structure that separates the domain core, applic
 - [ ] Each module contains a reference package under a named placeholder bounded context with at least one representative empty class.
 - [ ] A README is present that names each module, its layer, and its dependency rules.
 - [ ] All three ArchUnit rule sets (domain, application, adapter) are present as JUnit tests and pass on `./mvnw verify`.
-- [ ] `spring.jpa.hibernate.ddl-auto` is confirmed as `validate` or `none` in all environment configurations and verified by an ArchUnit or property-assertion test.
+- [ ] `spring.jpa.hibernate.ddl-auto` is confirmed as `validate` or `none` in all environment configurations via `application.yml` and test `.yml` files, and verified by an ArchUnit or property-assertion test.
 - [ ] The full backend build and test suite completes in ten minutes or fewer.
 - [ ] A pull request has been reviewed and approved before merge (Practice: Code review).
