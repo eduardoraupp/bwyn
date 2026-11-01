@@ -11,7 +11,13 @@ Establish the reference package structure that separates the domain core, applic
 ## Scope
 
 **In scope**
-- A reference package layout under a placeholder bounded context (e.g. `com.bwyn.<context>.domain`, `com.bwyn.<context>.application`, `com.bwyn.<context>.adapter.in`, `com.bwyn.<context>.adapter.out`) that demonstrates the intended structure for all future bounded contexts.
+- Four Maven modules reflecting the hexagonal layers (ADR-0017, ADR-0018):
+  - `bwyn-core` — domain core: entities, value objects, aggregates, domain services, domain events, and repository port interfaces. No dependency on Spring, JPA, or any other framework.
+  - `bwyn-application` — application layer: application services that orchestrate use cases by coordinating domain objects and invoking ports. Depends on `bwyn-core` only.
+  - `bwyn-rest` — inbound adapter: Spring MVC controllers and any other inbound driving adapters. Depends on `bwyn-application` and `bwyn-core`.
+  - `bwyn-infrastructure` — outbound adapters: Spring Data JPA repository implementations, external HTTP clients, and other driven infrastructure. Depends on `bwyn-application` and `bwyn-core`.
+- A reference package layout under a placeholder bounded context in each module (e.g. `com.bwyn.<context>.domain`, `com.bwyn.<context>.application`, `com.bwyn.<context>.adapter.in`, `com.bwyn.<context>.adapter.out`), with a representative empty class in each layer.
+- Parent POM updated to declare all four modules and manage their inter-module dependency declarations (ADR-0018).
 - A README or inline documentation that names each layer, states what belongs in it, and states what dependencies it may have.
 - ArchUnit rules (ADR-0009) enforcing:
   - The domain core has no dependency on Spring, JPA, or any adapter-layer class.
@@ -29,9 +35,13 @@ Establish the reference package structure that separates the domain core, applic
 - Lombok usage conventions on domain objects beyond what the ArchUnit rules enforce structurally.
 
 ## Tasks
+- [ ] Add `bwyn-core`, `bwyn-application`, `bwyn-rest`, and `bwyn-infrastructure` as modules in the parent POM, declaring inter-module dependencies (`bwyn-application` → `bwyn-core`; `bwyn-rest` → `bwyn-application`, `bwyn-core`; `bwyn-infrastructure` → `bwyn-application`, `bwyn-core`) (ADR-0018).
 - [ ] Agree and document the canonical package naming convention for bounded contexts and their four layers.
-- [ ] Create the reference package structure under a placeholder bounded context, with a representative empty class in each layer (e.g. a domain entity interface, an application service interface, an inbound adapter stub, an outbound adapter stub).
-- [ ] Write the README describing each layer, its responsibilities, and its permitted dependencies.
+- [ ] Create the `bwyn-core` module with the reference package `com.bwyn.<context>.domain` and a representative empty class for each domain building block (entity interface, value object, repository port interface).
+- [ ] Create the `bwyn-application` module with the reference package `com.bwyn.<context>.application` and a representative empty application service interface.
+- [ ] Create the `bwyn-rest` module with the reference package `com.bwyn.<context>.adapter.in` and a representative empty Spring MVC controller stub.
+- [ ] Create the `bwyn-infrastructure` module with the reference package `com.bwyn.<context>.adapter.out` and a representative empty Spring Data JPA repository stub.
+- [ ] Write the README describing each module and layer, its responsibilities, and its permitted dependencies.
 - [ ] Add ArchUnit rules asserting that classes in `*.domain.*` have no dependency on `org.springframework`, `javax.persistence`, `jakarta.persistence`, or `*.adapter.*`.
 - [ ] Add ArchUnit rules asserting that classes in `*.application.*` have no dependency on `*.adapter.*`.
 - [ ] Add ArchUnit rules asserting that classes in `*.adapter.in.*` and `*.adapter.out.*` depend only on types in `*.domain.*` or `*.application.*`.
@@ -39,9 +49,10 @@ Establish the reference package structure that separates the domain core, applic
 - [ ] Run the full backend test suite and confirm all ArchUnit rules pass and the build completes within the ten-minute budget (Practice: Ten-Minute Build).
 
 ## Definition of done
-- [ ] The reference package structure exists in the repository under a named placeholder bounded context.
-- [ ] A README is present that names each layer and its dependency rules.
-- [ ] All three ArchUnit rule sets (domain, application, adapter) are present as JUnit tests and pass on `./mvnw verify` (or equivalent).
+- [ ] All four Maven modules (`bwyn-core`, `bwyn-application`, `bwyn-rest`, `bwyn-infrastructure`) are declared in the parent POM and build cleanly with `./mvnw verify`.
+- [ ] Each module contains a reference package under a named placeholder bounded context with at least one representative empty class.
+- [ ] A README is present that names each module, its layer, and its dependency rules.
+- [ ] All three ArchUnit rule sets (domain, application, adapter) are present as JUnit tests and pass on `./mvnw verify`.
 - [ ] `spring.jpa.hibernate.ddl-auto` is confirmed as `validate` or `none` in all environment configurations and verified by an ArchUnit or property-assertion test.
 - [ ] The full backend build and test suite completes in ten minutes or fewer.
 - [ ] A pull request has been reviewed and approved before merge (Practice: Code review).
