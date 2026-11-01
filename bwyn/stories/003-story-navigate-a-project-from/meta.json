@@ -54,6 +54,18 @@
     {
       "id": "mvwsjg10fjiv56",
       "text": "Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    },
+    {
+      "id": "mvycuzejg5c0bl",
+      "text": "Implement a `ProjectViewModel` in the `interface-adapters` layer with load, create, and select operations, backed by the backend API and a browser cache (ADR-0007)"
+    },
+    {
+      "id": "mvycuzej0tkypt",
+      "text": "Add `GET /api/projects` (use case, controller with OpenAPI annotations, repository `findAll`) and a Flyway migration adding `created_at` to `project`, with MockMvc, handler and Testcontainers tests (ADR-0008, ADR-0010, ADR-0012, ADR-0014, ADR-0017)"
+    },
+    {
+      "id": "mvycuzejsrg7pt",
+      "text": "Extend `ProjectGateway` and `HttpProjectGateway` with `list` and make `create` return the new id; remove the Story 001 `CreateProjectUseCase` and `CreateProjectViewModel` that this story supersedes"
     }
   ]
 }
