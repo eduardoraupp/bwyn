@@ -1,0 +1,59 @@
+{
+  "title": "Navigate a project from the menu bar",
+  "prompt": "# Story: Navigate a project from the menu bar\n\n- **Story**: XXX-navigation-and-menu-bar\n- **Created**: 2026-10-31\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want a menu bar on the left with the list of my projects above it, so that after I create a\nproject I land on the main page and can move between the project's pages, and between projects, from one place.\n\n## Acceptance tests\n\n### A. The first visit and creating a project\n\n1. **Given** no project exists, **When** the app opens, **Then** the left bar shows the label \"Project\" and a selector\n   reading \"No project yet / Create one to get started\"; below it the label \"Menu\" and the eight menu items, all\n   disabled and dimmed; the main area shows \"Welcome to BWYN\", the text \"Create your first project to start feeding\n   drivers, reviewing decisions and building.\", and a \"Create project\" button.\n2. **Given** any state, **When** the user presses \"New project\" in the header, in the project dropdown, or \"Create\n   project\" on the welcome page, **Then** a dialog \"Create project\" opens, with the text \"A project groups the drivers,\n   decisions and integrations of one product.\", a Name field with focus (placeholder \"e.g. Payments platform\"), an\n   optional Description field, and Cancel and \"Create project\" buttons.\n3. **Given** the dialog, **When** the user submits an empty name (or only spaces), **Then** \"Give the project a name.\"\n   shows under the field and nothing is created.\n4. **Given** a project called \"Payments\", **When** the user submits \"payments \" (any case, spaces around), **Then** \"A\n   project with this name already exists.\" shows and nothing is created. Typing in the field clears the message.\n5. **Given** the dialog, **When** the user presses Escape, the Close (X) button, Cancel, or clicks outside the dialog,\n   **Then** it closes and nothing is created.\n6. **Given** a valid name, **When** the user presses \"Create project\", **Then** the dialog closes, the project becomes\n   the active one, and the main page shows the Builder page (the builder workspace is closed), with \"Builder\" selected in\n   the menu.\n\n### B. The left bar once a project exists\n\n7. **Given** an active project, **Then** the top of the bar shows \"Project\" and a selector with the project's avatar\n   (its first two letters in capitals, on a coloured square), its name, and \"Active project\".\n8. **Given** the menu, **Then** it shows, in this order, each with an icon: P&P, Builder, Drivers, Architecture, ADR,\n   Integrations, Plugins, Settings. All are enabled. The selected one has a light indigo background, a thin indigo bar on\n   its left edge and `aria-current=\"page\"`.\n9. **Given** the bottom of the bar, **Then** it shows the logo \"B\", the name \"BWYN\" and a \"Spike\" tag.\n10. **Given** projects were created, **Then** each new project gets the next colour of a palette of five, starting over\n    after the fifth.\n\n### C. Choosing a project\n\n11. **Given** two or more projects, **When** the user presses the selector, **Then** a list opens below it\n    (`role=\"listbox\"`) with each project's avatar and name, a check beside the active one, and \"New project\" at the\n    bottom after a divider.\n12. **Given** the list is open, **When** the user chooses a project, **Then** the list closes, that project becomes\n    active, and the page the user was on stays selected but now shows that project's content.\n13. **Given** the list is open, **When** the user presses Escape or clicks anywhere outside it, **Then** it closes and\n    nothing changes.\n14. **Given** the list is open, **When** the user chooses \"New project\", **Then** the list closes and the \"Create\n    project\" dialog opens.\n\n### D. Choosing a page\n\n15. **Given** an active project, **When** the user chooses a menu item, **Then** the main area shows that page with a\n    short fade, and the item becomes the selected one.\n16. **Given** a page, **Then** the top of the main area (the header) shows a folder icon, the project name, a \"/\" and the\n    page's label, for example \"Payments / Drivers\"; with no project it reads \"No project / Builder\".\n17. **Given** a page other than Settings, **Then** the main area starts with a large icon, the page's title and its\n    one-sentence description, as in this table:\n\n    | Menu item | Title | Description |\n    |---|---|---|\n    | P&P | Principles & Practices | The principles this team holds to, and the Extreme Programming and evolutionary architecture practices it follows. |\n    | Builder | Builder | Turn intent into working software, one guided step at a time. |\n    | Drivers | Drivers | The forces that steer decisions. Describe each driver and save it: they feed the skills used by the builder. |\n    | Architecture | Architecture | The architecture of the system: its style, its layers and the rules between them. Stories are checked against it. |\n    | ADR | Architecture decisions | The decision log of this project. |\n    | Integrations | External integrations | Connect the tools the project already lives in. |\n    | Plugins | Plugins | Extend the builder with extra skills, checks and generators. |\n    | Settings | Settings | The settings of this project. |\n\n18. **Given** the application starts with a project, **Then** the Builder page is the one shown first.\n\n### E. The menu makes room for a workspace\n\n19. **Given** the Builder page, **When** the user presses \"Open the builder\", **Then** the menu bar shrinks to a narrow\n    rail of icons: at the top the active project's avatar (tooltip \"<project> (expand menu)\"), then the eight items as\n    icons only with their name as tooltip and accessible name, and at the bottom an \"Expand menu\" button. The header adds\n    \"/ Prompt\" after \"Builder\". The workspace fills the rest of the width.\n20. **Given** the user opens Settings, **Then** the same rail appears and the page opens with a menu of its own beside\n    it.\n21. **Given** the rail, **When** the user presses the avatar or \"Expand menu\", **Then** the full menu returns and a\n    \"Collapse menu\" button appears beside the logo.\n22. **Given** the builder workspace is open, **When** the user chooses any other page, **Then** the workspace closes and\n    that page opens in a normal width. **When** the user chooses Builder again, **Then** the Builder page opens (not the\n    workspace).\n23. **Given** the builder workspace is open, **When** the user chooses another project, **Then** the workspace shows the\n    new project's files and starts without anything open.\n\n### F. Theme and memory\n\n24. **Given** the header, **Then** a Dark/Light switch (two buttons, the active one pressed) and a \"New project\"\n    button are on its right.\n25. **Given** the user chooses a theme, **Then** the whole app changes at once, and the choice is remembered. Dark is the\n    default.\n26. **Given** the user reloads the browser, **Then** the projects and the active project are still there, and the app\n    opens on the Builder page. If the remembered active project no longer exists, the first project is used.\n27. **Given** the browser's storage is blocked or holds invalid data, **Then** the app starts empty and never shows an\n    error.\n\n## Business rules and constraints\n\n- A project is a name, an optional description, a creation time, an id and a palette index. The name is trimmed and\n  must be unique, ignoring case.\n- The project selector, the menu and the logo form one left bar. The header and the main area are to its right.\n- Menu items are disabled until a project is active, because every page belongs to a project.\n- The page shown is keyed by project and page, so nothing from one project can show in another.\n- Creating a project always lands on the Builder page, whatever page was open.\n- Everything is reachable by keyboard, with a visible focus ring. Dialogs and lists close with Escape. The selector has\n  `aria-haspopup=\"listbox\"` and `aria-expanded`.\n- The projects, the active project and the theme are kept in the browser only, in this spike.\n\n## Out of scope\n\n- The content of each page (they are other stories), the builder workspace and the Settings menu items.\n- Renaming, deleting, archiving or reordering projects, project settings, users, roles and permissions.\n- Saving the page the user was on between visits.\n- A mobile layout.\n\n## Tasks\n\n- [ ] Hold the projects and the active id in one state with load, create and select, saved to the browser.\n- [ ] Build the project selector and the avatar, with the open list and its keyboard and outside-click handling.\n- [ ] Build the \"Create project\" dialog with its two validations.\n- [ ] Describe the eight menu items once (id, label, title, description, icon) and draw the menu from that list.\n- [ ] Build the left bar: selector, menu with the selected and disabled states, logo.\n- [ ] Build the header with the breadcrumb, the theme switch and the New project button.\n- [ ] Build the welcome page and the page frame (icon, title, description, fade, keyed by project and page).\n- [ ] Add the collapsed rail and the rules that open and close it.\n- [ ] Add the theme, applied to the document and remembered.\n\n---\n\nadapt this to our template and also improve the text whenever it is needed",
+  "createdAt": "2026-10-31",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mvwsjg106p92ul",
+      "text": "Define the `Project` entity (id, name, description, createdAt, paletteIndex) and its name-uniqueness rule in the `entities` layer (ADR-0007, AE-0002)"
+    },
+    {
+      "id": "mvwsjg10h7ma53",
+      "text": "Implement a `ProjectViewModel` in the `interface-adapters` layer with load, create, and select operations, backed by browser storage (ADR-0007)"
+    },
+    {
+      "id": "mvwsjg10bazppm",
+      "text": "Build the \"Create project\" dialog component with empty-name and duplicate-name validation"
+    },
+    {
+      "id": "mvwsjg10ydhbzb",
+      "text": "Build the project selector component with the avatar, the listbox, and keyboard and outside-click handling; add `aria-haspopup=\"listbox\"` and `aria-expanded`"
+    },
+    {
+      "id": "mvwsjg10nahbva",
+      "text": "Declare the eight menu-item descriptors (id, label, title, description, icon) as a single data structure and render the menu from it, with selected and disabled states"
+    },
+    {
+      "id": "mvwsjg105x97it",
+      "text": "Build the left bar, composing the selector, the menu, and the logo strip"
+    },
+    {
+      "id": "mvwsjg10kz71xm",
+      "text": "Build the header with the breadcrumb, the Dark/Light theme toggle, and the \"New project\" button"
+    },
+    {
+      "id": "mvwsjg10hzbzky",
+      "text": "Build the welcome page and the page frame (large icon, title, description, keyed fade transition by project id and page id)"
+    },
+    {
+      "id": "mvwsjg10pe6kx1",
+      "text": "Implement the collapsed icon rail and the rules that expand and collapse it"
+    },
+    {
+      "id": "mvwsjg10zr8kfj",
+      "text": "Apply the theme to the document root and persist the preference to browser storage; default to Dark"
+    },
+    {
+      "id": "mvwsjg104p73xn",
+      "text": "Verify that all ArchUnitTS fitness-function tests still pass (ADR-0016)"
+    },
+    {
+      "id": "mvwsjg10fjiv56",
+      "text": "Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
