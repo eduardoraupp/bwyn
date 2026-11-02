@@ -67,6 +67,26 @@
     {
       "id": "mvwrgir96iievo",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    },
+    {
+      "id": "mvyzlvk8k1r7qq",
+      "text": "Define the `CommandHandler<C, R>` interface in the application layer with a single `handle(C command): R` method (Principle: SOLID ISP, ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvyzlvk88yt17a",
+      "text": "Define the `QueryHandler<Q, R>` interface in the application layer with a single `handle(Q query): R` method (Principle: SOLID ISP, ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvyzlvk81ekpye",
+      "text": "Retrofit the `CreateProjectCommand` handler from story 001 to implement `CommandHandler<CreateProjectCommand, ProjectId>`, verifying its existing tests still pass (Principle: DRY)"
+    },
+    {
+      "id": "mvyzlvk81yrcup",
+      "text": "Define `AddPrincipleCommand` and implement its handler as `CommandHandler<AddPrincipleCommand, PrincipleId>`, enforcing the 1 000-character text constraint (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mvyzlvk8wm25zu",
+      "text": "Implement the inbound adapter: a Spring MVC controller with a `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)"
     }
   ]
 }
