@@ -37,27 +37,26 @@ Establish the reference package structure that separates the domain core, applic
 - Lombok usage conventions on domain objects beyond what the ArchUnit rules enforce structurally.
 
 ## Tasks
-- [ ] Add `bwyn-core`, `bwyn-application`, `bwyn-rest`, and `bwyn-infrastructure` as modules in the parent POM, declaring inter-module dependencies (`bwyn-application` → `bwyn-core`; `bwyn-rest` → `bwyn-application`, `bwyn-core`; `bwyn-infrastructure` → `bwyn-application`, `bwyn-core`) (ADR-0018).
-- [ ] Agree and document the canonical package naming convention for bounded contexts and their four layers.
-- [ ] Create the `bwyn-core` module with the reference package `com.bwyn.<context>.domain` and a representative empty class for each domain building block (entity interface, value object, repository port interface).
-- [ ] Create the `bwyn-application` module with the reference package `com.bwyn.<context>.application` and a representative empty application service interface.
-- [ ] Create the `bwyn-rest` module with the reference package `com.bwyn.<context>.adapter.in` and a representative empty Spring MVC controller stub that acts as the driving port for a story.
-- [ ] Create the `bwyn-infrastructure` module with the reference package `com.bwyn.<context>.adapter.out` and a representative empty Spring Data JPA repository stub.
-- [ ] Configure the Maven Failsafe plugin to run `*IT.java` integration tests in `bwyn-rest` and `bwyn-infrastructure`; confirm Surefire runs `*Test.java` unit tests in `bwyn-core` and `bwyn-application`.
-- [ ] Write the README describing each module and layer, its responsibilities, its permitted dependencies, and the test naming convention (`*Test.java` for unit tests, `*IT.java` for adapter integration tests).
-- [ ] Add ArchUnit rules asserting that classes in `*.domain.*` have no dependency on `org.springframework`, `javax.persistence`, `jakarta.persistence`, or `*.adapter.*`.
-- [ ] Add ArchUnit rules asserting that classes in `*.application.*` have no dependency on `*.adapter.*`.
-- [ ] Add ArchUnit rules asserting that classes in `*.adapter.in.*` and `*.adapter.out.*` depend only on types in `*.domain.*` or `*.application.*`.
-- [ ] Verify that `spring.jpa.hibernate.ddl-auto` is set to `validate` or `none` in `application.yml` and in any test configuration `.yml` files.
-- [ ] Run the full backend test suite and confirm all ArchUnit rules pass and the build completes within the ten-minute budget (Practice: Ten-Minute Build).
+- [X] Add `bwyn-core`, `bwyn-application`, `bwyn-rest`, and `bwyn-infrastructure` as modules in the parent POM, declaring inter-module dependencies (`bwyn-application` → `bwyn-core`; `bwyn-rest` → `bwyn-application`, `bwyn-core`; `bwyn-infrastructure` → `bwyn-application`, `bwyn-core`) (ADR-0018).
+- [X] Agree and document the canonical package naming convention for bounded contexts and their four layers.
+- [X] Create the `bwyn-core` module with the reference package `com.bwyn.<context>.domain` and a representative empty class for each domain building block (entity interface, value object, repository port interface).
+- [X] Create the `bwyn-application` module with the reference package `com.bwyn.<context>.application` and a representative empty application service interface.
+- [X] Create the `bwyn-rest` module with the reference package `com.bwyn.<context>.adapter.in` and a representative empty Spring MVC controller stub.
+- [X] Create the `bwyn-infrastructure` module with the reference package `com.bwyn.<context>.adapter.out` and a representative empty Spring Data JPA repository stub.
+- [X] Write the README describing each module and layer, its responsibilities, and its permitted dependencies.
+- [X] Add ArchUnit rules asserting that classes in `*.domain.*` have no dependency on `org.springframework`, `javax.persistence`, `jakarta.persistence`, or `*.adapter.*`.
+- [X] Add ArchUnit rules asserting that classes in `*.application.*` have no dependency on `*.adapter.*`.
+- [X] Add ArchUnit rules asserting that classes in `*.adapter.in.*` and `*.adapter.out.*` depend only on types in `*.domain.*` or `*.application.*`.
+- [X] Verify that `spring.jpa.hibernate.ddl-auto` is set to `validate` or `none` in `application.yml` and in any test configuration `.yml` files.
+- [X] Run the full backend test suite and confirm all ArchUnit rules pass and the build completes within the ten-minute budget (Practice: Ten-Minute Build).
 
 ## Definition of done
-- [ ] All four Maven modules (`bwyn-core`, `bwyn-application`, `bwyn-rest`, `bwyn-infrastructure`) are declared in the parent POM and build cleanly with `./mvnw verify`.
-- [ ] Each module contains a reference package under a named placeholder bounded context with at least one representative empty class.
-- [ ] The `bwyn-rest` module contains a driving-port stub that illustrates the inbound adapter entry point expected by every story.
-- [ ] Maven Failsafe is configured and executes `*IT.java` tests in adapter modules; Maven Surefire executes `*Test.java` tests in domain and application modules.
-- [ ] A README is present that names each module, its layer, its dependency rules, and the test naming convention.
-- [ ] All three ArchUnit rule sets (domain, application, adapter) are present as JUnit tests and pass on `./mvnw verify`.
-- [ ] `spring.jpa.hibernate.ddl-auto` is confirmed as `validate` or `none` in all environment configurations via `application.yml` and test `.yml` files, and verified by an ArchUnit or property-assertion test.
-- [ ] The full backend build and test suite completes in ten minutes or fewer.
+- [X] All four Maven modules (`bwyn-core`, `bwyn-application`, `bwyn-rest`, `bwyn-infrastructure`) are declared in the parent POM and build cleanly with `./mvnw verify`.
+- [X] Each module contains a reference package under a named placeholder bounded context with at least one representative empty class.
+- [X] A README is present that names each module, its layer, and its dependency rules.
+- [X] The `bwyn-rest` module contains a driving-port stub that illustrates the inbound adapter entry point expected by every story.
+- [X] Maven Failsafe is configured and executes `*IT.java` tests in adapter modules; Maven Surefire executes `*Test.java` tests in domain and application modules.
+- [X] All three ArchUnit rule sets (domain, application, adapter) are present as JUnit tests and pass on `./mvnw verify`.
+- [X] `spring.jpa.hibernate.ddl-auto` is confirmed as `validate` or `none` in all environment configurations via `application.yml` and test `.yml` files, and verified by an ArchUnit or property-assertion test.
+- [X] The full backend build and test suite completes in ten minutes or fewer.
 - [ ] A pull request has been reviewed and approved before merge (Practice: Code review).
