@@ -8,11 +8,11 @@
 As a subject matter expert, I want to open the Principles & Practices screen from the landing page and add principles to it, so that the team has a shared, living record of the principles that guide their work.
 
 ## Acceptance tests
-1. **Given** I am on the landing page, **When** I expand the left-hand menu and click "P&P", **Then** the Principles & Practices screen opens with two tabs: "Principles" and "Practices".
-2. **Given** I am on the Principles & Practices screen, **When** the screen first loads, **Then** the "Principles" tab is active by default.
-3. **Given** I am on the Principles tab, **When** I submit a new principle with valid text, **Then** the principle appears in the list on the same screen and a confirmation message indicates it was saved.
-4. **Given** I am on the Principles tab, **When** I attempt to submit a principle with no text, **Then** the submission is prevented and an inline validation error indicates that text is required.
-5. **Given** I am on the Practices tab, **When** the tab is active, **Then** the tab content is visible but no add or edit controls are present, confirming the tab is read-only.
+- [ ] **Given** I am on the landing page, **When** I expand the left-hand menu and click "P&P", **Then** the Principles & Practices screen opens with two tabs: "Principles" and "Practices".
+- [ ] **Given** I am on the Principles & Practices screen, **When** the screen first loads, **Then** the "Principles" tab is active by default.
+- [ ] **Given** I am on the Principles tab, **When** I submit a new principle with valid text, **Then** the principle appears in the list on the same screen and a confirmation message indicates it was saved.
+- [ ] **Given** I am on the Principles tab, **When** I attempt to submit a principle with no text, **Then** the submission is prevented and an inline validation error indicates that text is required.
+- [ ] **Given** I am on the Practices tab, **When** the tab is active, **Then** the tab content is visible but no add or edit controls are present, confirming the tab is read-only.
 
 ## Business rules and constraints
 - The left-hand expandable menu and the P&P navigation item live in the `ui` layer; no business logic resides in the component (ADR-0007, Architecture).
@@ -25,6 +25,9 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - The backend API endpoint is documented with OpenAPI annotations on the inbound adapter; no domain class appears directly in the API schema (ADR-0014).
 - The Practices tab is read-only; its content is not yet defined and will be provided in a later story.
 - The backend API base URL is configurable so the same frontend build works in both development and production deployment modes (Architecture).
+- All command handlers implement a shared `CommandHandler<C, R>` interface with a single `handle(C command): R` method; all query handlers implement a shared `QueryHandler<Q, R>` interface with a single `handle(Q query): R` method. Where a handler needs no meaningful input, a dedicated named input type is introduced (e.g. `GetPrinciplesQuery`) rather than a raw `void` or untyped parameter, so the contract is self-documenting (Principle: Declarative over imperative, Principle: SOLID ISP).
+- The `CommandHandler` and `QueryHandler` interfaces live in the application layer; no adapter or domain class depends on them directly (ADR-0017, Architecture).
+- The same `CommandHandler` and `QueryHandler` interfaces must be applied retroactively to the `CreateProjectCommand` handler introduced in story 001, so that all handlers share a uniform contract (Principle: DRY).
 
 ## Out of scope
 - Editing or deleting existing principles.
@@ -34,12 +37,15 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - The landing page itself and the left-hand menu beyond the P&P navigation item (assumed to be delivered by story 001 or a separate story).
 
 ## Tasks
+- [ ] Define the `CommandHandler<C, R>` interface in the application layer with a single `handle(C command): R` method (Principle: SOLID ISP, ADR-0017, Architecture)
+- [ ] Define the `QueryHandler<Q, R>` interface in the application layer with a single `handle(Q query): R` method (Principle: SOLID ISP, ADR-0017, Architecture)
+- [ ] Retrofit the `CreateProjectCommand` handler from story 001 to implement `CommandHandler<CreateProjectCommand, ProjectId>`, verifying its existing tests still pass (Principle: DRY)
 - [ ] Write a Flyway migration script that creates the `principles` table with `id`, `text`, and `created_at` columns (ADR-0010)
 - [ ] Add the `Principle` domain entity to the domain layer with no Spring or JPA dependency (ADR-0017, Architecture)
 - [ ] Define the `PrincipleRepository` port interface in the domain layer (ADR-0017, Architecture)
-- [ ] Implement the `AddPrincipleCommand` and its application-layer command handler, enforcing the 1 000-character text constraint (ADR-0017, Architecture)
+- [ ] Define `AddPrincipleCommand` and implement its handler as `CommandHandler<AddPrincipleCommand, PrincipleId>`, enforcing the 1 000-character text constraint (ADR-0017, Architecture)
 - [ ] Implement the outbound adapter: a Spring Data JPA repository and JPA entity that fulfils the `PrincipleRepository` port; keep the JPA `@Entity` out of the domain layer (ADR-0011, ADR-0017, Architecture)
-- [ ] Implement the inbound adapter: a Spring MVC controller with an `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)
+- [ ] Implement the inbound adapter: a Spring MVC controller with a `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)
 - [ ] Write a Testcontainers integration test that verifies the Flyway migration applies cleanly and the outbound adapter persists and retrieves a principle (ADR-0012)
 - [ ] Add the `AddPrinciple` use case to the `use-cases` layer; inject the repository port via Inversify (ADR-0006, ADR-0007, Architecture)
 - [ ] Add the `PrinciplesViewModel` to the `interface-adapters` layer; it exposes the principle list, the add command, and validation state (ADR-0007, Architecture)
