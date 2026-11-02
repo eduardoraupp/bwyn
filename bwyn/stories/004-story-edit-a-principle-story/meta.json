@@ -1,0 +1,99 @@
+{
+  "title": "Edit a principle",
+  "prompt": "# Story: Edit a principle\n\n- **Story**: XXX-edit-principle\n- **Created**: 2026-11-02\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to open a principle and change its name or its description, so that our principles stay true and\nkeep helping us decide.\n\n## Acceptance tests\n\nOpening\n\n- [ ] **Given** the Principles tab with principles, **When** the user presses a card (or uses Enter or Space on it), **Then**\n  a dialog titled \"Edit principle\" opens, with the Name and the Description filled in with what was saved, the Name field in\n  focus, Cancel, and Save.\n- [ ] **Given** the dialog just opened, **Then** Save is disabled, because nothing changed.\n- [ ] **Given** a principle with no description, **When** it is opened, **Then** the Description is empty and shows its\n  placeholder \"What the team holds to, and why.\"\n\nChanging and saving\n\n- [ ] **Given** the dialog, **When** the user changes the name or the description, **Then** Save is enabled. **When** the user\n  puts the text back as it was, **Then** Save is disabled again.\n- [ ] **Given** a change, **When** the user presses Save, **Then** the card shows the new name and description, in the same\n  place in the list, the dialog closes, and nothing else in the list changes.\n- [ ] **Given** a name and a description with spaces around them, **When** Save, **Then** both are saved without the spaces.\n- [ ] **Given** the user clears the name (or leaves only spaces), **When** Save, **Then** \"Give the principle a name.\" shows\n  under the field, the field is marked invalid, and nothing is saved. Typing in the field clears the message.\n- [ ] **Given** the user clears the description, **When** Save, **Then** it is saved. The card then shows \"Click to describe\n  this principle.\" in italics.\n- [ ] **Given** the user renames a principle, **Then** it is still the same principle: its position, and the name of its file in\n  the repository, do not change.\n- [ ] **Given** two principles with the same name, **When** one is renamed to the name of the other, **Then** it is saved. Names\n  do not have to be different.\n\nClosing without saving\n\n- [ ] **Given** the dialog, **When** the user presses Cancel, the Close (X) button or Escape, **Then** it closes and the principle\n  is as it was.\n- [ ] **Given** nothing changed, **When** the user clicks outside the dialog, **Then** it closes. **Given** there are unsaved\n  changes, **Then** a click outside does nothing.\n- [ ] **Given** the user opens the same principle again after closing without saving, **Then** the dialog shows the saved text, not\n  the discarded changes.\n\nAfter saving\n\n- [ ] **Given** an edited principle with a description, **Then** the next story, enabler or diagram that is drafted gets the new text\n  under \"Principles of the team\".\n- [ ] **Given** GitHub is connected, **Then** the next sync uploads the changed file, `principles/<identity>.md`, as a pull request.\n\n## Business rules and constraints\n\n- A principle is a name (a few words) and a description of one to three sentences: what the team holds to, and why, written so that it\n  helps to decide between two options.\n- A principle keeps its identity for life. The identity comes from the name when the principle is added (the first six words, lower-case,\n  joined by \"-\") and is not recalculated on a rename.\n- \"Changed\" means any difference from the saved text. Saving trims the spaces, so a change of spaces alone can be saved and change nothing.\n- While the dialog is open, syncing is blocked (\"Save or close the principle first\") and a download from the repository waits.\n\n## Out of scope\n\n- Adding a principle, removing one, and AI help with the text (each is its own story), reordering, and a history of changes to a principle.\n\n## Tasks\n\n- [ ] Open the dialog from a card with the saved name and description, and the title \"Edit principle\".\n- [ ] Make Save depend on a difference from the saved text, and trim both fields on save.\n- [ ] Add the check for an empty name, cleared when the user types.\n- [ ] Save a change by identity, in place, without changing the identity or the order.\n- [ ] Add the closing rules: Cancel, X, Escape, and click outside only when nothing changed.\n- [ ] Tell the page that a principle is open, so that sync is blocked and downloads wait.\n\n---\n\n# Reference\n\nFiles in `bwyn-frontend/spikes/home-page/`: `PrinciplesPractices.tsx` (the card and `PrincipleModal`) and `usePrinciples.ts`\n(`save(id, name, text)`).\n\nA spike detail worth keeping in mind when the story is built: Escape closes the dialog even with unsaved text, while a click outside does not.",
+  "createdAt": "2026-11-02",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mvzagctx6xz3tj",
+      "text": "Add an `EditPrincipleDialog` React component (UI layer, ADR-0007) that receives the saved name and description, opens with the Name field in focus, and renders the title \"Edit principle\", both fields, Cancel, and Save."
+    },
+    {
+      "id": "mvzagctxsg853r",
+      "text": "Wire the card's click, Enter, and Space handlers in the Principles tab to open `EditPrincipleDialog` with the selected principle's data (UI layer, ADR-0007)."
+    },
+    {
+      "id": "mvzagctxyib7bb",
+      "text": "Implement dirty-state tracking in the dialog's ViewModel (interface-adapters layer, ADR-0007) so that Save is enabled only when the trimmed current values differ from the saved values."
+    },
+    {
+      "id": "mvzagctxcr9aqo",
+      "text": "Implement the empty-name validation in the ViewModel: block Save, show \"Give the principle a name.\" beneath the field, mark the field invalid, and clear the message on any keystroke."
+    },
+    {
+      "id": "mvzagctxgx297p",
+      "text": "Implement the `save(id, name, description)` use-case call (use-cases layer, ADR-0007) that trims both fields and updates the principle in place by identity, preserving its position and identity."
+    },
+    {
+      "id": "mvzagctx7mc0z4",
+      "text": "Update the card rendering to show the new name and description after a successful save, and to show \"Click to describe this principle.\" in italics when the description is empty."
+    },
+    {
+      "id": "mvzagctxcqdu90",
+      "text": "Implement the closing rules in the ViewModel: Cancel and X close unconditionally; Escape closes unconditionally; a click outside closes only when nothing has changed."
+    },
+    {
+      "id": "mvzagctx20qnek",
+      "text": "Expose a \"principle dialog open\" flag from the ViewModel so that the sync and download mechanisms can observe it and block or wait accordingly."
+    },
+    {
+      "id": "mvzagctxqi9ntk",
+      "text": "Write Jest unit tests for the ViewModel covering dirty-state, validation, trim-on-save, identity preservation, and each closing rule (ADR-0005)."
+    },
+    {
+      "id": "mvzagctxae9cxf",
+      "text": "Write a Jest component test for `EditPrincipleDialog` covering initial focus, placeholder text, Save disabled state, and the invalid-name message (ADR-0005)."
+    },
+    {
+      "id": "mvzagctx8r8g9m",
+      "text": "Add or extend an ArchUnitTS rule to verify that `react-router-dom` and dialog-state imports do not appear in the use-cases or entities layers (ADR-0016)."
+    },
+    {
+      "id": "mvzagctx4md8tq",
+      "text": "Run the full frontend build and test suite and confirm it completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mvzarfxt7x9ca7",
+      "text": "Implement the `save(id, name, description)` use-case call (use-cases layer, ADR-0007) that trims both fields and updates the principle in place by identity, preserving its position."
+    },
+    {
+      "id": "mvzasfmhydh11o",
+      "text": "Add a `PUT /api/principles/{id}` endpoint in the inbound adapter (`bwyn-rest`) that accepts `{ name, description }` and returns the updated principle (ADR-0008, ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mvzasfmhulans0",
+      "text": "Add an `UpdatePrincipleCommand` and its handler in the application layer (`bwyn-application`) that trims both fields, validates the name is non-blank, and updates the principle by identity (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mvzasfmhxpvdgu",
+      "text": "Add or extend the `Principle` aggregate in the domain core (`bwyn-core`) with an `update(name, description)` method that enforces the non-blank name invariant (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mvzasfmhx4xdag",
+      "text": "Add or extend the outbound adapter (`bwyn-infrastructure`) to persist the updated principle via Spring Data JPA (ADR-0011, AE-0005)."
+    },
+    {
+      "id": "mvzasfmhkyy96i",
+      "text": "Write a Testcontainers integration test for the repository that verifies the updated name and description are persisted and the principle's identity and position are unchanged (ADR-0012)."
+    },
+    {
+      "id": "mvzasfmhvkzzv9",
+      "text": "Write a unit test for the `UpdatePrincipleCommand` handler covering trim-on-save, blank-name rejection, and identity preservation (ADR-0009)."
+    },
+    {
+      "id": "mvzasfmh22x6tr",
+      "text": "Extend ArchUnit rules to verify that the `UpdatePrincipleCommand` handler in `*.application.*` has no dependency on `*.adapter.*` (ADR-0009, AE-0005)."
+    },
+    {
+      "id": "mvzasfmhncefn5",
+      "text": "Implement the `save(id, name, description)` use-case call (use-cases layer, ADR-0007) that calls the `PUT /api/principles/{id}` endpoint through an outbound port and updates the principle in place by identity, preserving its position."
+    },
+    {
+      "id": "mvzasfmh0o97bw",
+      "text": "Run the full frontend and backend build and test suite and confirm it completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
