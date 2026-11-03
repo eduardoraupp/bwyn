@@ -1,0 +1,103 @@
+{
+  "title": "Connect an LLM provider with an API key",
+  "prompt": "# Story: Connect an LLM provider with an API key\n\n- **Story**: XXX-llm-provider\n- **Created**: 2026-11-03\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to choose where the AI comes from (Claude on Amazon Bedrock, Claude on the Anthropic API, or Azure OpenAI) and\nconnect it with an API key, so that the project can use the AI service that my team already pays for.\n\n## Acceptance tests\n\nChoosing a provider\n\n- [ ] **Given** Integrations in a project with no connection, **Then** the card \"LLM provider\" says \"Not connected\".\n- [ ] **Given** the card is opened, **Then** three options show: \"Claude on Amazon Bedrock\", \"Claude on the Anthropic API\" and\n  \"Azure OpenAI\". None is selected, no field shows, and Connect is disabled.\n- [ ] **Given** the user chooses \"Claude on Amazon Bedrock\", **Then** the fields are \"Amazon Bedrock API key\" (placeholder\n  \"bedrock-api-key-...\"), Region (\"us-east-1\"), Model id (\"us.anthropic.claude-sonnet-4-6\"), Prompt cache lifetime (\"5 minutes\")\n  and Longest answer (4096 tokens).\n- [ ] **Given** the user chooses \"Claude on the Anthropic API\", **Then** the fields are \"Anthropic API key\" (placeholder \"sk-ant-...\"),\n  Model id (\"claude-sonnet-4-6\"), Prompt cache lifetime (\"5 minutes\") and Longest answer (4096 tokens). There is no Region.\n- [ ] **Given** the user chooses \"Azure OpenAI\", **Then** the fields are \"Azure OpenAI API key\" (placeholder \"Key 1 or Key 2 of the\n  resource\"), Endpoint (placeholder \"https://your-resource.openai.azure.com\"), Deployment name (placeholder \"the name you gave the\n  model in Azure\") and Longest answer (4096 tokens). There is no Region, no Model id and no Prompt cache lifetime.\n- [ ] **Given** a key was typed, **When** the user chooses another option, **Then** the key field is empty, so that a key is never\n  sent to a provider it does not belong to.\n\nConnecting\n\n- [ ] **Given** a provider and a valid key, **When** the user presses Connect, **Then** the button reads \"Connecting...\", and when the\n  provider has answered, the card shows the chip \"Connected\", the provider and the model (for Azure OpenAI, the deployment) and, for\n  Bedrock, the Region or, for Azure OpenAI, the endpoint, for example \"Claude on the Anthropic API · claude-sonnet-4-6\" or\n  \"Azure OpenAI · my-gpt · your-resource.openai.azure.com\". The key field is gone.\n- [ ] **Given** an empty key (or only spaces), **When** the user presses Connect, **Then** \"Paste the Azure OpenAI API key.\" (with the\n  name of the chosen provider's key) shows and nothing is sent.\n- [ ] **Given** Azure OpenAI with an empty endpoint or deployment name, **Then** \"Enter the endpoint of the Azure resource.\" or \"Enter\n  the deployment name.\" shows and nothing is sent.\n- [ ] **Given** an endpoint that does not start with \"https://\" or is not a valid address, **Then** \"The endpoint looks wrong, for\n  example https://your-resource.openai.azure.com.\" shows and nothing is sent.\n- [ ] **Given** a key with spaces inside, **Then** \"Paste the key without spaces.\" shows and nothing is sent.\n- [ ] **Given** Longest answer is 100 or 70000, **Then** \"Maximum tokens must be a whole number between 256 and 64000.\" shows and\n  nothing is sent.\n- [ ] **Given** the provider refuses the key, **Then** the card stays \"Not connected\", nothing is kept, and the message names the\n  provider and says the key was refused, for example \"Anthropic refused the key. Check that it is valid and active.\"\n- [ ] **Given** the model id does not exist for the provider (for Azure OpenAI, the deployment does not exist on that endpoint),\n  **Then** the card stays \"Not connected\", nothing is kept, and the message says to check the model id (or the deployment name and\n  the endpoint).\n- [ ] **Given** the provider cannot be reached, **Then** the card stays \"Not connected\" and the message says the provider could not be\n  reached, with a Connect button that tries again.\n- [ ] **Given** a successful Connect, **Then** the short test request is counted in the usage of the project (Costs).\n\nUsing the connection\n\n- [ ] **Given** a project connected to Amazon Bedrock, to the Anthropic API or to Azure OpenAI, **When** the user sends a prompt in the\n  builder, **Then** the story streams in the same way for all three, and the line with the tokens shows input, output, cache read\n  and cache write.\n- [ ] **Given** a project connected to Azure OpenAI, **Then** the cache write is 0 and the cache read is what Azure OpenAI reports as\n  cached.\n- [ ] **Given** a project connected to a provider, **When** the user uses \"Improve with AI\", the driver assistant or a diagram, **Then**\n  the same provider answers.\n- [ ] **Given** project A connected to Amazon Bedrock and project B to Azure OpenAI, **Then** each project's requests go to its own\n  provider with its own key.\n- [ ] **Given** no provider is connected, **When** the user sends a prompt, **Then** the message says \"No model is connected for this\n  project. Connect one in Integrations.\"\n\nChanging, switching and removing\n\n- [ ] **Given** a connection, **Then** the card shows the provider, the model and the settings of that provider, and \"Key: entered\n  here, kept by the backend\". No part of the key is shown.\n- [ ] **Given** a connection, **When** the user presses \"Change settings\", **Then** the form of the same provider shows with the\n  current values and the key field empty (\"Leave empty to keep the current key\"). **When** Save with an empty key, **Then** the\n  settings are checked with the key that is kept.\n- [ ] **Given** a connection, **When** the user presses \"Change provider\", **Then** the three options show with the note \"Connecting\n  replaces the current connection (Claude on Amazon Bedrock).\" and a Cancel that keeps everything as it was.\n- [ ] **Given** the user connects another provider with a valid key, **Then** the card shows the new provider and the key and settings of\n  the old one are deleted.\n- [ ] **Given** the user connects another provider and the check fails, **Then** the old connection keeps working and nothing of the\n  new attempt is kept.\n- [ ] **Given** a connection, **When** the user presses \"Remove the key\", **Then** the card says \"Not connected\" and the key and settings\n  are deleted.\n\nThe key stays on the backend\n\n- [ ] **Given** any provider, **Then** the browser sends the key once, to the BWYN backend over its REST API. It never calls a provider,\n  and the key is not in the bundle, in the browser storage or in any response to the browser.\n- [ ] **Given** the status of a connection is asked for, **Then** the answer has the provider, the model, the settings and whether it is\n  connected, and never the key.\n- [ ] **Given** the key is refused or the request fails, **Then** the key is not in the error message nor in the logs.\n- [ ] **Given** the backend, **Then** these calls (the providers and their settings, connect, status and remove) are in its OpenAPI\n  document.\n\n## Business rules and constraints\n\n- There are three providers: Claude on Amazon Bedrock, Claude on the Anthropic API, and Azure OpenAI (the OpenAI models that run in\n  the team's own Azure resource). Signing in with an account is not used.\n- An API key is the only credential, for all three. Azure OpenAI also needs to know where the resource is (the endpoint) and which\n  deployment to call: in Azure the model is reached through a deployment name that the team chose, not through a model id.\n- A project has one connection at a time. Every project has its own, with its own key.\n- The settings that exist depend on the provider: Region only for Bedrock, the endpoint and the deployment name only for Azure OpenAI,\n  and the prompt cache lifetime only for the two Claude providers. Azure OpenAI caches by itself, so there is nothing to choose.\n- Bedrock and the Anthropic API start with a default model that the user can change. Azure OpenAI has none, because the deployment\n  name is the team's own.\n- The endpoint must be an https address. The backend calls only the endpoint that the user entered for that project.\n- \"Connected\" means that the provider answered a short test request (a few tokens) with the key and the settings. Nothing is kept\n  otherwise, and a failed attempt never removes a working connection.\n- The keys stay on the backend. The rest of BWYN (the prompt, the assistants, the diagrams) does not know which provider is used: it\n  asks for a reply and gets the same stream of text, usage and end whichever provider answers.\n- Usage is counted as input, output, cache read and cache write for all providers, so that Costs does not change.\n\n## Out of scope\n\n- More than one provider connected to a project at once, a fallback between them, and choosing a provider per feature.\n- Other providers (OpenAI directly, ChatGPT, Gemini, local models) and signing in with an account instead of a key.\n- A list of the models or deployments of a provider (the user types the model id or the deployment name), and the price in money (Costs counts tokens only).\n- How the keys are encrypted at rest on the backend (a decision for an ADR).\n\n## Tasks\n\n- [ ] Define in the backend one way to check a connection and to stream a reply, with the provider, model and settings of a project, and\n  keep one connection per project.\n- [ ] Move the connect, status and remove of Amazon Bedrock behind it, as REST calls described in the OpenAPI document, without the key\n  in any answer.\n- [ ] Add the Anthropic API provider: check, streaming, prompt cache lifetime and usage.\n- [ ] Add the Azure OpenAI provider: check against the endpoint and deployment, streaming and usage, with the cached tokens as cache read.\n- [ ] Check the endpoint (https, valid address) and give clear errors per provider for a refused key, an unknown model or deployment and an unreachable provider, without the key in them or in the logs.\n- [ ] Make the builder, the assistants and the diagrams use the connected provider of the project, with the message for a project with none.\n- [ ] Replace the Bedrock card with the \"LLM provider\" card: the three options, the fields of each, the checks of the fields, and the\n  connected view.\n- [ ] Add \"Change settings\", \"Change provider\" (the old connection stays until the new one works) and \"Remove the key\".\n- [ ] Test each provider against a fake provider server, so that no real key is needed.\n\n---\n\n# Reference\n\nSpike: `bwyn-frontend/spikes/home-page/LlmIntegrationCard.tsx` (today's card, Amazon Bedrock only), `builder/bedrockClient.ts` (status,\nconnect, disconnect, usage and the stream), `server/bedrock.js` (the dev server that checks and keeps the key per project, and streams)\nand `Settings.tsx` (Costs, which reads the usage and the status). This story builds on `story-improve-with-ai.md`, which moves the\ncall to the model to the Spring Boot backend (ADR 0004, documented with OpenAPI, ADR 0010).",
+  "createdAt": "2026-11-03",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw0ytb4ot2dsmo",
+      "text": "Define the `LlmConnection` aggregate and its value objects (provider type, model id or deployment name, region, endpoint, prompt cache lifetime, max tokens) in `bwyn-core` with no framework dependency (ADR-0017)"
+    },
+    {
+      "id": "mw0ytb4oq1fb9r",
+      "text": "Define the `LlmConnectionRepository` port interface and the `LlmProviderPort` outbound port (check connection, stream reply) in `bwyn-core` (ADR-0017)"
+    },
+    {
+      "id": "mw0ytb4of8dbfc",
+      "text": "Write unit tests for the `LlmConnection` aggregate covering construction, validation rules, and the rule that a failed attempt does not replace a working connection"
+    },
+    {
+      "id": "mw0ytb4oqq5568",
+      "text": "Implement the `ConnectLlmProviderCommand` and `RemoveLlmConnectionCommand` application services in `bwyn-application`, routing through `LlmProviderPort` (ADR-0017)"
+    },
+    {
+      "id": "mw0ytb4olzh34u",
+      "text": "Implement the `GetLlmConnectionStatusQuery` application service in `bwyn-application`; ensure the response DTO never includes the key"
+    },
+    {
+      "id": "mw0ytb4orx1cbd",
+      "text": "Add a Flyway migration in `bwyn-runtime` for the `llm_connection` table (provider, encrypted-key placeholder column, settings columns, project FK) (ADR-0010)"
+    },
+    {
+      "id": "mw0ytb4o3m4oqq",
+      "text": "Implement the `LlmConnectionJpaRepository` outbound adapter in `bwyn-infrastructure` with a JPA entity separate from the domain aggregate; map between them explicitly (ADR-0017, ADR-0011)"
+    },
+    {
+      "id": "mw0ytb4oy64vgf",
+      "text": "Implement the Amazon Bedrock adapter in `bwyn-infrastructure` implementing `LlmProviderPort`: check, stream, and usage (input, output, cache read, cache write)"
+    },
+    {
+      "id": "mw0ytb4o87nqa5",
+      "text": "Implement the Anthropic API adapter in `bwyn-infrastructure` implementing `LlmProviderPort`: check, stream, prompt cache lifetime, and usage"
+    },
+    {
+      "id": "mw0ytb4o2g4ozb",
+      "text": "Implement the Azure OpenAI adapter in `bwyn-infrastructure` implementing `LlmProviderPort`: check against endpoint and deployment, stream, and usage with Azure cached tokens as cache read; cache write is always 0"
+    },
+    {
+      "id": "mw0ytb4odq2ulx",
+      "text": "Add endpoint validation (must start with `https://`, must be a valid URL) in the inbound adapter before the command is dispatched (ADR-0017)"
+    },
+    {
+      "id": "mw0ytb4oz5grpe",
+      "text": "Add error translation in the inbound adapter: refused key, unknown model or deployment, and unreachable provider each produce a distinct error message without the key (ADR-0017)"
+    },
+    {
+      "id": "mw0ytb4olfdmf4",
+      "text": "Expose `POST /projects/{projectId}/llm-connection`, `GET /projects/{projectId}/llm-connection`, `PUT /projects/{projectId}/llm-connection`, and `DELETE /projects/{projectId}/llm-connection` as Spring MVC controllers in `bwyn-rest`, annotated with OpenAPI descriptions (ADR-0014, ADR-0008)"
+    },
+    {
+      "id": "mw0ytb4ofc14ku",
+      "text": "Write integration tests for each provider adapter against a fake provider HTTP server using Testcontainers (ADR-0012), verifying check, stream, and usage without a real key"
+    },
+    {
+      "id": "mw0ytb4o79msjc",
+      "text": "Extend the ArchUnit rules to assert that `LlmProviderPort` is implemented only in `bwyn-infrastructure` and that no key value appears in response DTOs (ADR-0009)"
+    },
+    {
+      "id": "mw0ytb4o0e3yi8",
+      "text": "Add the `LlmConnectionUseCase` interface and its ViewModel (`LlmConnectionViewModel`) in the frontend interface-adapter layer, injected via Inversify (ADR-0006, ADR-0007)"
+    },
+    {
+      "id": "mw0ytb4ob6m7rj",
+      "text": "Replace the existing Bedrock card in the frontend `ui` layer with the \"LLM provider\" card: three provider options, per-provider fields with defaults and placeholders, and client-side field validation (ADR-0007, AE-0002)"
+    },
+    {
+      "id": "mw0ytb4orjhxjr",
+      "text": "Implement the connected view: chip \"Connected\", provider and model or deployment summary line, no key field, and \"Change settings\", \"Change provider\", and \"Remove the key\" actions"
+    },
+    {
+      "id": "mw0ytb4opeh7h5",
+      "text": "Implement \"Change settings\" flow: form pre-filled with current non-key values, empty key field with hint, and save that validates against the stored key when the key field is left empty"
+    },
+    {
+      "id": "mw0ytb4o75ukjz",
+      "text": "Implement \"Change provider\" flow: show all three options with the replacement warning and a Cancel that restores the current state; replace the connection only on a successful check"
+    },
+    {
+      "id": "mw0ytb4obav6qb",
+      "text": "Wire the builder, \"Improve with AI\", driver assistant, and diagram features to call the project's connected provider port; display \"No model is connected for this project. Connect one in Integrations.\" when none is set"
+    },
+    {
+      "id": "mw0ytb4od1yhnj",
+      "text": "Add ArchUnitTS rules asserting that `react-router-dom` and provider-specific imports appear only in the `ui` layer and that the key is never referenced outside the use-case layer (ADR-0016, AE-0003)"
+    },
+    {
+      "id": "mw0ytb4o19cdxk",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    }
+  ]
+}
