@@ -1,0 +1,77 @@
+classDiagram
+  direction LR
+
+  class ImproveWithAIProps:::component {
+    <<Interface>>
+    +projectId: string
+    +currentText: string
+    +noun: string
+    +quickActions: string[]
+    +systemInstructions: string
+    +onApplyProposal: (text: string) => void
+  }
+
+  class ImproveWithAI:::component {
+    <<Component>>
+    +render() ReactElement
+  }
+
+  class useImproveWithAI:::component {
+    <<Component>>
+    +conversation: Message[]
+    +isStreaming: boolean
+    +proposedText: string
+    +usage: UsageInfo
+    +error: string
+    +send(instruction: string) void
+    +stop() void
+    +retry() void
+    +applyProposal() void
+  }
+
+  class ImproveTextUseCase:::component {
+    <<Interface>>
+    +stream(command: ImproveTextCommand) AsyncIterable
+  }
+
+  class ImproveTextCommand:::component {
+    <<Component>>
+    +projectId: string
+    +currentText: string
+    +conversation: Message[]
+    +instruction: string
+    +systemInstructions: string
+  }
+
+  class Message:::component {
+    <<Component>>
+    +role: string
+    +content: string
+  }
+
+  class UsageInfo:::component {
+    <<Component>>
+    +inputTokens: number
+    +outputTokens: number
+    +cacheReadTokens: number
+    +cacheWriteTokens: number
+  }
+
+  class ImproveApiClient:::component {
+    <<Component>>
+    +streamImprovement(command: ImproveTextCommand) AsyncIterable
+  }
+
+  ImproveWithAI --> useImproveWithAI : Uses hook
+  ImproveWithAI ..> ImproveWithAIProps : Accepts
+  useImproveWithAI --> ImproveTextUseCase : Invokes
+  useImproveWithAI ..> ImproveTextCommand : Creates
+  useImproveWithAI ..> Message : Manages
+  useImproveWithAI ..> UsageInfo : Reads
+  ImproveTextUseCase ..> ImproveTextCommand : Receives
+  ImproveApiClient ..|> ImproveTextUseCase : Implements
+  ImproveApiClient ..> ImproveTextCommand : Sends to backend
+
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
