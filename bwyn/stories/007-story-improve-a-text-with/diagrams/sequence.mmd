@@ -1,0 +1,31 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant editDialog as "Edit Principle Dialog<br/>[Component: React/TypeScript]"
+    participant improvePanel as "ImproveWithAI<br/>[Component: React/TypeScript]"
+    participant hook as "useImproveWithAI<br/>[Component: TypeScript]"
+    participant apiClient as "AI API Client<br/>[Component: TypeScript]"
+    participant restAdapter as "Improve Controller<br/>[Component: Spring MVC]"
+    participant handler as "StreamTextImprovementCommandHandler<br/>[Component: Spring Boot]"
+    participant llmPort as "LLM Outbound Port<br/>[Interface]"
+  end
+  participant llmProvider as "LLM Provider<br/>[External Software System]"
+
+  user->>editDialog: Opens Edit Principle dialog
+  user->>improvePanel: Presses "Improve with AI"
+  improvePanel->>hook: Sends instruction and current text
+  hook->>apiClient: Calls /improve with project id, instruction, conversation, name, description, current text
+  apiClient->>restAdapter: POST /improve (streamed request)
+  restAdapter->>handler: Invokes StreamTextImprovementCommandHandler
+  handler->>llmPort: Delegates streaming to outbound port
+  llmPort->>llmProvider: Calls configured model provider
+  llmProvider-->>llmPort: Streams text chunks
+  llmPort-->>handler: Streams tokens back
+  handler-->>restAdapter: Streams text, usage, end chunks
+  restAdapter-->>apiClient: Streams newline-delimited JSON chunks
+  apiClient-->>hook: Delivers text chunks and usage object
+  hook-->>improvePanel: Updates streaming state and proposed text
+  improvePanel-->>user: Shows streamed reply and "Use this text" button
+  user->>improvePanel: Presses "Use this text"
+  improvePanel->>editDialog: Calls apply-proposal callback
+  editDialog-->>user: Replaces Description field with proposed text
