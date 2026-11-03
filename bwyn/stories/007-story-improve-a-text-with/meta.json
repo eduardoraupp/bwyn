@@ -1,0 +1,87 @@
+{
+  "title": "Improve a text with AI",
+  "prompt": "# Story: Improve a text with AI\n\n- **Story**: XXX-improve-with-ai\n- **Created**: 2026-11-03\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want an \"Improve with AI\" button in the dialog where I edit a principle that asks the AI for a clearer\ntext and lets me use its proposal, so that I write better principles without leaving the dialog. The same button must be usable\nin any other dialog or screen that edits a text.\n\n## Acceptance tests\n\nThe button in the Edit principle dialog\n\n- [ ] **Given** the Edit principle dialog, **Then** a collapsed \"Improve with AI\" button shows under the Description.\n- [ ] **Given** the button, **When** the user presses it, **Then** a panel opens with the title \"Improve with AI\", a Hide (X)\n  button, four quick actions (\"Improve this\", \"Make it actionable\", \"Ask me questions\", \"Shorten\"), a field with the\n  placeholder \"Ask for a change, for example: focus on security\", and a Send button that is disabled while the field is empty.\n- [ ] **Given** the user hides the panel and opens it again, **Then** the conversation and what was typed in the dialog are still there.\n\nAsking and using the answer\n\n- [ ] **Given** the panel, **When** the user presses \"Shorten\", **Then** it shows as the user's message, \"Thinking...\" shows until\n  the first text arrives, the reply streams in, and every quick action is disabled until it ends.\n- [ ] **Given** the user types \"focus on security\" and presses Enter, **Then** the instruction is sent, and the dialog is not\n  submitted.\n- [ ] **Given** a reply with new text, **Then** it shows a short comment and a \"Proposed text\" card with a \"Use this text\" button.\n- [ ] **Given** a proposal, **When** the user presses \"Use this text\", **Then** it replaces the Description only, not the Name, the\n  button reads \"In the editor\" and is disabled, and nothing is saved until the user presses Save.\n- [ ] **Given** a reply that is still streaming, or was cut off, **Then** \"Use this text\" is disabled, and a cut-off one says\n  \"Incomplete, so it cannot be used.\"\n- [ ] **Given** a reply is streaming, **When** the user presses Stop, **Then** the text received so far stays, it cannot be used,\n  and Send comes back.\n- [ ] **Given** a reply, **Then** a line shows its tokens: input, output, cache read and cache write.\n\nWhen the request fails\n\n- [ ] **Given** the backend cannot be reached or answers with an error, **Then** the error shows with a Retry button, and Retry\n  sends the last instruction again without adding a second user message.\n- [ ] **Given** no model is connected for the project, **Then** the error says so and where to connect it (\"Connect the model in\n  Integrations.\").\n\nThe connection to the model goes through the backend\n\n- [ ] **Given** the user asks for an improvement, **Then** the browser calls only the BWYN backend over its REST API. It never\n  calls the model provider, and no key or token is in the bundle or in any response to the browser.\n- [ ] **Given** the call, **Then** it carries the project, the instruction, the conversation so far, and the name and the text as\n  they are in the dialog right now. The reply comes back as a stream of text, then the usage, then the end, or an error.\n- [ ] **Given** a project with no connection to the model, **Then** the backend answers with a clear error status and a message, and\n  does not call the model.\n- [ ] **Given** the user closes the dialog while a reply streams, **Then** the call is cancelled and the backend stops asking the model.\n- [ ] **Given** the backend, **Then** this API is described in its OpenAPI document.\n\nThe button is reusable\n\n- [ ] **Given** a second screen (the Drivers dialog) that uses the button with its own noun \"driver\", its own quick actions and its\n  own instructions, **Then** the panel shows those quick actions, the proposal replaces that screen's text, and nothing of the\n  principle dialog is shown.\n- [ ] **Given** two dialogs that use the button, **Then** each keeps its own conversation, and neither sees the other's.\n- [ ] **Given** a screen that uses the button, **Then** it only gives the button what it needs (the project, the current text, the\n  noun, the quick actions, the instructions for the AI and what to do with a proposal). The button does not know about principles.\n\n## Business rules and constraints\n\n- The AI only suggests. It never saves, and it never changes the Name.\n- The reply has a short comment (at most three sentences, or at most three short questions) and, only when the AI proposes new text, the\n  proposed text.\n- The AI keeps the user's intent, language and facts, invents nothing, and prefers plain, specific, positive wording. It never\n  contradicts a non-negotiable practice. If the text does, its comment says so.\n- The AI is given, as stable (cached) context, the practices and the other principles of the project, never the one being edited. The\n  name and the text as they are in the dialog travel with each instruction.\n- The conversation belongs to the open dialog and is lost when it closes.\n- The keys of the model stay on the backend. Every project has its own connection to the model, set in Integrations.\n- The button and the panel are one shared component. What is specific to a screen (instructions, context, quick actions, noun) is given\n  by that screen, never written inside the component.\n- Before this story the button called a dev server directly. That call is replaced, not kept next to the new one.\n\n## Out of scope\n\n- Putting the button in other screens (Drivers, ADRs, Architecture): each is its own story. This story proves it can be reused with a\n  second, test screen only.\n- Connecting the model, and the token totals of a project (Integrations).\n- Keeping the conversation after the dialog closes, and choosing the model in the dialog.\n\n## Tasks\n\n- [ ] Describe the REST call for the assistant in the OpenAPI document: request, streamed reply, usage, end and error.\n- [ ] Add the backend endpoint that checks the project's connection, calls the model with the context cached, and streams the reply.\n- [ ] Return a clear error when the project has no connection, and stop the model call when the browser cancels.\n- [ ] Replace the direct dev-server call in the frontend with a client of the backend REST API, with the same stream of text, usage and end.\n- [ ] Turn the button and its panel into one shared component that gets the project, text, noun, quick actions, instructions and what to\n  do with a proposal from the screen using it.\n- [ ] Use the shared component in the Edit principle dialog, passing the principle's instructions, quick actions and context.\n- [ ] Use the shared component in one more screen in a test, to prove that nothing of the principle dialog leaks into it.\n\n---\n\n# Reference\n\nSpike: `bwyn-frontend/spikes/home-page/DriverAssistant.tsx` (the button and the panel), `useDriverAssistant.ts` (the conversation),\n`builder/bedrockClient.ts` (today's call to the dev server `/api/draft`) and `server/bedrock.js` (the dev server that keeps the keys).\nThe principle's instructions and quick actions are in `principlePrompts.ts`. The backend is Spring Boot (ADR 0004) and documents its\nAPI with OpenAPI (ADR 0010).\n\n\nThere is no need for Query/Command, You can directly create an ApplicationService with the correct prefix for the use case here, you decide the best one.\n\nThis new *ApplicatioService application (use case) class is the layer in between the rest api and the outbound (going to the LLM).\n\nas task make this component as a reusable component",
+  "createdAt": "2026-11-03",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw16d5i0whwbcv",
+      "text": "Define the streamed-response format (text chunk, usage, end, error) and document the `/improve` endpoint in the OpenAPI specification with its request schema, response stream, and error responses (ADR-0014)."
+    },
+    {
+      "id": "mw16d5i0609fd5",
+      "text": "Create the `TextImprovementApplicationService` in `bwyn-application`, with a port interface in `bwyn-core` for the outbound LLM call; the service checks the project's model connection, builds the cached context, and delegates streaming to the outbound port (ADR-0017)."
+    },
+    {
+      "id": "mw16d5i01slegk",
+      "text": "Implement the outbound LLM adapter in `bwyn-infrastructure` that calls the configured model provider and streams tokens back through the port."
+    },
+    {
+      "id": "mw16d5i0mouljf",
+      "text": "Return a typed error from `TextImprovementApplicationService` when the project has no model connection, and propagate it as the documented error response."
+    },
+    {
+      "id": "mw16d5i0s0ali7",
+      "text": "Implement the Spring MVC inbound adapter in `bwyn-rest` that accepts the request, invokes `TextImprovementApplicationService`, streams the response, and cancels the model call when the client disconnects (ADR-0008, ADR-0014)."
+    },
+    {
+      "id": "mw16d5i0r41q3q",
+      "text": "Replace the existing `bedrockClient.ts` dev-server call with a typed frontend API client that calls the BWYN backend `/improve` endpoint and surfaces the same stream of text chunks, usage, and end or error events (ADR-0005, ADR-0015)."
+    },
+    {
+      "id": "mw16d5i07kq8bg",
+      "text": "Build the shared `ImproveWithAI` component (button + panel) in the `ui` layer, accepting project id, current text, noun, quick actions, system instructions, and an apply-proposal callback as its only inputs; wire conversation state through the `useImproveWithAI` hook in the `interface-adapters` layer (ADR-0007)."
+    },
+    {
+      "id": "mw16d5i0dtcr9i",
+      "text": "Integrate the shared component into the Edit principle dialog, passing principle-specific instructions, quick actions, and the apply-to-description callback."
+    },
+    {
+      "id": "mw16d5i0mb7iaj",
+      "text": "Add a second, self-contained test screen that mounts the shared component with the noun \"driver\" and its own quick actions, verifying that no principle-specific logic leaks into the component."
+    },
+    {
+      "id": "mw16d5i0725qvx",
+      "text": "Write Jest unit tests for `useImproveWithAI`: streaming state transitions, Stop cancellation, Retry behaviour, and the \"no model connected\" error path (ADR-0005)."
+    },
+    {
+      "id": "mw16d5i0lv8uf3",
+      "text": "Write a JUnit unit test for `TextImprovementApplicationService` using a test-double outbound port (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mw16d5i0sb7h0i",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mw16e19itd98qk",
+      "text": "Define the streamed-response format (text chunk, usage, end, error) and document the `/improve` endpoint in the OpenAPI specification with its request schema (including the current text field), response stream, and error responses (ADR-0014)."
+    },
+    {
+      "id": "mw16e19icbzo57",
+      "text": "Replace the existing `bedrockClient.ts` dev-server call with a typed frontend API client that calls the BWYN backend `/improve` endpoint, passing the current text at the moment of sending, and surfaces the same stream of text chunks, usage, and end or error events (ADR-0005, ADR-0015)."
+    },
+    {
+      "id": "mw16ijpppstsf0",
+      "text": "Review any existing `StreamLlmReplyCommandHandler` and remove or replace it so that no orphaned handler remains alongside the new one introduced by this story."
+    },
+    {
+      "id": "mw16ijpp2cg24j",
+      "text": "Create the `StreamTextImprovementCommandHandler` in `bwyn-application`, with a port interface in `bwyn-core` for the outbound LLM call; the handler checks the project's model connection, builds the cached context, and delegates streaming to the outbound port (ADR-0017)."
+    },
+    {
+      "id": "mw16ijpppuipeb",
+      "text": "Return a typed error from `StreamTextImprovementCommandHandler` when the project has no model connection, and propagate it as the documented error response."
+    },
+    {
+      "id": "mw16ijpp56mrfa",
+      "text": "Implement the Spring MVC inbound adapter in `bwyn-rest` that accepts the request, invokes `StreamTextImprovementCommandHandler`, streams the response, and cancels the model call when the client disconnects (ADR-0008, ADR-0014)."
+    },
+    {
+      "id": "mw16ijppron1rw",
+      "text": "Write a JUnit unit test for `StreamTextImprovementCommandHandler` using a test-double outbound port (ADR-0009, ADR-0017)."
+    }
+  ]
+}
