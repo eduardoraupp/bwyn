@@ -98,6 +98,18 @@
     {
       "id": "mw0ytb4o19cdxk",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    },
+    {
+      "id": "mw14675d4aok2q",
+      "text": "Add endpoint validation (must start with `https://`, must be a valid URL) in the inbound adapter before the command is dispatched (ADR-0017) (Done in the domain value object ProviderSettings, before any provider is contacted; the controller maps it to 400.)"
+    },
+    {
+      "id": "mw14675dxkpyie",
+      "text": "Write integration tests for each provider adapter against a fake provider HTTP server using Testcontainers (ADR-0012), verifying check, stream, and usage without a real key (Done with an in-process fake HTTP server; Postgres tests use Testcontainers.)"
+    },
+    {
+      "id": "mw14675d2f3xn1",
+      "text": "Wire the builder, \"Improve with AI\", driver assistant, and diagram features to call the project's connected provider port; display \"No model is connected for this project. Connect one in Integrations.\" when none is set (Done as the backend hook StreamLlmReplyCommandHandler, which gives the no-connection message; the builder, Improve with AI, assistants and diagrams are not in the production frontend yet.)"
     }
   ]
 }
