@@ -78,6 +78,46 @@
     {
       "id": "mw2lo2zq45a3pl",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    },
+    {
+      "id": "mw2nx0fihwkzdc",
+      "text": "Add a `Driver` entity type and a `DriverRepository` port interface in `bwyn-core` for persisting per-project driver texts and custom driver records (ADR-0017, Architecture) (Done as a `Driver` record with identity, name, text, custom and position, and a `DriverRepository` with `save` and `findByProjectId`, in `com.bwyn.driver.domain`.)"
+    },
+    {
+      "id": "mw2nx0firwg1af",
+      "text": "Add a Flyway migration script that creates the `driver` table with columns for project id, driver identity, text, and display order (ADR-0010) (V8__create_driver_table.sql: project id, identity, name, text, custom flag and position; primary key is project and identity. There is no back-fill: no drivers were stored before this story.)"
+    },
+    {
+      "id": "mw2nx0fivw553t",
+      "text": "Write a `GetDriversQuery` and its handler in `bwyn-application` that returns the fixed drivers merged with per-project texts and the project's custom drivers, in display order (ADR-0017, Architecture) (Deviation: the handler returns only what the project stores. The fixed drivers are merged in by the frontend use case, because the story keeps the fixed list in the frontend entity layer.)"
+    },
+    {
+      "id": "mw2nx0fisjtp5o",
+      "text": "Add a `GET /api/projects/{projectId}/drivers` endpoint in `bwyn-rest` annotated with OpenAPI annotations, returning the merged driver list (ADR-0014, ADR-0017, Architecture) (Returns only the stored drivers, for the same reason; the fixed ones are listed once their text is written.)"
+    },
+    {
+      "id": "mw2nx0fiks2ept",
+      "text": "Write a Testcontainers integration test for the `DriverRepository` adapter confirming read and write against a real PostgreSQL instance (ADR-0012) (DriverPersistenceIT, a Spring Boot test with Testcontainers, covers the adapter, the endpoint, the migration and the OpenAPI entry.)"
+    },
+    {
+      "id": "mw2nx0fiis9ddm",
+      "text": "Write a use case in the frontend use-case layer that calls the drivers endpoint and maps the response to driver view models (ADR-0007, Architecture) (GetDriversUseCase merges the stored drivers with FIXED_DRIVERS.)"
+    },
+    {
+      "id": "mw2nx0fjqmf5mq",
+      "text": "Register the Drivers route in the top-level route configuration and add \"Drivers\" to the left-bar menu (ADR-0020) (Already in place from the navigation story: the \"drivers\" page id, its menu entry and the /:pageId route; this story only gives that page its content.)"
+    },
+    {
+      "id": "mw2nx0fjfx04wr",
+      "text": "Add a read-only `drivers/<identity>.md` file entry per driver in the Builder file list, with the note \"Read-only here. Edit this driver from the Drivers page.\" (NOT DONE: the production Builder is a placeholder; see the criterion on the Builder above.)"
+    },
+    {
+      "id": "mw2nx0fjbljuyl",
+      "text": "Ensure that when a story prompt is built, only drivers linked by that story are included in the payload sent to the model (NOT DONE: the production Builder has no prompt building yet.)"
+    },
+    {
+      "id": "mw2nx0fjh5k5xb",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build) (Not met yet: the full build took about 10.5 minutes in the last measurement.)"
     }
   ]
 }
