@@ -76,3 +76,33 @@ As a team member, I want one screen with the five fixed drivers and the drivers 
 - [ ] Write Jest unit tests for the fixed-driver constant, the `DriversViewModel`, and the `DriverCard` component (ADR-0005)
 - [ ] Extend ArchUnitTS rules to verify that the fixed-driver constant resides in the entity layer and that `DriversViewModel` resides in the interface-adapter layer (ADR-0016)
 - [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+
+## Files of the spike
+
+In `bwyn-frontend/spikes/home-page/`:
+
+| File | What it holds |
+|---|---|
+| `Drivers.tsx` | The screen: `Drivers` (what is open: a fixed driver, a custom one, or a new one), `DriverCard`, and `DriverModal`, the one dialog for add, edit and remove (`nameEditable`, `onRemove`, `confirmRemove`, the dirty check, the closing rules). It also sets up the sync of all drivers as one (`drivers:project`) and blocks it while a dialog is open. |
+| `DriverAssistant.tsx` | The "Improve with AI" button and its panel: quick actions, streaming reply, "Use this text", Stop, Retry. Props let other screens give it their own `system`, `noun` and `actions` (principles do). |
+| `useDriverAssistant.ts` | The conversation with the model for one dialog: turns, streaming, status, error, usage, send, retry, stop. |
+| `driverPrompts.ts` | `DRIVER_SYSTEM_PROMPT`, `buildDriverContext` (the other drivers and the ADRs), `buildDriverTurn` (name, meaning, current text, instruction), `QUICK_ACTIONS` and `parseReply` (the `---DRIVER---` marker that separates the comment from the proposal). |
+| `useDrivers.ts` | The drivers of a project, kept in the browser: `texts` of the fixed drivers and the `custom` list, with `saveFixed`, `addCustom` (identity from `slugify(name, 6)`, "-2" when taken), `saveCustom`, `removeCustom` and `importDrivers`. |
+| `data.ts` | `FIXED_DRIVERS` (the five, with meaning, icon and tags) and the "Drivers" menu entry (title and description). |
+| `Sections.tsx` | Mounts `Drivers` for the "drivers" section. |
+| `icons.tsx` | The icons of the cards and buttons. |
+| `builder/generate.ts` | `driverMarkdown` and `DRIVER_PLACEHOLDER` (how a driver is written as a file) and `slugify`. |
+| `builder/catalog.ts` | Turns every driver, written or not, into a read-only `driver:<identity>` entry (`drivers/<identity>.md`) that stories can link to. |
+| `builder/FileView.tsx` | The note "Read-only here. Edit this driver from the Drivers page." |
+| `builder/prompt.ts`, `builder/linkedDocs.ts` | A driver goes to the model only when linked, in full. |
+| `builder/repoFiles.ts`, `builder/git/*` | The files `drivers/<identity>.md` (empty drivers left out), reading them back, and the sync scope of all drivers. |
+| `builder/bedrockClient.ts`, `server/bedrock.js` | Today's call to the model, through the dev server. `story-improve-with-ai.md` replaces it with the backend REST API. |
+
+## Spike details worth keeping in mind
+
+- Escape closes the dialog even with unsaved text, while a click outside does not.
+- The add dialog's subtitle ("Custom drivers sit next to the fixed ones...") is also handed to the assistant as the driver's "Meaning".
+  Story 2 asks for the meaning only for fixed drivers, which have one.
+- A fixed driver's text can be cleared and saved; the card then shows the italic prompt.
+- A name made only of signs (such as "???") passes the name check and gets the identity "untitled". Nothing in these stories decides
+  about it.
