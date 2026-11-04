@@ -1,0 +1,67 @@
+{
+  "title": "Remove a custom driver",
+  "prompt": "# Story 4: Remove a custom driver, inside its edit dialog\n\n- **Story**: XXX-remove-driver\n- **Created**: 2026-11-04\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to remove a custom driver the team no longer needs, after a confirmation, so that the screen, the stories that\nlinked to it and the prompts only carry drivers that still apply.\n\n## Acceptance tests\n\nStarting a removal\n\n- [ ] **Given** a custom driver was opened from its card, **Then** a \"Remove\" button (red, with a trash icon) is on the left of the dialog's\n  footer, opposite Cancel and Save.\n- [ ] **Given** the dialog of a fixed driver, **Then** it has no \"Remove\" button, because fixed drivers cannot be removed.\n- [ ] **Given** the dialog to add a driver, **Then** it has no \"Remove\" button, because there is nothing to remove yet.\n- [ ] **Given** \"Remove\" was pressed, **Then** nothing is deleted yet: \"Remove\" is replaced by two buttons, \"Confirm remove\" and \"Keep\".\n- [ ] **Given** the driver is linked from other documents, **When** \"Remove\" is pressed, **Then** a line next to the buttons says how many,\n  for example \"Linked from 2 stories and 1 enabler. Removing it also removes those links.\"\n\nConfirming and keeping\n\n- [ ] **Given** the two buttons, **When** the user presses \"Keep\", **Then** \"Remove\" comes back and the driver is untouched.\n- [ ] **Given** the two buttons, **When** the user presses \"Confirm remove\", **Then** the driver is deleted, the dialog closes, its card is\n  gone, the other cards stay in the same order and the \"Add a driver\" card is still last.\n- [ ] **Given** the user typed changes before pressing \"Confirm remove\", **Then** they are discarded together with the driver and nothing\n  is asked about them.\n- [ ] **Given** the confirmation is showing, **When** the user presses Cancel, the Close (X) button or Escape, **Then** the dialog closes and\n  the driver is untouched.\n- [ ] **Given** the user pressed \"Remove\", then closed the dialog without confirming, **When** the driver is opened again, **Then** the\n  dialog shows \"Remove\" again, not the confirmation.\n- [ ] **Given** a driver was removed, **Then** it cannot be brought back from BWYN: there is no undo.\n\nAfter removing\n\n- [ ] **Given** stories and enablers that linked to the removed driver, **Then** the link is taken away from each of them, and the\n  Builder no longer lists `drivers/<identity>.md`.\n- [ ] **Given** a removed driver \"Compliance\", **When** a new driver named \"Compliance\" is added later, **Then** it is a new driver with the\n  identity \"compliance\" again (no \"-2\"), and no story is linked to it.\n- [ ] **Given** a driver with text was removed, **Then** the next story, enabler or diagram that is drafted is not given it, and the AI of\n  another driver's dialog does not have it in its context.\n- [ ] **Given** a removed driver was already synced, **Then** its file is not deleted from the repository, and the removal is not uploaded.\n\n## Business rules and constraints\n\n- Only a custom driver can be removed, and only from inside its edit dialog. Removing needs two deliberate steps: \"Remove\", then \"Confirm\n  remove\". One click never deletes.\n- Removing is permanent in BWYN and affects only this project's drivers.\n- A removed driver leaves no link behind: stories and enablers that linked to it lose the link, in the same way as when a story or an\n  enabler is removed. Otherwise a new driver with the same identity would silently inherit the old links.\n- Removing does not touch the repository. BWYN does not delete files by syncing: a file that is only missing here is left alone.\n- While the dialog is open, syncing is blocked (\"Save or close the driver first\"), so a removal never happens in the middle of a sync.\n\n## Out of scope\n\n- Deleting the driver's file from the repository and remembering the removal so that the file does not come back (see the note below), an\n  undo, removing several drivers at once, archiving, and removing a fixed driver (clearing its text is editing, story 3).\n\n## Tasks\n\n- [ ] Show \"Remove\" in the edit dialog of a custom driver only, on the left of the footer.\n- [ ] Replace it with \"Confirm remove\" and \"Keep\" when pressed, show how many documents link to the driver, and reset that when the dialog opens again.\n- [ ] Delete the driver by its identity, close the dialog, and take its link away from every story and enabler.\n- [ ] Keep the removed driver out of the Builder's files, the prompts and the AI context.\n- [ ] Tell the page that no dialog is open any more, so that syncing is allowed again.\n\nUseCommand hadnler and queryhandler instead of suffix usecase for java calsses",
+  "createdAt": "2026-11-04",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw2m1zq8s4k6jl",
+      "text": "Add a `RemoveDriverCommandHandler` in `bwyn-application` that accepts a driver identity, deletes the driver, and strips its link from every story and enabler that references it (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2m1zq85w9i1s",
+      "text": "Add a `GetDriverLinkCountQueryHandler` in `bwyn-application` that returns the count of stories and enablers linked to a given driver identity, broken down by document type (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2m1zq85hy0te",
+      "text": "Add the outbound port interfaces for driver removal and link-count query in `bwyn-core`; implement them in `bwyn-infrastructure` (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2m1zq8cy1dve",
+      "text": "Add a Flyway migration script that supports the removal operation at the persistence level (ADR-0010)"
+    },
+    {
+      "id": "mw2m1zq8jv4mzh",
+      "text": "Expose a `DELETE /api/projects/{projectId}/drivers/{driverIdentity}` endpoint in `bwyn-rest`, annotated with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014, Architecture)"
+    },
+    {
+      "id": "mw2m1zq8xzcrkg",
+      "text": "Add a `RemoveDriverUseCase` interface and a `removeDriver` method to the driver ViewModel in the interface-adapters layer, injected via Inversify (ADR-0006, ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2m1zq82zxgs2",
+      "text": "Extend the driver edit dialog React component (ui layer) to show the \"Remove\" button only for custom drivers, replacing it with \"Confirm remove\" and \"Keep\" on press, and displaying the link-count line when links exist (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2m1zq8skdtnd",
+      "text": "Reset the confirmation state to \"Remove\" each time the dialog is opened, and ensure Cancel, Close (X), and Escape close the dialog without deleting (ADR-0007)"
+    },
+    {
+      "id": "mw2m1zq8r8brr0",
+      "text": "On \"Confirm remove\", call the ViewModel's `removeDriver`, close the dialog, remove the card from the drivers screen, and notify the page that no dialog is open so syncing is unblocked (ADR-0007)"
+    },
+    {
+      "id": "mw2m1zq8t0p5nz",
+      "text": "Exclude removed drivers from the Builder file list, the AI prompt context, and the AI context passed to other driver dialogs (Architecture)"
+    },
+    {
+      "id": "mw2m1zq8nsabqk",
+      "text": "Write unit tests for `RemoveDriverCommandHandler` and `GetDriverLinkCountQueryHandler` using test doubles for the outbound ports (ADR-0009)"
+    },
+    {
+      "id": "mw2m1zq8un9nkc",
+      "text": "Write a ViewModel Jest unit test verifying the two-step confirmation flow and the reset-on-open behaviour (ADR-0005, ADR-0007)"
+    },
+    {
+      "id": "mw2m1zq8kr0ekt",
+      "text": "Write a React component Jest test verifying that the \"Remove\" button is absent for fixed drivers and for the add-driver dialog (ADR-0005)"
+    },
+    {
+      "id": "mw2m1zq82vlpz3",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
