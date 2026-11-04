@@ -75,6 +75,54 @@
     {
       "id": "mw2ly05rueddxd",
       "text": "Write a JUnit unit test for `AddCustomDriverCommandHandler` using a test-double repository port (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mw2o384hl144f3",
+      "text": "Add an `AddCustomDriverCommandHandler` in `bwyn-application` that derives the identity from the name (first six words, lower-case, `-2`/`-3` suffix when taken), persists the driver, and returns the assigned identity (ADR-0017). (Done as `AddCustomDriverCommandHandler`, which returns a `DriverIdentity`.)"
+    },
+    {
+      "id": "mw2o384h9qdx1k",
+      "text": "Add a Flyway migration in `bwyn-runtime` for the `custom_driver` table (`id`, `project_id`, `identity`, `name`, `description`) (ADR-0010). (Deviation: no new `custom_driver` table or migration. The `driver` table from story 009 already holds custom drivers, so this story reuses it.)"
+    },
+    {
+      "id": "mw2o384h46mlr8",
+      "text": "Implement the outbound JPA repository adapter in `bwyn-infrastructure` for custom drivers, including the uniqueness query used by the identity-derivation logic (ADR-0011, ADR-0017). (Done as `DriverRepository.addCustom` in the existing JPA adapter: one insert-only statement that never replaces a driver, so two simultaneous adds of one name get different identities.)"
+    },
+    {
+      "id": "mw2o384h35kxk4",
+      "text": "Expose a `POST /projects/{projectId}/drivers` endpoint in `bwyn-rest`, annotated with OpenAPI metadata, that invokes `AddCustomDriverCommandHandler` and returns the created driver's identity (ADR-0008, ADR-0014). (The path is `POST /api/projects/{projectId}/drivers`, next to the `GET` of story 009.)"
+    },
+    {
+      "id": "mw2o384hv8z4pn",
+      "text": "Add the `AddCustomDriverCommand` and `DriverIdentity` value object to `bwyn-core`, with the identity-derivation rule expressed as a pure domain function (ADR-0017). (`AddCustomDriverCommand` is in `bwyn-application`, and `DriverIdentity` with `FixedDrivers` in `bwyn-core`; `DriverIdentity.derive` is a pure function.)"
+    },
+    {
+      "id": "mw2o384hy3nu82",
+      "text": "Build the \"Add a driver\" dialog in the `ui` layer: Name field (auto-focused), seven-row Description field, dirty-state guard on \"Add driver\", name-empty validation message, closing rules (Cancel / X / Escape clears state; outside-click only when pristine) (ADR-0007). (`AddDriverDialog` in the ui layer, with its state in `DriversViewModel`.)"
+    },
+    {
+      "id": "mw2o384hftd1js",
+      "text": "Place the \"Add a driver\" card at the end of the custom-driver list on the Drivers screen and wire it to open the dialog (ADR-0007). (The \"Add a driver\" card already existed from story 009; this story wires it to the dialog.)"
+    },
+    {
+      "id": "mw2o384hwssbxs",
+      "text": "Write the driver-assistant system prompt, define the four quick actions (\"Improve this\", \"Make it measurable\", \"Ask me questions\", \"Shorten\"), and implement the context builder (other drivers + ADRs) and the per-turn payload (name, current description, instruction) in the `use-cases` layer (ADR-0007). (Deviation: the system instructions and quick actions are in `DriverImproveWithAI.tsx`, like the principle ones, and the backend builds the cached context of the other drivers. There are no ADRs in the product yet, so none are in it.)"
+    },
+    {
+      "id": "mw2o384hyecyzc",
+      "text": "Mount the shared `ImproveWithAI` component (story 007) in the dialog, passing the noun \"driver\", the four quick actions, the system instructions, the context builder, and the apply-to-description callback; verify the Name field is never touched by the component (ADR-0007). (The shared component gained an optional `contextKind` prop, which the dialog sets to \"drivers\"; nothing in the component names a driver.)"
+    },
+    {
+      "id": "mw2o384haa6a5p",
+      "text": "Expose the page-level \"dialog open\" flag so that the sync mechanism blocks and pending downloads wait while the dialog is open. (`DriversState.dialogOpen` is exposed. Sync is still a disabled button in this story, so nothing needs blocking yet.)"
+    },
+    {
+      "id": "mw2o384h95gnwh",
+      "text": "Write Jest unit tests for the identity-derivation logic (six-word rule, suffix increment, fixed-driver collision) (ADR-0005). (Deviation: the identity is derived by the backend, so the rule is tested in JUnit by `DriverIdentityTest`; Jest tests the validation of a new driver.)"
+    },
+    {
+      "id": "mw2o384hafqaik",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build). (Not met yet: the full build took about 10.5 minutes in the last measurement.)"
     }
   ]
 }
