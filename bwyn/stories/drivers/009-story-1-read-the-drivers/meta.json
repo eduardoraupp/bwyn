@@ -1,0 +1,83 @@
+{
+  "title": "Read the drivers of my project on one screen",
+  "prompt": "# Story 1: Read the drivers of my project on one screen\n\n- **Story**: XXX-read-drivers\n- **Created**: 2026-11-04\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want one screen with the five fixed drivers and the drivers my team added, each with what was written, so that\nI can see at a glance what steers our decisions and stories, and which drivers still need to be written.\n\n## Acceptance tests\n\nThe screen\n\n- [ ] **Given** a project, **When** the user chooses \"Drivers\" in the menu, **Then** the page is titled \"Drivers\" with the description\n  \"The forces that steer decisions. Describe each driver and save it: they feed the skills used by the builder.\"\n- [ ] **Given** the page, **Then** the sentence \"Drivers are kept in the repository as drivers/ files. Sync uploads what you changed as a\n  pull request and downloads what changed on the base branch.\" shows, with a Sync button on its right (its own story).\n- [ ] **Given** the page, **Then** the drivers are cards in a grid of two columns on a wide screen and one on a narrow screen.\n- [ ] **Given** the page, **Then** it can be read with no model connected and no repository connected.\n\nFixed drivers\n\n- [ ] **Given** any project, **Then** the first five cards are, in this order, Core Functionality, Architectural Concerns, Constraints,\n  Quality Attributes and Design Purpose. They cannot be removed and have no \"Custom\" chip.\n- [ ] **Given** a fixed card, **Then** it shows an icon, the name in bold, a pencil, and what the driver means: \"What the system must do\n  for its users, in the terms they would use.\" (Core Functionality), \"The structural worries that shape the design, such as\n  integration, data and deployment.\" (Architectural Concerns), \"What cannot be negotiated: the technology that must be used, the rules\n  to follow and the date to meet.\" (Constraints), \"How well the system must perform: speed, security, reliability and ease of\n  change.\" (Quality Attributes), \"Why this design exists and which problem it is meant to solve.\" (Design Purpose).\n- [ ] **Given** the Constraints card, **Then** it also shows three tags: \"Technical\", \"Policy\" and \"Delivery date\".\n- [ ] **Given** a fixed driver with text, **Then** its card shows the text under a line, with line breaks kept and cut after three lines.\n- [ ] **Given** a fixed driver with no text, **Then** its card shows \"Click to describe this driver.\" in italics.\n\nCustom drivers\n\n- [ ] **Given** the team added drivers, **Then** each is a card after the fixed ones, in the order they were added, with the chip \"Custom\",\n  a pencil, the name in bold and the text (or \"Click to describe this driver.\" in italics). A custom card has no meaning line.\n- [ ] **Given** the last card, **Then** it is a dashed card with a plus and \"Add a driver\".\n\nOpening\n\n- [ ] **Given** a driver card, **When** the user presses it (or uses Enter or Space on it), **Then** the driver opens for editing (story 3).\n  The card's accessible name is \"Edit <name>\".\n- [ ] **Given** the \"Add a driver\" card, **When** the user presses it, **Then** the dialog to add a driver opens (story 2).\n\nKeeping drivers\n\n- [ ] **Given** drivers with text, **When** the page is reloaded, **Then** the same drivers show with the same text.\n- [ ] **Given** two projects, **Then** each shows its own texts and its own custom drivers.\n\nWhat drivers are for\n\n- [ ] **Given** a driver, written or not, **When** the user opens the Builder, **Then** it is listed as `drivers/<identity>.md`, read-only\n  (\"Read-only here. Edit this driver from the Drivers page.\"), and a story can link to it.\n- [ ] **Given** a story linked to a driver, **When** its prompt is built, **Then** the driver's full text goes to the model. A driver that no\n  story links to is not sent.\n\n## Business rules and constraints\n\n- The five fixed drivers are part of BWYN: the same names and meanings in every project. Their text belongs to the project.\n- Custom drivers belong to one project. A project never sees the drivers of another.\n- A driver is kept as a Markdown file in the repository: its name as the title, its meaning (fixed drivers only), and its text. A driver\n  with no text is written as \"Not written yet. Edit this driver from the Drivers page.\" where it is shown as a file, and is left out of\n  what is uploaded.\n- Drivers are not part of the project context that every request carries: a driver reaches the model only when the user links it.\n\n## Out of scope\n\n- Adding, editing and removing a driver (stories 2, 3 and 4), syncing drivers with the repository, linking a driver to a story (the\n  Builder), ordering or grouping drivers, and a search.\n\n## Tasks\n\n- [ ] Keep the fixed drivers (identity, name, meaning, icon, tags) as one fixed list.\n- [ ] Keep, per project, the text of each fixed driver and the list of custom drivers.\n- [ ] Build the card: icon, name, meaning, tags, \"Custom\" chip, three-line text or the italic prompt, and the pencil.\n- [ ] Build the grid with the fixed cards, the custom cards and the dashed \"Add a driver\" card.\n- [ ] Add \"Drivers\" to the menu with its title and description, and show the sentence and the Sync button's place.\n- [ ] List every driver in the Builder as a read-only file that stories can link to.",
+  "createdAt": "2026-11-04",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw2lo2zquan468",
+      "text": "Define the fixed-driver list (identity, name, meaning, icon, tags) as an immutable constant in the entity layer (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqcxq0w2",
+      "text": "Add a `Driver` entity type and a `DriverRepository` port interface in `bwyn-core` for persisting per-project driver texts and custom driver records (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqsnzi5o",
+      "text": "Add a Flyway migration script that creates the `driver` table with columns for project id, driver identity, text, and display order (ADR-0010)"
+    },
+    {
+      "id": "mw2lo2zq3itgwe",
+      "text": "Implement the `DriverRepository` port as a Spring Data JPA outbound adapter in `bwyn-infrastructure` (ADR-0011, ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqo9kbvs",
+      "text": "Write a `GetDriversQuery` and its handler in `bwyn-application` that returns the fixed drivers merged with per-project texts and the project's custom drivers, in display order (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqh51upm",
+      "text": "Add a `GET /api/projects/{projectId}/drivers` endpoint in `bwyn-rest` annotated with OpenAPI annotations, returning the merged driver list (ADR-0014, ADR-0017, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqw73385",
+      "text": "Write a Testcontainers integration test for the `DriverRepository` adapter confirming read and write against a real PostgreSQL instance (ADR-0012)"
+    },
+    {
+      "id": "mw2lo2zq604yye",
+      "text": "Write a use case in the frontend use-case layer that calls the drivers endpoint and maps the response to driver view models (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqkshhpq",
+      "text": "Write a `DriversViewModel` in the interface-adapter layer that exposes the ordered driver list and the loading state (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqgokh20",
+      "text": "Build the `DriverCard` React component in the UI layer: icon, name in bold, meaning line (fixed only), tags (Constraints only), \"Custom\" chip, three-line text preview with line breaks, italic placeholder, and pencil icon; accessible name \"Edit \\<name\\>\" (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqzdnpxq",
+      "text": "Build the `AddDriverCard` React component: dashed border, plus icon, label \"Add a driver\", keyboard-accessible (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqlv4pgt",
+      "text": "Build the `DriversPage` React component: page title, description, repository sentence with Sync button placeholder, two-column / one-column responsive grid of cards (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw2lo2zqle1uvq",
+      "text": "Register the Drivers route in the top-level route configuration and add \"Drivers\" to the left-bar menu (ADR-0020)"
+    },
+    {
+      "id": "mw2lo2zqfyi7u1",
+      "text": "Add a read-only `drivers/<identity>.md` file entry per driver in the Builder file list, with the note \"Read-only here. Edit this driver from the Drivers page.\""
+    },
+    {
+      "id": "mw2lo2zqh563b5",
+      "text": "Ensure that when a story prompt is built, only drivers linked by that story are included in the payload sent to the model"
+    },
+    {
+      "id": "mw2lo2zqpx648k",
+      "text": "Write Jest unit tests for the fixed-driver constant, the `DriversViewModel`, and the `DriverCard` component (ADR-0005)"
+    },
+    {
+      "id": "mw2lo2zquupqnb",
+      "text": "Extend ArchUnitTS rules to verify that the fixed-driver constant resides in the entity layer and that `DriversViewModel` resides in the interface-adapter layer (ADR-0016)"
+    },
+    {
+      "id": "mw2lo2zq45a3pl",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
