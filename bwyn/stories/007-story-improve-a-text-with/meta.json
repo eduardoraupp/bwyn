@@ -82,6 +82,10 @@
     {
       "id": "mw16ijppron1rw",
       "text": "Write a JUnit unit test for `StreamTextImprovementCommandHandler` using a test-double outbound port (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mw1vlq9gbdk8u7",
+      "text": "Offer the same shared component in the Add a principle dialog, with no subject id so that all saved principles are in the cached context."
     }
   ]
 }
