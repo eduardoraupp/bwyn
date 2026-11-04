@@ -1,0 +1,82 @@
+classDiagram
+direction LR
+
+class AddDriverDialog:::component {
+    <<Component>>
+    +projectId: string
+    +onClose() void
+    +onDriverAdded(identity: string) void
+}
+
+class AddDriverViewModel:::component {
+    <<Component>>
+    +name: string
+    +description: string
+    +isAddEnabled: boolean
+    +validationMessage: string
+    +isDirty: boolean
+    +setName(value: string) void
+    +setDescription(value: string) void
+    +addDriver() Promise~void~
+    +applyProposal(text: string) void
+}
+
+class AddDriverUseCase:::component {
+    <<Interface>>
+    +execute(command: AddDriverCommand) Promise~AddDriverResult~
+}
+
+class AddDriverCommandHandler:::component {
+    <<Component>>
+    +execute(command: AddDriverCommand) Promise~AddDriverResult~
+}
+
+class Driver:::entity {
+    <<Entity>>
+    +identity: DriverIdentity
+    +name: string
+    +description: string
+}
+
+class DriverIdentity:::entity {
+    <<Entity>>
+    +value: string
+    +deriveFrom(name: string, takenIdentities: string[]) DriverIdentity
+}
+
+class DriverRepositoryPort:::component {
+    <<Interface>>
+    +save(driver: Driver) Promise~void~
+    +findAllIdentities(projectId: string) Promise~string[]~
+}
+
+class ImproveWithAI:::component {
+    <<Component>>
+    +projectId: string
+    +currentText: string
+    +noun: string
+    +quickActions: string[]
+    +systemInstructions: string
+    +onApplyProposal(text: string) void
+}
+
+class useImproveWithAI:::component {
+    <<Component>>
+    +conversationState: ConversationState
+    +send(instruction: string) void
+    +stop() void
+    +retry() void
+}
+
+AddDriverDialog --> AddDriverViewModel : Delegates state to
+AddDriverDialog --> ImproveWithAI : Mounts with driver props
+AddDriverViewModel --> AddDriverUseCase : Invokes
+AddDriverViewModel --> useImproveWithAI : Wires conversation through
+AddDriverCommandHandler ..|> AddDriverUseCase : Implements
+AddDriverCommandHandler --> DriverRepositoryPort : Reads and writes drivers
+AddDriverCommandHandler ..> Driver : Creates
+AddDriverCommandHandler ..> DriverIdentity : Derives identity via
+
+classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
