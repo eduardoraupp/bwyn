@@ -40,10 +40,6 @@
       "text": "Write an integration test with a fake provider HTTP server for each of the three providers, including a mid-session provider switch, to verify that counts accumulate under the correct provider."
     },
     {
-      "id": "mw208tj0lo1yx9",
-      "text": "Add a `UsageByProviderUseCase` port interface in `bwyn-core` and bind it in the composition root (ADR-0017)."
-    },
-    {
       "id": "mw208tj0qochwf",
       "text": "Create or update the `CostsViewModel` in the interface-adapters layer to call the new REST endpoint, map the response to per-provider view state, and expose a `refresh` command and an error state (ADR-0007, AE-0002)."
     },
