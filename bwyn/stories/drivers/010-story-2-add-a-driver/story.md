@@ -57,7 +57,7 @@ As a team member, I want to add a driver that is specific to my project, and opt
 - The stable (cached) context sent to the model contains all other drivers with their text and the project's ADRs. The name and description as they currently appear in the dialog travel with every instruction. The AI is given the meaning of a fixed driver only when one is present in the context.
 - A reply contains a short comment (at most three sentences or three short questions) and, only when new text is proposed, a proposed-text block. The AI keeps the user's intent, language, and facts; it invents nothing (missing numbers become placeholders in square brackets), prefers short, specific, testable statements, uses bullets for separate points, and writes no headings or code fences. It never contradicts an ADR whose status is Accepted; if the input text does, the comment says so.
 - The conversation belongs to the open dialog instance and is discarded when the dialog closes.
-- The "Improve with AI" button and panel are the shared component from story 007. What is specific to drivers (the noun "driver", the four quick actions, the system instructions, and the apply-proposal callback) is passed to the component as props; no driver-specific logic is written inside the shared component (Principle: Declarative over imperative).
+- The "Improve with AI" button and panel are the shared `ImproveWithAI` component delivered by story 007. What is specific to drivers (the noun "driver", the four quick actions, the system instructions, and the apply-proposal callback) is passed to the component as props; no driver-specific logic is written inside the shared component (Principle: Declarative over imperative).
 - While the dialog is open, syncing is blocked ("Save or close the driver first") and any download from the repository waits.
 - Assumption: the identity uniqueness check covers both fixed driver identities and the identities of all custom drivers already saved for the project.
 
@@ -71,18 +71,18 @@ As a team member, I want to add a driver that is specific to my project, and opt
 
 ## Tasks
 
-- [ ] Add an `addCustomDriver` command handler in `bwyn-application` that derives the identity from the name (first six words, lower-case, `-2`/`-3` suffix when taken), persists the driver, and returns the assigned identity (ADR-0017).
+- [ ] Add an `AddCustomDriverCommandHandler` in `bwyn-application` that derives the identity from the name (first six words, lower-case, `-2`/`-3` suffix when taken), persists the driver, and returns the assigned identity (ADR-0017).
 - [ ] Add a Flyway migration in `bwyn-runtime` for the `custom_driver` table (`id`, `project_id`, `identity`, `name`, `description`) (ADR-0010).
 - [ ] Implement the outbound JPA repository adapter in `bwyn-infrastructure` for custom drivers, including the uniqueness query used by the identity-derivation logic (ADR-0011, ADR-0017).
-- [ ] Expose a `POST /projects/{projectId}/drivers` endpoint in `bwyn-rest`, annotated with OpenAPI metadata, that invokes `addCustomDriver` and returns the created driver's identity (ADR-0008, ADR-0014).
-- [ ] Add the `AddDriverUseCase` entity and `DriverIdentity` value object to `bwyn-core`, with the identity-derivation rule expressed as a pure domain function (ADR-0017).
+- [ ] Expose a `POST /projects/{projectId}/drivers` endpoint in `bwyn-rest`, annotated with OpenAPI metadata, that invokes `AddCustomDriverCommandHandler` and returns the created driver's identity (ADR-0008, ADR-0014).
+- [ ] Add the `AddCustomDriverCommand` and `DriverIdentity` value object to `bwyn-core`, with the identity-derivation rule expressed as a pure domain function (ADR-0017).
 - [ ] Build the "Add a driver" dialog in the `ui` layer: Name field (auto-focused), seven-row Description field, dirty-state guard on "Add driver", name-empty validation message, closing rules (Cancel / X / Escape clears state; outside-click only when pristine) (ADR-0007).
 - [ ] Place the "Add a driver" card at the end of the custom-driver list on the Drivers screen and wire it to open the dialog (ADR-0007).
 - [ ] Write the driver-assistant system prompt, define the four quick actions ("Improve this", "Make it measurable", "Ask me questions", "Shorten"), and implement the context builder (other drivers + ADRs) and the per-turn payload (name, current description, instruction) in the `use-cases` layer (ADR-0007).
 - [ ] Mount the shared `ImproveWithAI` component (story 007) in the dialog, passing the noun "driver", the four quick actions, the system instructions, the context builder, and the apply-to-description callback; verify the Name field is never touched by the component (ADR-0007).
 - [ ] Expose the page-level "dialog open" flag so that the sync mechanism blocks and pending downloads wait while the dialog is open.
 - [ ] Write Jest unit tests for the identity-derivation logic (six-word rule, suffix increment, fixed-driver collision) (ADR-0005).
-- [ ] Write a JUnit unit test for `addCustomDriver` using a test-double repository port (ADR-0009, ADR-0017).
+- [ ] Write a JUnit unit test for `AddCustomDriverCommandHandler` using a test-double repository port (ADR-0009, ADR-0017).
 - [ ] Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build).
 
 ## Files of the spike

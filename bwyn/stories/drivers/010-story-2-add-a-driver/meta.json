@@ -59,6 +59,22 @@
     {
       "id": "mw2lu1uoigy8iq",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mw2ly05rrbj6r5",
+      "text": "Add an `AddCustomDriverCommandHandler` in `bwyn-application` that derives the identity from the name (first six words, lower-case, `-2`/`-3` suffix when taken), persists the driver, and returns the assigned identity (ADR-0017)."
+    },
+    {
+      "id": "mw2ly05r5pmnfj",
+      "text": "Expose a `POST /projects/{projectId}/drivers` endpoint in `bwyn-rest`, annotated with OpenAPI metadata, that invokes `AddCustomDriverCommandHandler` and returns the created driver's identity (ADR-0008, ADR-0014)."
+    },
+    {
+      "id": "mw2ly05ruri0zk",
+      "text": "Add the `AddCustomDriverCommand` and `DriverIdentity` value object to `bwyn-core`, with the identity-derivation rule expressed as a pure domain function (ADR-0017)."
+    },
+    {
+      "id": "mw2ly05rueddxd",
+      "text": "Write a JUnit unit test for `AddCustomDriverCommandHandler` using a test-double repository port (ADR-0009, ADR-0017)."
     }
   ]
 }

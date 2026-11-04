@@ -1,0 +1,29 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant dialog as "Add a Driver Dialog<br/>[Component: React/TypeScript]"
+    participant viewmodel as "useAddDriver Hook<br/>[Component: interface-adapters]"
+    participant usecase as "AddDriverUseCase<br/>[Component: use-cases]"
+    participant apiClient as "Drivers API Client<br/>[Component: interface-adapters]"
+    participant controller as "DriversController<br/>[Component: Spring MVC]"
+    participant handler as "AddCustomDriverCommandHandler<br/>[Component: bwyn-application]"
+    participant repo as "CustomDriverRepositoryAdapter<br/>[Component: bwyn-infrastructure]"
+  end
+  user->>dialog: Presses "Add a driver"
+  dialog->>viewmodel: Opens dialog, focuses Name field
+  user->>dialog: Types Name and optional Description
+  dialog->>viewmodel: Updates dirty state, enables "Add driver"
+  user->>dialog: Presses "Add driver"
+  dialog->>viewmodel: Submits name and description
+  viewmodel->>usecase: Derives identity from name
+  usecase-->>viewmodel: Returns candidate identity
+  viewmodel->>apiClient: POST /projects/{projectId}/drivers
+  apiClient->>controller: POST /projects/{projectId}/drivers
+  controller->>handler: Executes AddCustomDriverCommand
+  handler->>repo: Checks identity uniqueness, persists driver
+  repo-->>handler: Returns saved driver with assigned identity
+  handler-->>controller: Returns assigned identity
+  controller-->>apiClient: 201 Created with identity
+  apiClient-->>viewmodel: Returns created driver identity
+  viewmodel-->>dialog: Closes dialog, emits new driver card
+  dialog-->>user: Shows new card with "Custom" chip on Drivers screen
