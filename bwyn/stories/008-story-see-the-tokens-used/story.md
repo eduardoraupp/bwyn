@@ -11,50 +11,50 @@ As a team member, I want Settings > Costs to show the tokens my project used for
 
 **One block per provider**
 
-- [ ] **Given** a project that used Claude on Amazon Bedrock and Azure OpenAI, **When** the user opens Settings > Costs, **Then** two blocks appear — "Claude on Amazon Bedrock" and "Azure OpenAI" — each showing its own Input tokens, Output tokens, Total tokens, number of requests, and the date and time it was last used.
-- [ ] **Given** those blocks, **Then** no figure adds up tokens across providers: there is no grand total and no combined bar, and a line under the title reads "Providers are counted apart, because their tokens are priced differently."
-- [ ] **Given** a project that used only Claude on the Anthropic API, **Then** one block appears and the other two providers are not listed.
-- [ ] **Given** the blocks, **Then** they appear in the order: Claude on Amazon Bedrock, Claude on the Anthropic API, Azure OpenAI; the provider the project is connected to now carries the chip "Connected now".
+- [X] **Given** a project that used Claude on Amazon Bedrock and Azure OpenAI, **When** the user opens Settings > Costs, **Then** two blocks appear — "Claude on Amazon Bedrock" and "Azure OpenAI" — each showing its own Input tokens, Output tokens, Total tokens, number of requests, and the date and time it was last used.
+- [X] **Given** those blocks, **Then** no figure adds up tokens across providers: there is no grand total and no combined bar, and a line under the title reads "Providers are counted apart, because their tokens are priced differently."
+- [X] **Given** a project that used only Claude on the Anthropic API, **Then** one block appears and the other two providers are not listed.
+- [X] **Given** the blocks, **Then** they appear in the order: Claude on Amazon Bedrock, Claude on the Anthropic API, Azure OpenAI; the provider the project is connected to now carries the chip "Connected now".
 
 **Counting inside a block**
 
-- [ ] **Given** Claude on Amazon Bedrock with 2 requests that reported 1,200 new input tokens, 8,000 read from the cache, 3,000 written to the cache, and 900 output tokens, **Then** its block shows Input tokens 12,200 (new input 1,200, read from the prompt cache 8,000, written to the prompt cache 3,000), Output tokens 900, Total tokens 13,100, and "2 requests".
-- [ ] **Given** Claude on the Anthropic API with 1 request of 500 new input and 300 output tokens, **Then** its block shows Input 500, Output 300, Total 800, "1 request", and 0 for both cache lines.
-- [ ] **Given** Azure OpenAI answered a request that reported 5,000 prompt tokens of which 4,000 were cached, and 400 completion tokens, **Then** its block shows new input 1,000, read from the prompt cache 4,000, written to the prompt cache 0, Input 5,000, Output 400, and Total 5,400; the cached tokens are not counted twice.
-- [ ] **Given** each block, **Then** the input bar shows the share of input and output for that provider only.
-- [ ] **Given** a provider whose block has no tokens yet but is connected now, **Then** its block shows zeros and "Not used yet".
+- [X] **Given** Claude on Amazon Bedrock with 2 requests that reported 1,200 new input tokens, 8,000 read from the cache, 3,000 written to the cache, and 900 output tokens, **Then** its block shows Input tokens 12,200 (new input 1,200, read from the prompt cache 8,000, written to the prompt cache 3,000), Output tokens 900, Total tokens 13,100, and "2 requests".
+- [X] **Given** Claude on the Anthropic API with 1 request of 500 new input and 300 output tokens, **Then** its block shows Input 500, Output 300, Total 800, "1 request", and 0 for both cache lines.
+- [X] **Given** Azure OpenAI answered a request that reported 5,000 prompt tokens of which 4,000 were cached, and 400 completion tokens, **Then** its block shows new input 1,000, read from the prompt cache 4,000, written to the prompt cache 0, Input 5,000, Output 400, and Total 5,400; the cached tokens are not counted twice.
+- [X] **Given** each block, **Then** the input bar shows the share of input and output for that provider only.
+- [X] **Given** a provider whose block has no tokens yet but is connected now, **Then** its block shows zeros and "Not used yet".
 
 **What is counted**
 
-- [ ] **Given** the user connects a provider, **Then** the short test request is counted under that provider, not under any previously connected provider.
-- [ ] **Given** the user sends a prompt or uses "Improve with AI", **Then** the tokens are added to the block of the provider that answered, and only to the block of the project in use.
-- [ ] **Given** the user stops a request before the model finishes, **Then** nothing is added.
-- [ ] **Given** a failed request (key refused, provider unreachable), **Then** nothing is added.
+- [X] **Given** the user connects a provider, **Then** the short test request is counted under that provider, not under any previously connected provider.
+- [X] **Given** the user sends a prompt or uses "Improve with AI", **Then** the tokens are added to the block of the provider that answered, and only to the block of the project in use.
+- [X] **Given** the user stops a request before the model finishes, **Then** nothing is added.
+- [X] **Given** a failed request (key refused, provider unreachable), **Then** nothing is added.
 
 **Changing providers**
 
-- [ ] **Given** a project that used Claude on Amazon Bedrock and then switched to Azure OpenAI, **Then** the Bedrock block keeps its figures without "Connected now", and the Azure OpenAI block grows from the switch onwards.
-- [ ] **Given** a project that used Claude on Amazon Bedrock and then switched to Claude on the Anthropic API, **Then** the Bedrock block keeps its figures without "Connected now", and the Anthropic API block grows from the switch onwards.
-- [ ] **Given** the user removes the key of a provider, **Then** its figures stay.
-- [ ] **Given** the user connects the same provider again later, **Then** its block continues from the figures it had before.
-- [ ] **Given** two projects, **Then** each shows only its own figures for each provider.
+- [X] **Given** a project that used Claude on Amazon Bedrock and then switched to Azure OpenAI, **Then** the Bedrock block keeps its figures without "Connected now", and the Azure OpenAI block grows from the switch onwards.
+- [X] **Given** a project that used Claude on Amazon Bedrock and then switched to Claude on the Anthropic API, **Then** the Bedrock block keeps its figures without "Connected now", and the Anthropic API block grows from the switch onwards.
+- [X] **Given** the user removes the key of a provider, **Then** its figures stay.
+- [X] **Given** the user connects the same provider again later, **Then** its block continues from the figures it had before.
+- [X] **Given** two projects, **Then** each shows only its own figures for each provider.
 
 **Before providers were told apart**
 
-- [ ] **Given** figures that were counted before providers were distinguished (only Bedrock existed), **Then** they appear in the Claude on Amazon Bedrock block and none are lost.
+- [X] **Given** figures that were counted before providers were distinguished (only Bedrock existed), **Then** they appear in the Claude on Amazon Bedrock block and none are lost.
 
 **Empty and error states**
 
-- [ ] **Given** a project that never used a model and has no provider connected, **Then** the page shows "No tokens used yet", states that no provider is connected, and offers an "Open Integrations" button.
-- [ ] **Given** a project that never used a model but has a provider connected, **Then** the block of the connected provider shows zeros and the page states that tokens appear as soon as the model is used.
-- [ ] **Given** the count cannot be read, **Then** the page shows "The count could not be read right now, so nothing is shown." and does not display zeros as if nothing was used.
-- [ ] **Given** the user presses Refresh, **Then** the icon spins, the buttons wait, and the figures are read again.
+- [X] **Given** a project that never used a model and has no provider connected, **Then** the page shows "No tokens used yet", states that no provider is connected, and offers an "Open Integrations" button.
+- [X] **Given** a project that never used a model but has a provider connected, **Then** the block of the connected provider shows zeros and the page states that tokens appear as soon as the model is used.
+- [X] **Given** the count cannot be read, **Then** the page shows "The count could not be read right now, so nothing is shown." and does not display zeros as if nothing was used.
+- [X] **Given** the user presses Refresh, **Then** the icon spins, the buttons wait, and the figures are read again.
 
 **Where the count lives**
 
-- [ ] **Given** the user opens Costs, **Then** the browser reads the figures from the bwyn backend over its REST API as one response containing a list of providers each with its token counts, and never directly from a provider.
-- [ ] **Given** the backend, **Then** the endpoint that returns usage by provider is described in the OpenAPI document (ADR-0014).
-- [ ] **Given** the response, **Then** it contains no API key and no text from any prompt or reply.
+- [X] **Given** the user opens Costs, **Then** the browser reads the figures from the bwyn backend over its REST API as one response containing a list of providers each with its token counts, and never directly from a provider.
+- [X] **Given** the backend, **Then** the endpoint that returns usage by provider is described in the OpenAPI document (ADR-0014).
+- [X] **Given** the response, **Then** it contains no API key and no text from any prompt or reply.
 
 ## Business rules and constraints
 
@@ -80,18 +80,18 @@ As a team member, I want Settings > Costs to show the tokens my project used for
 
 ## Tasks
 
-- [ ] Add a `provider` field to the usage-record domain model in `bwyn-core` so that each stored record is associated with the provider that answered (ADR-0017).
-- [ ] Write a Flyway migration script that adds the `provider` column to the usage table and back-fills existing rows with `CLAUDE_AMAZON_BEDROCK` (ADR-0010).
-- [ ] Implement normalisation logic in `bwyn-application` that converts each provider's raw usage report (Bedrock, Anthropic API, Azure OpenAI) into the shared five-figure model, including the Azure OpenAI cached-token subtraction.
-- [ ] Update the application service in `bwyn-application` that records usage after a completed request to pass the provider identifier alongside the token counts.
-- [ ] Add a query handler in `bwyn-application` that returns usage grouped by provider for a given project, with providers ordered Bedrock → Anthropic API → Azure OpenAI.
-- [ ] Add a REST endpoint `GET /api/projects/{projectId}/usage` in `bwyn-rest` that invokes the query handler and returns the provider list; annotate it with OpenAPI annotations (ADR-0014).
-- [ ] Write a `@DataJpaTest` integration test using Testcontainers that verifies the migration, the back-fill, and the per-provider query (ADR-0012).
-- [ ] Write an integration test with a fake provider HTTP server for each of the three providers, including a mid-session provider switch between Bedrock and Anthropic API, to verify that counts accumulate under the correct provider.
-- [ ] Add a `UsageByProviderQueryHandler` port interface in `bwyn-core` and bind it in the composition root (ADR-0017).
-- [ ] Create or update the `CostsViewModel` in the interface-adapters layer to call the new REST endpoint, map the response to per-provider view state, and expose a `refresh` command and an error state (ADR-0007, AE-0002).
-- [ ] Build the provider block React component in the UI layer showing new input, cache read, cache write, output, total, input bar, request count, last-used timestamp, and the "Connected now" chip (ADR-0007, AE-0002).
-- [ ] Update `CostsPanel` to render one block per provider returned, display the "Providers are counted apart…" note, and handle the three empty/error states (no provider connected, provider connected but unused, count unreadable) (ADR-0007).
-- [ ] Add a Jest unit test for `CostsViewModel` covering the refresh command, the error state, and the "Connected now" derivation using a test double for the fetch port (ADR-0005).
-- [ ] Verify that ArchUnitTS rules still pass with the new frontend modules in place (ADR-0016, AE-0003).
-- [ ] Verify that ArchUnit rules still pass with the new backend modules in place (ADR-0009, AE-0005).
+- [X] Add a `provider` field to the usage-record domain model in `bwyn-core` so that each stored record is associated with the provider that answered (ADR-0017). (Done by reusing ProviderType instead of a new Provider enum: LlmUsageRepository.record now takes the provider that answered, and totalsByProvider returns the existing LlmUsageTotals for each ProviderType.)
+- [X] Write a Flyway migration script that adds the `provider` column to the usage table and back-fills existing rows with `CLAUDE_AMAZON_BEDROCK` (ADR-0010). (V7__llm_usage_by_provider.sql; existing rows are back-filled with the existing ProviderType name BEDROCK, and the primary key becomes project and provider.)
+- [X] Implement normalisation logic in `bwyn-application` that converts each provider's raw usage report (Bedrock, Anthropic API, Azure OpenAI) into the shared five-figure model, including the Azure OpenAI cached-token subtraction. (Not a new class: the provider adapters already report the shared LlmUsage model, and the Azure OpenAI adapter already subtracts the cached tokens from the prompt tokens and stores 0 for cache write.)
+- [X] Update the application service in `bwyn-application` that records usage after a completed request to pass the provider identifier alongside the token counts.
+- [X] Add a query handler in `bwyn-application` that returns usage grouped by provider for a given project, with providers ordered Bedrock → Anthropic API → Azure OpenAI.
+- [X] Add a REST endpoint `GET /api/projects/{projectId}/usage` in `bwyn-rest` that invokes the query handler and returns the provider list; annotate it with OpenAPI annotations (ADR-0014).
+- [X] Write a `@DataJpaTest` integration test using Testcontainers that verifies the migration, the back-fill, and the per-provider query (ADR-0012). (Done as Spring Boot integration tests with Testcontainers in LlmConnectionIT rather than @DataJpaTest; the back-fill test migrates a scratch schema to V6, inserts a row, then applies V7.)
+- [X] Write an integration test with a fake provider HTTP server for each of the three providers, including a mid-session provider switch between Bedrock and Anthropic API, to verify that counts accumulate under the correct provider. (Done with fake Anthropic and Bedrock servers in LlmConnectionIT, including the switch between them; Azure OpenAI needs an https endpoint, so it is covered by its adapter test and the application tests.)
+- [X] Add a `UsageByProviderQueryHandler` port interface in `bwyn-core` and bind it in the composition root (ADR-0017). (Reused the existing QueryHandler: GetUsageByProviderQueryHandler in bwyn-application, bound in LlmConfig, with no separate port interface.)
+- [X] Create or update the `CostsViewModel` in the interface-adapters layer to call the new REST endpoint, map the response to per-provider view state, and expose a `refresh` command and an error state (ADR-0007, AE-0002).
+- [X] Build the provider block React component in the UI layer showing new input, cache read, cache write, output, total, input bar, request count, last-used timestamp, and the "Connected now" chip (ADR-0007, AE-0002).
+- [X] Update `CostsPanel` to render one block per provider returned, display the "Providers are counted apart…" note, and handle the three empty/error states (no provider connected, provider connected but unused, count unreadable) (ADR-0007).
+- [X] Add a Jest unit test for `CostsViewModel` covering the refresh command, the error state, and the "Connected now" derivation using a test double for the fetch port (ADR-0005).
+- [X] Verify that ArchUnitTS rules still pass with the new frontend modules in place (ADR-0016, AE-0003).
+- [X] Verify that ArchUnit rules still pass with the new backend modules in place (ADR-0009, AE-0005).
