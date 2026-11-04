@@ -110,6 +110,14 @@
     {
       "id": "mw14675d2f3xn1",
       "text": "Wire the builder, \"Improve with AI\", driver assistant, and diagram features to call the project's connected provider port; display \"No model is connected for this project. Connect one in Integrations.\" when none is set (Done as the backend hook StreamLlmReplyCommandHandler, which gives the no-connection message; the builder, Improve with AI, assistants and diagrams are not in the production frontend yet.)"
+    },
+    {
+      "id": "mw27x7z4brpaxy",
+      "text": "Wire the builder, \"Improve with AI\", driver assistant, and diagram features to call the project's connected provider port; display \"No model is connected for this project. Connect one in Integrations.\" when none is set (Done as the backend hook StreamLlmReplyCommandHandler, which gave the no-connection message. Story 007 removed that handler and replaced it with StreamTextImprovementCommandHandler, which gives the same message and powers \"Improve with AI\" through POST /api/improve; the builder, assistants and diagrams are not in the production frontend yet.)"
+    },
+    {
+      "id": "mw27x7z4rz11a4",
+      "text": "Give select fields an opaque background and `color-scheme` in the dark theme only (`:root:not([data-theme=\"light\"]) select.field-input` and its options in `styles.ts`), so that the \"Prompt cache lifetime\" list is readable in dark mode and the light theme is untouched, with a Jest test on the stylesheet"
     }
   ]
 }
