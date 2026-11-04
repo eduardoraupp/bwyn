@@ -1,0 +1,29 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant costsPanel as "CostsPanel<br/>[Component: React]"
+    participant costsVM as "CostsViewModel<br/>[Component: TypeScript]"
+    participant usageController as "UsageController<br/>[Component: Spring MVC]"
+    participant queryHandler as "UsageByProviderQueryHandler<br/>[Component: Spring]"
+    participant usageRepo as "UsageRepository<br/>[Component: Spring Data JPA]"
+  end
+  participant db as "PostgreSQL<br/>[External Software System]"
+
+  user->>costsPanel: Opens Settings > Costs
+  costsPanel->>costsVM: Requests usage data
+  costsVM->>usageController: GET /api/projects/{projectId}/usage
+  usageController->>queryHandler: Queries usage by provider
+  queryHandler->>usageRepo: Loads usage records by project
+  usageRepo->>db: Selects usage rows
+  db-->>usageRepo: Returns usage rows
+  usageRepo-->>queryHandler: Returns usage records
+  queryHandler-->>usageController: Returns provider usage list
+  usageController-->>costsVM: Returns provider usage response
+  costsVM-->>costsPanel: Exposes per-provider view state
+  costsPanel-->>user: Renders one block per provider
+
+  alt count cannot be read
+    usageController-->>costsVM: Returns error response
+    costsVM-->>costsPanel: Exposes error state
+    costsPanel-->>user: Shows "The count could not be read right now"
+  end

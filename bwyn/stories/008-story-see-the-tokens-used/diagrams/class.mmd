@@ -1,0 +1,78 @@
+classDiagram
+direction LR
+
+class ProviderUsage:::entity {
+    <<Entity>>
+    +provider: Provider
+    +newInputTokens: number
+    +cacheReadTokens: number
+    +cacheWriteTokens: number
+    +outputTokens: number
+    +requestCount: number
+    +lastUsedAt: Date
+    +totalInputTokens() number
+    +totalTokens() number
+}
+
+class Provider:::entity {
+    <<Entity>>
+    +CLAUDE_AMAZON_BEDROCK
+    +CLAUDE_ANTHROPIC_API
+    +AZURE_OPENAI
+}
+
+class UsageByProviderPort:::component {
+    <<Interface>>
+    +getUsageByProject(projectId: string) ProviderUsage[]
+}
+
+class GetUsageByProviderUseCase:::component {
+    <<Component>>
+    +execute(projectId: string) ProviderUsage[]
+}
+
+class CostsViewModel:::component {
+    <<Component>>
+    +providerBlocks: ProviderBlockState[]
+    +isLoading: boolean
+    +errorState: ErrorState | null
+    +connectedProvider: Provider | null
+    +refresh() void
+}
+
+class CostsPanel:::component {
+    <<Component>>
+    +render() ReactElement
+}
+
+class ProviderBlock:::component {
+    <<Component>>
+    +providerBlock: ProviderBlockState
+    +render() ReactElement
+}
+
+class ProviderBlockState:::entity {
+    <<Entity>>
+    +provider: Provider
+    +newInputTokens: number
+    +cacheReadTokens: number
+    +cacheWriteTokens: number
+    +outputTokens: number
+    +totalTokens: number
+    +requestCount: number
+    +lastUsedAt: Date | null
+    +isConnectedNow: boolean
+}
+
+GetUsageByProviderUseCase --> UsageByProviderPort : Queries usage via
+GetUsageByProviderUseCase ..> ProviderUsage : Returns
+CostsViewModel --> GetUsageByProviderUseCase : Invokes on refresh
+CostsViewModel ..> ProviderBlockState : Maps to
+CostsPanel --> CostsViewModel : Reads state from
+CostsPanel --> ProviderBlock : Renders one per provider
+ProviderUsage --> Provider : Belongs to
+ProviderBlockState --> Provider : Identifies
+
+classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
