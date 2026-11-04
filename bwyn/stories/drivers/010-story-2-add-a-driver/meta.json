@@ -1,0 +1,64 @@
+{
+  "title": "Add a driver",
+  "prompt": "# Story 2: Add a driver of my own, with AI help if I want it\n\n- **Story**: XXX-add-driver\n- **Created**: 2026-11-04\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to add a driver that is specific to my project, and optionally ask AI to make its text clearer, so that our\ndecisions and stories take into account forces that the five fixed drivers do not cover, such as compliance.\n\n## Acceptance tests\n\nOpening\n\n- [ ] **Given** the Drivers screen, **When** the user presses \"Add a driver\", **Then** a dialog \"Add a driver\" opens with the hint\n  \"Custom drivers sit next to the fixed ones and can be removed at any time.\", a Name field in focus (placeholder \"e.g. Compliance\"),\n  a Description field of seven rows (placeholder \"Write what the builder should know about this driver.\"), a collapsed \"Improve with\n  AI\" button, Cancel, and \"Add driver\", which is disabled. There is no \"Remove\" button.\n- [ ] **Given** the dialog, **When** nothing was typed, **Then** \"Add driver\" stays disabled. **When** something was typed, **Then** it is\n  enabled.\n\nSaving\n\n- [ ] **Given** the name \"Compliance\" and no description, **When** the user presses \"Add driver\", **Then** the driver is saved (a\n  description is not required), the dialog closes, and a new card with the chip \"Custom\" and \"Click to describe this driver.\" is\n  after the last custom card, before the \"Add a driver\" card.\n- [ ] **Given** a name and a description with spaces around them, **When** \"Add driver\", **Then** both are saved without the spaces.\n- [ ] **Given** an empty name (or only spaces) and a description, **When** \"Add driver\", **Then** \"Give the driver a name.\" shows under\n  the field, the field is marked invalid, and nothing is saved. Typing in the field clears the message.\n- [ ] **Given** a driver named \"Compliance\" exists, **When** another is added with the name \"Compliance\", **Then** it is saved as a second\n  driver. Names do not have to be different, not even from a fixed driver's name.\n\nIdentity\n\n- [ ] **Given** the name \"Compliance\", **Then** the driver's identity is \"compliance\", and its file is `drivers/compliance.md`.\n- [ ] **Given** \"compliance\" is taken, **When** another driver is named \"Compliance\", **Then** its identity is \"compliance-2\", then\n  \"compliance-3\", and so on.\n- [ ] **Given** a driver named \"Constraints\", **Then** its identity is \"constraints-2\", because \"constraints\" belongs to the fixed driver.\n- [ ] **Given** a name of more than six words, **Then** the identity uses the first six, lower-case, joined by \"-\".\n\nClosing without saving\n\n- [ ] **Given** the dialog, **When** the user presses Cancel, the Close (X) button or Escape, **Then** it closes and nothing is saved.\n- [ ] **Given** nothing was typed, **When** the user clicks outside the dialog, **Then** it closes. **Given** something was typed, **Then** a\n  click outside does nothing.\n- [ ] **Given** the user typed, closed with Cancel and pressed \"Add a driver\" again, **Then** the dialog is empty.\n\nImprove with AI\n\n- [ ] **Given** the dialog, **When** the user presses \"Improve with AI\", **Then** a panel opens with the same title, a Hide (X) button,\n  four quick actions, a field \"Ask for a change, for example: focus on security\" and a Send button that is disabled while the field is\n  empty.\n- [ ] **Given** the panel, **Then** the quick actions are \"Improve this\", \"Make it measurable\", \"Ask me questions\" and \"Shorten\".\n- [ ] **Given** the user presses a quick action or sends their own instruction, **Then** it shows as the user's message, the reply streams\n  in (\"Thinking...\" first), and every quick action is disabled until it ends. Enter in the field sends the instruction and does not\n  submit the dialog.\n- [ ] **Given** a reply, **Then** it has a short comment (at most three sentences, or at most three short questions) and, only when the\n  AI proposes new text, a \"Proposed text\" card with a \"Use this text\" button.\n- [ ] **Given** a proposal, **When** the user presses \"Use this text\", **Then** it replaces the Description only, not the Name, and nothing\n  is saved until the user presses \"Add driver\". The button then reads \"In the editor\" and is disabled.\n- [ ] **Given** a reply that is still streaming or was cut off, **Then** \"Use this text\" is disabled, and a cut-off one says \"Incomplete,\n  so it cannot be used.\"\n- [ ] **Given** a reply is streaming, **Then** a Stop button replaces Send. **Given** the request fails, **Then** the error shows with a\n  Retry button that sends the last instruction again.\n- [ ] **Given** the model is not connected for the project, **Then** the error says so and where to connect it.\n- [ ] **Given** a reply, **Then** a line shows its tokens: input, output, cache read and cache write.\n- [ ] **Given** the user hides the panel, **Then** the dialog keeps what was typed.\n- [ ] **Given** the Name is still empty, **When** the user presses \"Improve this\", **Then** the AI is told that the driver is \"(not named\n  yet)\" and still answers. **Given** the Name was typed, **Then** it travels with every instruction as it is in the field now.\n- [ ] **Given** a Description with no numbers, **When** the user presses \"Make it measurable\", **Then** the proposal marks every missing\n  number as a placeholder in square brackets, for example \"[target response time]\", and invents none.\n\nAfter adding\n\n- [ ] **Given** a driver was added with text, **When** the user opens the Builder, **Then** `drivers/compliance.md` is listed, read-only,\n  and a story can link to it.\n- [ ] **Given** GitHub is connected, **Then** the next sync of the drivers uploads `drivers/compliance.md`. A driver with no text is not\n  uploaded.\n\n## Business rules and constraints\n\n- A driver is a name (a few words) and a description: the force that steers decisions, in plain, specific and testable statements.\n- A driver's identity comes from its name: the first six words, lower-case, joined by \"-\". If it is taken by a fixed or a custom driver,\n  \"-2\", \"-3\" and so on are added. The identity never changes afterwards (story 3). It is also the file name in the repository.\n- The AI only suggests. It never saves, and it never changes the name.\n- The AI is given, as stable (cached) context, all the other drivers with their text and the architecture decision records (ADRs). The\n  name and the description as they are in the dialog right now travel with each instruction. It is given the meaning of a driver only\n  for a fixed driver, which has one.\n- The AI keeps the user's intent, language and facts, invents nothing (a missing number becomes a placeholder in square brackets), prefers\n  short, specific, testable statements, uses bullets for several separate points, and writes no headings or code fences. It never\n  contradicts an ADR whose status is Accepted: if the text does, its comment says so.\n- The conversation with the AI belongs to the open dialog and is lost when the dialog closes.\n- The \"Improve with AI\" button and its panel are the shared component of `story-improve-with-ai.md`. What belongs to drivers (the\n  instructions, the context, the quick actions and the noun \"driver\") is given to it by this screen.\n- While the dialog is open, syncing is blocked (\"Save or close the driver first\") and a download from the repository waits.\n\n## Out of scope\n\n- Editing and removing a driver (stories 3 and 4), syncing (its own story), choosing an icon for a custom driver, ordering drivers, and\n  how the model is reached (`story-improve-with-ai.md`).\n\n## Tasks\n\n- [ ] Add `addCustom` to the drivers of a project, with the identity rule (six words, lower-case, \"-2\" when taken by a fixed or custom driver).\n- [ ] Build the dialog: Name, Description of seven rows, the dirty-based \"Add driver\", the name check and the closing rules.\n- [ ] Place the \"Add a driver\" card last and open the dialog from it.\n- [ ] Write the system prompt of the driver assistant, its four quick actions and the reply format (comment, then the proposed text).\n- [ ] Build the context of the assistant (the other drivers and the ADRs) and the turn (name, current text, instruction).\n- [ ] Put the shared \"Improve with AI\" panel in the dialog, with \"Use this text\" replacing the Description only.\n- [ ] Tell the page that a dialog is open, so that sync is blocked and downloads wait.",
+  "createdAt": "2026-11-04",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure",
+    "story:007-story-improve-a-text-with"
+  ],
+  "tasks": [
+    {
+      "id": "mw2lu1uotuhgtc",
+      "text": "Add an `addCustomDriver` command handler in `bwyn-application` that derives the identity from the name (first six words, lower-case, `-2`/`-3` suffix when taken), persists the driver, and returns the assigned identity (ADR-0017)."
+    },
+    {
+      "id": "mw2lu1uotw6vo2",
+      "text": "Add a Flyway migration in `bwyn-runtime` for the `custom_driver` table (`id`, `project_id`, `identity`, `name`, `description`) (ADR-0010)."
+    },
+    {
+      "id": "mw2lu1uo1rowc6",
+      "text": "Implement the outbound JPA repository adapter in `bwyn-infrastructure` for custom drivers, including the uniqueness query used by the identity-derivation logic (ADR-0011, ADR-0017)."
+    },
+    {
+      "id": "mw2lu1uomjrvmw",
+      "text": "Expose a `POST /projects/{projectId}/drivers` endpoint in `bwyn-rest`, annotated with OpenAPI metadata, that invokes `addCustomDriver` and returns the created driver's identity (ADR-0008, ADR-0014)."
+    },
+    {
+      "id": "mw2lu1uon63kqe",
+      "text": "Add the `AddDriverUseCase` entity and `DriverIdentity` value object to `bwyn-core`, with the identity-derivation rule expressed as a pure domain function (ADR-0017)."
+    },
+    {
+      "id": "mw2lu1uo0ut4vd",
+      "text": "Build the \"Add a driver\" dialog in the `ui` layer: Name field (auto-focused), seven-row Description field, dirty-state guard on \"Add driver\", name-empty validation message, closing rules (Cancel / X / Escape clears state; outside-click only when pristine) (ADR-0007)."
+    },
+    {
+      "id": "mw2lu1uox7f8kx",
+      "text": "Place the \"Add a driver\" card at the end of the custom-driver list on the Drivers screen and wire it to open the dialog (ADR-0007)."
+    },
+    {
+      "id": "mw2lu1uol6pjj5",
+      "text": "Write the driver-assistant system prompt, define the four quick actions (\"Improve this\", \"Make it measurable\", \"Ask me questions\", \"Shorten\"), and implement the context builder (other drivers + ADRs) and the per-turn payload (name, current description, instruction) in the `use-cases` layer (ADR-0007)."
+    },
+    {
+      "id": "mw2lu1uonga21z",
+      "text": "Mount the shared `ImproveWithAI` component (story 007) in the dialog, passing the noun \"driver\", the four quick actions, the system instructions, the context builder, and the apply-to-description callback; verify the Name field is never touched by the component (ADR-0007)."
+    },
+    {
+      "id": "mw2lu1uocoxrl1",
+      "text": "Expose the page-level \"dialog open\" flag so that the sync mechanism blocks and pending downloads wait while the dialog is open."
+    },
+    {
+      "id": "mw2lu1uoev8fh7",
+      "text": "Write Jest unit tests for the identity-derivation logic (six-word rule, suffix increment, fixed-driver collision) (ADR-0005)."
+    },
+    {
+      "id": "mw2lu1uohbx5ih",
+      "text": "Write a JUnit unit test for `addCustomDriver` using a test-double repository port (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mw2lu1uoigy8iq",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
