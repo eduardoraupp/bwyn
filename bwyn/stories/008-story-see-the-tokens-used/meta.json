@@ -74,6 +74,30 @@
     {
       "id": "mw20btxq0ikiht",
       "text": "Add a `UsageByProviderQueryHandler` port interface in `bwyn-core` and bind it in the composition root (ADR-0017)."
+    },
+    {
+      "id": "mw25rr5bcg0l70",
+      "text": "Add a `provider` field to the usage-record domain model in `bwyn-core` so that each stored record is associated with the provider that answered (ADR-0017). (Done by reusing ProviderType instead of a new Provider enum: LlmUsageRepository.record now takes the provider that answered, and totalsByProvider returns the existing LlmUsageTotals for each ProviderType.)"
+    },
+    {
+      "id": "mw25rr5biytsq5",
+      "text": "Write a Flyway migration script that adds the `provider` column to the usage table and back-fills existing rows with `CLAUDE_AMAZON_BEDROCK` (ADR-0010). (V7__llm_usage_by_provider.sql; existing rows are back-filled with the existing ProviderType name BEDROCK, and the primary key becomes project and provider.)"
+    },
+    {
+      "id": "mw25rr5bmwwjn2",
+      "text": "Implement normalisation logic in `bwyn-application` that converts each provider's raw usage report (Bedrock, Anthropic API, Azure OpenAI) into the shared five-figure model, including the Azure OpenAI cached-token subtraction. (Not a new class: the provider adapters already report the shared LlmUsage model, and the Azure OpenAI adapter already subtracts the cached tokens from the prompt tokens and stores 0 for cache write.)"
+    },
+    {
+      "id": "mw25rr5b1hlxnm",
+      "text": "Write a `@DataJpaTest` integration test using Testcontainers that verifies the migration, the back-fill, and the per-provider query (ADR-0012). (Done as Spring Boot integration tests with Testcontainers in LlmConnectionIT rather than @DataJpaTest; the back-fill test migrates a scratch schema to V6, inserts a row, then applies V7.)"
+    },
+    {
+      "id": "mw25rr5b5ch7yo",
+      "text": "Write an integration test with a fake provider HTTP server for each of the three providers, including a mid-session provider switch between Bedrock and Anthropic API, to verify that counts accumulate under the correct provider. (Done with fake Anthropic and Bedrock servers in LlmConnectionIT, including the switch between them; Azure OpenAI needs an https endpoint, so it is covered by its adapter test and the application tests.)"
+    },
+    {
+      "id": "mw25rr5bkrabm9",
+      "text": "Add a `UsageByProviderQueryHandler` port interface in `bwyn-core` and bind it in the composition root (ADR-0017). (Reused the existing QueryHandler: GetUsageByProviderQueryHandler in bwyn-application, bound in LlmConfig, with no separate port interface.)"
     }
   ]
 }
