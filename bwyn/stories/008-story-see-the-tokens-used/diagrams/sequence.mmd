@@ -3,22 +3,27 @@ sequenceDiagram
   box rgba(17,104,189,0.12) bwyn (Software System boundary)
     participant costsPanel as "CostsPanel<br/>[Component: React]"
     participant costsVM as "CostsViewModel<br/>[Component: TypeScript]"
-    participant usageEndpoint as "GET /api/projects/{id}/usage<br/>[Component: Spring MVC]"
-    participant queryHandler as "UsageByProviderUseCase<br/>[Component: Spring]"
-    participant usageRepo as "Usage Repository<br/>[Component: Spring Data JPA]"
+    participant usageController as "UsageController<br/>[Component: Spring MVC]"
+    participant queryHandler as "UsageByProviderQueryHandler<br/>[Component: Spring]"
+    participant usageRepo as "UsageRepository<br/>[Component: Spring Data JPA]"
   end
+  participant db as "PostgreSQL<br/>[External Software System]"
+
   user->>costsPanel: Opens Settings > Costs
-  costsPanel->>costsVM: Initialises and calls refresh
-  costsVM->>usageEndpoint: GET /api/projects/{projectId}/usage
-  usageEndpoint->>queryHandler: Queries usage grouped by provider
-  queryHandler->>usageRepo: Reads per-provider token counts
+  costsPanel->>costsVM: Requests usage data
+  costsVM->>usageController: GET /api/projects/{projectId}/usage
+  usageController->>queryHandler: Queries usage by provider
+  queryHandler->>usageRepo: Loads usage records by project
+  usageRepo->>db: Selects usage rows
+  db-->>usageRepo: Returns usage rows
   usageRepo-->>queryHandler: Returns usage records
-  queryHandler-->>usageEndpoint: Returns ordered provider list
-  usageEndpoint-->>costsVM: Returns provider usage response
+  queryHandler-->>usageController: Returns provider usage list
+  usageController-->>costsVM: Returns provider usage response
   costsVM-->>costsPanel: Exposes per-provider view state
   costsPanel-->>user: Renders one block per provider
+
   alt count cannot be read
-    usageEndpoint-->>costsVM: Returns error
+    usageController-->>costsVM: Returns error response
     costsVM-->>costsPanel: Exposes error state
     costsPanel-->>user: Shows "The count could not be read right now"
   end
