@@ -88,7 +88,7 @@ As a team member, I want Settings > Costs to show the tokens my project used for
 - [ ] Add a REST endpoint `GET /api/projects/{projectId}/usage` in `bwyn-rest` that invokes the query handler and returns the provider list; annotate it with OpenAPI annotations (ADR-0014).
 - [ ] Write a `@DataJpaTest` integration test using Testcontainers that verifies the migration, the back-fill, and the per-provider query (ADR-0012).
 - [ ] Write an integration test with a fake provider HTTP server for each of the three providers, including a mid-session provider switch between Bedrock and Anthropic API, to verify that counts accumulate under the correct provider.
-- [ ] Add a `UsageByProviderUseCase` port interface in `bwyn-core` and bind it in the composition root (ADR-0017).
+- [ ] Add a `UsageByProviderQueryHandler` port interface in `bwyn-core` and bind it in the composition root (ADR-0017).
 - [ ] Create or update the `CostsViewModel` in the interface-adapters layer to call the new REST endpoint, map the response to per-provider view state, and expose a `refresh` command and an error state (ADR-0007, AE-0002).
 - [ ] Build the provider block React component in the UI layer showing new input, cache read, cache write, output, total, input bar, request count, last-used timestamp, and the "Connected now" chip (ADR-0007, AE-0002).
 - [ ] Update `CostsPanel` to render one block per provider returned, display the "Providers are counted apart…" note, and handle the three empty/error states (no provider connected, provider connected but unused, count unreadable) (ADR-0007).
