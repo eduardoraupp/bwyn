@@ -1,0 +1,76 @@
+classDiagram
+direction LR
+
+class FixedDriverDefinition:::entity {
+    <<Entity>>
+    +identity: string
+    +name: string
+    +meaning: string
+    +icon: string
+    +tags: string[]
+}
+
+class FIXED_DRIVERS:::entity {
+    <<Entity>>
+    +list: FixedDriverDefinition[]
+}
+
+class GetDriversUseCase:::component {
+    <<Interface>>
+    +execute(projectId: string): Promise~DriverViewModel[]~
+}
+
+class GetDriversUseCaseImpl:::component {
+    <<Component>>
+    +execute(projectId: string): Promise~DriverViewModel[]~
+}
+
+class DriversViewModel:::component {
+    <<Component>>
+    +drivers: DriverViewModel[]
+    +isLoading: boolean
+    +load(projectId: string): void
+}
+
+class DriverViewModel:::entity {
+    <<Entity>>
+    +identity: string
+    +name: string
+    +meaning: string
+    +icon: string
+    +tags: string[]
+    +text: string
+    +isFixed: boolean
+    +isCustom: boolean
+}
+
+class DriversPage:::component {
+    <<Component>>
+    +render(): JSX.Element
+}
+
+class DriverCard:::component {
+    <<Component>>
+    +driver: DriverViewModel
+    +onEdit(): void
+    +render(): JSX.Element
+}
+
+class AddDriverCard:::component {
+    <<Component>>
+    +onAdd(): void
+    +render(): JSX.Element
+}
+
+FIXED_DRIVERS --> FixedDriverDefinition : Contains
+GetDriversUseCaseImpl ..|> GetDriversUseCase : Implements
+GetDriversUseCaseImpl --> FIXED_DRIVERS : Reads fixed list
+DriversViewModel --> GetDriversUseCase : Calls
+DriversViewModel ..> DriverViewModel : Produces
+DriversPage --> DriversViewModel : Observes state
+DriversPage --> DriverCard : Renders
+DriversPage --> AddDriverCard : Renders
+
+classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff

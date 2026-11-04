@@ -1,0 +1,22 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant page as "DriversPage<br/>[Component: React]"
+    participant vm as "DriversViewModel<br/>[Component: TypeScript]"
+    participant uc as "GetDriversUseCase<br/>[Component: TypeScript]"
+    participant ctrl as "DriversController<br/>[Component: Spring MVC]"
+    participant handler as "GetDriversQueryHandler<br/>[Component: Spring Boot]"
+    participant repo as "DriverRepositoryAdapter<br/>[Component: Spring Data JPA]"
+  end
+  user->>page: Navigates to Drivers
+  page->>vm: Requests driver list
+  vm->>uc: Executes GetDriversUseCase
+  uc->>ctrl: GET /api/projects/{projectId}/drivers
+  ctrl->>handler: Dispatches GetDriversQuery
+  handler->>repo: Reads project drivers
+  repo-->>handler: Returns persisted driver rows
+  handler-->>ctrl: Returns merged driver list
+  ctrl-->>uc: Returns driver list response
+  uc-->>vm: Maps response to driver view models
+  vm-->>page: Exposes ordered drivers and loading state
+  page-->>user: Renders fixed and custom driver cards
