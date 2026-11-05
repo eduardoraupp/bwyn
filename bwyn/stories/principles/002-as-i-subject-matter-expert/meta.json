@@ -87,6 +87,18 @@
     {
       "id": "mvyzlvk8wm25zu",
       "text": "Implement the inbound adapter: a Spring MVC controller with a `POST /api/principles` endpoint, annotated with OpenAPI annotations; no domain class appears in the API schema (ADR-0008, ADR-0014, Architecture)"
+    },
+    {
+      "id": "mw3xxd5qt68bjt",
+      "text": "Extract the dashed \"Add\" card into a shared `AddCard` component in the `ui` layer (label as a prop) and use it for \"Add a driver\" and \"Add a principle\" (Principle: DRY, ADR-0007)"
+    },
+    {
+      "id": "mw3xxd5qpo5g0d",
+      "text": "Replace the \"Add principle\" button of the Principles tab header with the `AddCard` as the last item of the principles grid, keeping the empty state, and remove the header button and its styles (ADR-0007)"
+    },
+    {
+      "id": "mw3xxd5qwch9ct",
+      "text": "Update the acceptance tests of the principles to the new card and add tests for its position, the missing top button, the empty state and the load failure; add a component test for `AddCard` (ADR-0005)"
     }
   ]
 }

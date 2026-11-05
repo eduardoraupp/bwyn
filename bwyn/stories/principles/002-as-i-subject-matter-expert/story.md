@@ -12,6 +12,10 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - [X] **Given** I am on the Principles & Practices screen, **When** the screen first loads, **Then** the "Principles" tab is active by default.
 - [X] **Given** I am on the Principles tab, **When** I submit a new principle with valid text, **Then** the principle appears in the list on the same screen and a confirmation message indicates it was saved.
 - [X] **Given** I am on the Principles tab, **When** I attempt to submit a principle with no text, **Then** the submission is prevented and an inline validation error indicates that text is required.
+- [X] **Given** I am on the Principles tab, **Then** there is no "Add principle" button above the principles, and the grid ends with a dashed "Add a principle" card, the same card as "Add a driver" on the Drivers screen, after the last principle.
+- [X] **Given** I am on the Principles tab, **When** I press the "Add a principle" card (or use Enter or Space on it), **Then** the "Add a principle" dialog opens.
+- [X] **Given** there are no principles yet, **Then** the empty state is shown together with the "Add a principle" card, so the first principle can still be added.
+- [X] **Given** the principles are loading or could not be loaded, **Then** no "Add a principle" card is shown.
 - [X] **Given** I am on the Practices tab, **When** the tab is active, **Then** the tab content is visible but no add or edit controls are present, confirming the tab is read-only.
 
 ## Business rules and constraints
@@ -55,3 +59,6 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - [X] Add the P&P navigation item to the left-hand expandable menu in the `ui` layer and wire it to the `PrinciplesAndPracticesScreen` (ADR-0007, Architecture)
 - [X] Write Jest unit tests for the `PrinciplesViewModel` covering valid submission, empty-text rejection, and confirmation state (ADR-0005)
 - [X] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)
+- [X] Extract the dashed "Add" card into a shared `AddCard` component in the `ui` layer (label as a prop) and use it for "Add a driver" and "Add a principle" (Principle: DRY, ADR-0007)
+- [X] Replace the "Add principle" button of the Principles tab header with the `AddCard` as the last item of the principles grid, keeping the empty state, and remove the header button and its styles (ADR-0007)
+- [X] Update the acceptance tests of the principles to the new card and add tests for its position, the missing top button, the empty state and the load failure; add a component test for `AddCard` (ADR-0005)
