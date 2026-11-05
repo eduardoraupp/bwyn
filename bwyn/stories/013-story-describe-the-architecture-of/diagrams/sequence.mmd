@@ -1,0 +1,37 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant page as "Architecture Page<br/>[Component: React]"
+    participant viewmodel as "ArchitectureViewModel<br/>[Component: TypeScript]"
+    participant api as "Architecture API Client<br/>[Component: TypeScript]"
+    participant controller as "Architecture Controller<br/>[Component: Spring MVC]"
+    participant handler as "Save/Load Architecture Handler<br/>[Component: Spring Boot]"
+    participant repo as "Architecture Repository<br/>[Component: Spring Data JPA]"
+  end
+  user->>page: Opens Architecture page
+  page->>viewmodel: Requests architecture text
+  viewmodel->>api: Fetches architecture for project
+  api->>controller: GET /projects/{id}/architecture
+  controller->>handler: Loads architecture text
+  handler->>repo: Finds by project id
+  repo-->>handler: Returns architecture text
+  handler-->>controller: Returns architecture text
+  controller-->>api: Returns architecture text
+  api-->>viewmodel: Returns architecture text
+  viewmodel-->>page: Exposes loaded text and clean state
+  page-->>user: Shows text area with saved text
+  user->>page: Edits architecture text
+  page->>viewmodel: Notifies text changed
+  viewmodel-->>page: Sets dirty state ("Unsaved changes.")
+  user->>page: Presses Save
+  page->>viewmodel: Invokes save
+  viewmodel->>api: Saves architecture for project
+  api->>controller: PUT /projects/{id}/architecture
+  controller->>handler: Saves architecture text
+  handler->>repo: Persists architecture text
+  repo-->>handler: Confirms saved
+  handler-->>controller: Returns saved text
+  controller-->>api: Returns saved text
+  api-->>viewmodel: Confirms saved
+  viewmodel-->>page: Sets clean state ("Saved.")
+  page-->>user: Shows "Saved" for ~2.5 s, disables Save
