@@ -55,6 +55,46 @@
     {
       "id": "mw3yyy9llkohza",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mw41neb6x9hcpc",
+      "text": "Add the \"Architecture\" entry to the menu with its icon, title, and description (ADR-0020, Architecture: UI layer). (The entry was already in the menu; this story fills the page it opens.)"
+    },
+    {
+      "id": "mw41neb61kc823",
+      "text": "Implement the backend endpoint to persist and retrieve one architecture text per project, with no schema validation (ADR-0008, ADR-0017: domain layer, application layer, inbound adapter, outbound adapter). (`GET` and `PUT /api/projects/{projectId}/architecture`; a project that never saved answers an empty text, an unknown project is a 404.)"
+    },
+    {
+      "id": "mw41neb6myo40q",
+      "text": "Add a Flyway migration for the architecture text column or table (ADR-0010). (`V9__create_architecture_table.sql`.)"
+    },
+    {
+      "id": "mw41neb639kz55",
+      "text": "Build the `ArchitectureViewModel` in the interface-adapters layer: load, save, and track dirty state (ADR-0007). (It also keeps the 2.5 second \"Saved\" moment.)"
+    },
+    {
+      "id": "mw41neb681jbep",
+      "text": "Mount the shared `ImproveWithAI` component on the Architecture page, passing the noun \"architecture\", the four quick actions, the architecture system prompt, the ADR context builder, and the apply-proposal callback (story 007, ADR-0007). (The context builder is on the backend: the `architecture` context kind carries the project name and the ADRs.)"
+    },
+    {
+      "id": "mw41neb6zaycfb",
+      "text": "Add the saved architecture text to the Builder's story context (create and edit) as the section \"Architecture of the system (the layers a story must respect)\", omitting the section when the text is empty (Architecture: application layer). (Deferred: there is no Builder in the product yet.)"
+    },
+    {
+      "id": "mw41neb6og7nyz",
+      "text": "Add the same section to the diagram and UI-example prompts, with the layer-placement instruction for diagrams (Architecture: application layer). (Deferred: there is no Builder in the product yet.)"
+    },
+    {
+      "id": "mw41neb6vjruim",
+      "text": "Add the story-checking instruction to the story prompt: each rule in the right layer, no broken dependency, cite \"(Architecture)\", leave non-fitting parts under Out of scope. (Deferred: there is no Builder in the product yet.)"
+    },
+    {
+      "id": "mw41neb6w99hb0",
+      "text": "Write a JUnit unit test for the save and retrieve application service using a test-double repository port (ADR-0009, ADR-0017). (`ArchitectureHandlersTest`.)"
+    },
+    {
+      "id": "mw41neb6n47smw",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build). (Not met yet: the Java modules build and pass in about 5 minutes, but the frontend module takes about 6 minutes and its `npm test` fails on two architecture rules (`layer-rules.test.ts`, \"Where the drivers live\") that need forward-slash paths and fail when node runs on this Windows drive.)"
     }
   ]
 }
