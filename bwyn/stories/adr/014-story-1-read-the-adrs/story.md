@@ -10,25 +10,25 @@ As a team member, I want to open "ADR" in the menu and see all the architecture 
 ## Acceptance tests
 
 **The page**
-- [ ] **Given** a project, **When** the user chooses "ADR" in the menu, **Then** the item becomes selected (`aria-current="page"`), the header reads "&lt;project&gt; / ADR", and the page is titled "Architecture decisions" with the description "The decision log of this project."
-- [ ] **Given** the page, **Then** a card shows the sentence "The decisions of this project. An ADR goes to GitHub the first time with the story or the enabler that uses it. After that, saving an edit of a used ADR opens a pull request.", an "Add ADR" button on its right, and the list below it.
-- [ ] **Given** the page, **Then** it renders correctly with no LLM provider connected and no repository connected.
+- [X] **Given** a project, **When** the user chooses "ADR" in the menu, **Then** the item becomes selected (`aria-current="page"`), the header reads "&lt;project&gt; / ADR", and the page is titled "Architecture decisions" with the description "The decision log of this project."
+- [X] **Given** the page, **Then** a card shows the sentence "The decisions of this project. An ADR goes to GitHub the first time with the story or the enabler that uses it. After that, saving an edit of a used ADR opens a pull request.", an "Add ADR" button on its right, and the list below it.
+- [X] **Given** the page, **Then** it renders correctly with no LLM provider connected and no repository connected.
 
 **No ADRs**
-- [ ] **Given** a project with no ADRs, **Then** the list shows an icon, the text "No ADRs yet", and the hint "Record the first architecture decision, or connect GitHub in Integrations and sync a story to bring in the ones that are in the repository."
+- [X] **Given** a project with no ADRs, **Then** the list shows an icon, the text "No ADRs yet", and the hint "Record the first architecture decision, or connect GitHub in Integrations and sync a story to bring in the ones that are in the repository."
 
 **The rows**
-- [ ] **Given** a project with ADRs, **Then** each ADR is a row showing its number (4 digits, monospace), its title on one line truncated with "…" when long, its date, its status chip, and a pencil icon; rows are ordered by number ascending.
-- [ ] **Given** an ADR that at least one story or enabler links to or derives from, **Then** its row shows a chip with the count of those stories and enablers and the tooltip "Used by a story or an enabler"; an ADR that nothing uses shows no chip.
-- [ ] **Given** a status chip, **Then** "Accepted" is green, "Proposed" is amber, "Deprecated" and "Superseded" are grey.
-- [ ] **Given** an ADR whose status is not one of the four recognised values (for example an ADR imported from the repository with no Status line), **Then** its chip is neutral and shows "Unknown".
-- [ ] **Given** a row, **Then** it is a single button with the accessible name "Edit ADR 0004, &lt;title&gt;"; **When** the user activates it with a click, Enter, or Space, **Then** the edit dialog opens (story 3, out of scope here).
-- [ ] **Given** the list, **Then** no row, dialog, or menu offers a way to remove an ADR: no trash button and no "Remove" option.
+- [X] **Given** a project with ADRs, **Then** each ADR is a row showing its number (4 digits, monospace), its title on one line truncated with "…" when long, its date, its status chip, and a pencil icon; rows are ordered by number ascending.
+- [X] **Given** an ADR that at least one story or enabler links to or derives from, **Then** its row shows a chip with the count of those stories and enablers and the tooltip "Used by a story or an enabler"; an ADR that nothing uses shows no chip. (The chip logic is tested with counts given by the test backend. The real backend sends none yet, because nothing can link to an ADR.)
+- [X] **Given** a status chip, **Then** "Accepted" is green, "Proposed" is amber, "Deprecated" and "Superseded" are grey.
+- [X] **Given** an ADR whose status is not one of the four recognised values (for example an ADR imported from the repository with no Status line), **Then** its chip is neutral and shows "Unknown".
+- [X] **Given** a row, **Then** it is a single button with the accessible name "Edit ADR 0004, &lt;title&gt;"; **When** the user activates it with a click, Enter, or Space, **Then** the edit dialog opens (story 3, out of scope here).
+- [X] **Given** the list, **Then** no row, dialog, or menu offers a way to remove an ADR: no trash button and no "Remove" option.
 
 **Persistence and isolation**
-- [ ] **Given** ADRs saved to a project, **When** the page is reloaded, **Then** the same ADRs appear in the same order.
-- [ ] **Given** two projects each with their own ADRs, **Then** each project's ADR screen shows only its own ADRs.
-- [ ] **Given** a repository containing ADR files, **When** the project syncs, **Then** files whose names start with a four-digit number appear in the list; the template file `0000` and files that do not start with a number are not imported as ADRs.
+- [X] **Given** ADRs saved to a project, **When** the page is reloaded, **Then** the same ADRs appear in the same order.
+- [X] **Given** two projects each with their own ADRs, **Then** each project's ADR screen shows only its own ADRs.
+- [ ] **Given** a repository containing ADR files, **When** the project syncs, **Then** files whose names start with a four-digit number appear in the list; the template file `0000` and files that do not start with a number are not imported as ADRs. (Not verified: syncing with a repository is a separate story and does not exist yet. The list reads whatever the project keeps, so ADRs that sync brings in will show.)
 
 ## Business rules and constraints
 - ADRs are ordered by number only; there is no filter, search, or alternative ordering.
@@ -46,19 +46,19 @@ As a team member, I want to open "ADR" in the menu and see all the architecture 
 - The edit dialog content (story 3).
 
 ## Tasks
-- [ ] Add an "ADR" entry to the left-hand menu with its icon, route, title "Architecture decisions", and description "The decision log of this project." (ADR-0020, Architecture: ui layer)
-- [ ] Define the `Adr` entity (number, title, status, date, file name, Markdown body) in the entities layer and export it from the layer barrel (ADR-0007, Architecture: entities layer)
-- [ ] Implement a `ListAdrsUseCase` interface in the use-cases layer that returns the ADRs of a project ordered by number, and a `GetAdrUsageCountUseCase` interface that returns the count of stories and enablers linked to each ADR (ADR-0007, Architecture: use-cases layer)
-- [ ] Implement a `AdrRepository` port in the use-cases layer and a concrete in-memory implementation in the interface-adapters layer that persists ADRs per project (ADR-0007, Architecture: interface-adapters layer)
-- [ ] Implement an `AdrListViewModel` in the interface-adapters layer that exposes the ordered ADR list, the usage counts, and the empty-state flag, injected via Inversify (ADR-0006, ADR-0007)
-- [ ] Add the backend `GET /api/projects/{projectId}/adrs` query endpoint in `bwyn-rest` returning ADR number, title, status, date, and usage count; annotate with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014, ADR-0017, Architecture: inbound adapter)
-- [ ] Add the `AdrQueryRepository` outbound port in `bwyn-core` and its Spring Data JPA implementation in `bwyn-infrastructure`; add a Flyway migration for the `adr` table (ADR-0010, ADR-0011, ADR-0017, Architecture: outbound adapter)
-- [ ] Build the `AdrListPage` React component: page header, info card with "Add ADR" button placeholder, list of rows, and empty state (ADR-0007, Architecture: ui layer)
-- [ ] Build the `AdrRow` React component: monospace 4-digit number, truncated title, date, coloured status chip, usage chip (conditional), and accessible button with name "Edit ADR &lt;number&gt;, &lt;title&gt;" (ADR-0007, Architecture: ui layer)
-- [ ] Wire the `AdrListViewModel` into the Inversify composition root and connect it to `AdrListPage` (ADR-0006)
-- [ ] Write Jest unit tests for `ListAdrsUseCase`, `AdrListViewModel`, `AdrRow`, and `AdrListPage` covering ordering, status colours, usage chip visibility, empty state, and the no-removal invariant (ADR-0005)
-- [ ] Write a `@DataJpaTest` integration test for `AdrQueryRepository` using the Testcontainers base class (ADR-0012)
-- [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+- [X] Add an "ADR" entry to the left-hand menu with its icon, route, title "Architecture decisions", and description "The decision log of this project." (ADR-0020, Architecture: ui layer) (The entry was already in the menu; this story fills the page it opens.)
+- [X] Define the `Adr` entity (number, title, status, date, file name, Markdown body) in the entities layer and export it from the layer barrel (ADR-0007, Architecture: entities layer)
+- [ ] Implement a `ListAdrsUseCase` interface in the use-cases layer that returns the ADRs of a project ordered by number, and a `GetAdrUsageCountUseCase` interface that returns the count of stories and enablers linked to each ADR (ADR-0007, Architecture: use-cases layer) (`ListAdrsUseCase` is done. `GetAdrUsageCountUseCase` is deferred: nothing can link to an ADR yet, so there is nothing to count.)
+- [X] Implement a `AdrRepository` port in the use-cases layer and a concrete in-memory implementation in the interface-adapters layer that persists ADRs per project (ADR-0007, Architecture: interface-adapters layer) (Deviation: the port is `AdrGateway` in the use-cases layer, with an HTTP adapter; the ADRs are kept by the backend, not in memory. The in-memory version is a test double.)
+- [X] Implement an `AdrListViewModel` in the interface-adapters layer that exposes the ordered ADR list, the usage counts, and the empty-state flag, injected via Inversify (ADR-0006, ADR-0007) (The usage count is `usedBy` on each row; it is 0 until something can link to an ADR.)
+- [X] Add the backend `GET /api/projects/{projectId}/adrs` query endpoint in `bwyn-rest` returning ADR number, title, status, date, and usage count; annotate with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014, ADR-0017, Architecture: inbound adapter) (Deviation: no usage count is returned, because nothing can link to an ADR yet. The list never carries the text of an ADR.)
+- [X] Add the `AdrQueryRepository` outbound port in `bwyn-core` and its Spring Data JPA implementation in `bwyn-infrastructure`; add a Flyway migration for the `adr` table (ADR-0010, ADR-0011, ADR-0017, Architecture: outbound adapter) (`V10__create_adr_table.sql`.)
+- [X] Build the `AdrListPage` React component: page header, info card with "Add ADR" button placeholder, list of rows, and empty state (ADR-0007, Architecture: ui layer) (Built as `AdrPage`. "Add ADR" is disabled until story 015.)
+- [X] Build the `AdrRow` React component: monospace 4-digit number, truncated title, date, coloured status chip, usage chip (conditional), and accessible button with name "Edit ADR &lt;number&gt;, &lt;title&gt;" (ADR-0007, Architecture: ui layer)
+- [X] Wire the `AdrListViewModel` into the Inversify composition root and connect it to `AdrListPage` (ADR-0006)
+- [X] Write Jest unit tests for `ListAdrsUseCase`, `AdrListViewModel`, `AdrRow`, and `AdrListPage` covering ordering, status colours, usage chip visibility, empty state, and the no-removal invariant (ADR-0005) (`ListAdrsUseCase` is tested through the entity and view-model tests; the row and the page through `adrs.acceptance.test.tsx`.)
+- [X] Write a `@DataJpaTest` integration test for `AdrQueryRepository` using the Testcontainers base class (ADR-0012) (Done as `AdrPersistenceIT`, a full-context test on the Testcontainers base class, like the other persistence tests.)
+- [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build) (Not met yet: the Java modules build and pass in about 6 minutes, but the frontend module takes about 6 minutes and its `npm test` fails on two architecture rules (`layer-rules.test.ts`, "Where the drivers live") that need forward-slash paths and fail when node runs on this Windows drive.)
 
 
 Files of the spike

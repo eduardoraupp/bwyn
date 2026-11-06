@@ -58,6 +58,46 @@
     {
       "id": "mw4ph5wclc072g",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    },
+    {
+      "id": "mw4zst1meif5eh",
+      "text": "Add an \"ADR\" entry to the left-hand menu with its icon, route, title \"Architecture decisions\", and description \"The decision log of this project.\" (ADR-0020, Architecture: ui layer) (The entry was already in the menu; this story fills the page it opens.)"
+    },
+    {
+      "id": "mw4zst1mvugjpg",
+      "text": "Implement a `ListAdrsUseCase` interface in the use-cases layer that returns the ADRs of a project ordered by number, and a `GetAdrUsageCountUseCase` interface that returns the count of stories and enablers linked to each ADR (ADR-0007, Architecture: use-cases layer) (`ListAdrsUseCase` is done. `GetAdrUsageCountUseCase` is deferred: nothing can link to an ADR yet, so there is nothing to count.)"
+    },
+    {
+      "id": "mw4zst1mdbj38g",
+      "text": "Implement a `AdrRepository` port in the use-cases layer and a concrete in-memory implementation in the interface-adapters layer that persists ADRs per project (ADR-0007, Architecture: interface-adapters layer) (Deviation: the port is `AdrGateway` in the use-cases layer, with an HTTP adapter; the ADRs are kept by the backend, not in memory. The in-memory version is a test double.)"
+    },
+    {
+      "id": "mw4zst1m03nim1",
+      "text": "Implement an `AdrListViewModel` in the interface-adapters layer that exposes the ordered ADR list, the usage counts, and the empty-state flag, injected via Inversify (ADR-0006, ADR-0007) (The usage count is `usedBy` on each row; it is 0 until something can link to an ADR.)"
+    },
+    {
+      "id": "mw4zst1m5mfho3",
+      "text": "Add the backend `GET /api/projects/{projectId}/adrs` query endpoint in `bwyn-rest` returning ADR number, title, status, date, and usage count; annotate with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014, ADR-0017, Architecture: inbound adapter) (Deviation: no usage count is returned, because nothing can link to an ADR yet. The list never carries the text of an ADR.)"
+    },
+    {
+      "id": "mw4zst1mh8zutu",
+      "text": "Add the `AdrQueryRepository` outbound port in `bwyn-core` and its Spring Data JPA implementation in `bwyn-infrastructure`; add a Flyway migration for the `adr` table (ADR-0010, ADR-0011, ADR-0017, Architecture: outbound adapter) (`V10__create_adr_table.sql`.)"
+    },
+    {
+      "id": "mw4zst1mhd35ir",
+      "text": "Build the `AdrListPage` React component: page header, info card with \"Add ADR\" button placeholder, list of rows, and empty state (ADR-0007, Architecture: ui layer) (Built as `AdrPage`. \"Add ADR\" is disabled until story 015.)"
+    },
+    {
+      "id": "mw4zst1mhwlm71",
+      "text": "Write Jest unit tests for `ListAdrsUseCase`, `AdrListViewModel`, `AdrRow`, and `AdrListPage` covering ordering, status colours, usage chip visibility, empty state, and the no-removal invariant (ADR-0005) (`ListAdrsUseCase` is tested through the entity and view-model tests; the row and the page through `adrs.acceptance.test.tsx`.)"
+    },
+    {
+      "id": "mw4zst1mycgsmt",
+      "text": "Write a `@DataJpaTest` integration test for `AdrQueryRepository` using the Testcontainers base class (ADR-0012) (Done as `AdrPersistenceIT`, a full-context test on the Testcontainers base class, like the other persistence tests.)"
+    },
+    {
+      "id": "mw4zst1mlqqipy",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build) (Not met yet: the Java modules build and pass in about 6 minutes, but the frontend module takes about 6 minutes and its `npm test` fails on two architecture rules (`layer-rules.test.ts`, \"Where the drivers live\") that need forward-slash paths and fail when node runs on this Windows drive.)"
     }
   ]
 }
