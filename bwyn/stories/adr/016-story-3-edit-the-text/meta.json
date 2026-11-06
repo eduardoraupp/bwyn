@@ -54,6 +54,42 @@
     {
       "id": "mw4pod7hgwwigi",
       "text": "Write an integration test with a fake repository: edit of a used ADR on the base branch, one that never reached GitHub, and a conflict (Practice: Continuous integration)"
+    },
+    {
+      "id": "mw565p5oyrrcgq",
+      "text": "Open the edit dialog from a row, pre-filled with the ADR's text, status selector, and used-by note, with Save disabled until something changes (ADR-0007) (The row asks the backend for the ADR with its text; the dialog opens from that. `GET /api/projects/{projectId}/adrs/{number}`.)"
+    },
+    {
+      "id": "mw565p5o3beok5",
+      "text": "Wire the AI context: pass the project name and every ADR except the one being edited (ADR-0007) (The backend `adrs` context kind, with the ADR named as the subject so it is left out.)"
+    },
+    {
+      "id": "mw565p5oa17qt4",
+      "text": "Implement text-only save: rebuild the full Markdown with the stored date, re-read title, status, and date, keep number and file name (ADR-0017) (`PUT /api/projects/{projectId}/adrs/{number}`; `UpdateAdrCommandHandler` and `AdrDocument.markdown`.)"
+    },
+    {
+      "id": "mw565p5o5d0z3l",
+      "text": "Implement status-only save: rewrite only the Status line (or insert it under the title when absent), leaving all other bytes unchanged (ADR-0017) (`AdrDocument.withStatus`.)"
+    },
+    {
+      "id": "mw565p5oswxfal",
+      "text": "Colour the status chip on the row for each of the four statuses, with a neutral colour for any other value (ADR-0007) (Done with the list in story 014.)"
+    },
+    {
+      "id": "mw565p5ovzsisi",
+      "text": "Remove all removal affordances: delete the confirmation dialog, `removeAdr` from the builder store, `deleteFromRepo` for ADRs, and the removed-numbers list; derive the next number from the highest existing number only (ADR-0017) (Nothing to remove in the product: the removal existed only in the spike. The list, the dialogs and the endpoints have none, and a test checks a `DELETE` is refused. The next number is the highest plus one.)"
+    },
+    {
+      "id": "mw565p5oaissiv",
+      "text": "Implement the five repository notices (pull request opened, not on GitHub, conflict, unchanged/already open, error) with link and dismiss button (ADR-0007) (Deferred: GitHub cannot be connected yet.)"
+    },
+    {
+      "id": "mw565p5obnrfj5",
+      "text": "Implement `publishAdr`: open a pull request for an ADR that is on GitHub and used, and record it for the next sync (ADR-0017) (Deferred: GitHub cannot be connected yet, and nothing links to an ADR.)"
+    },
+    {
+      "id": "mw565p5o4trnto",
+      "text": "Write an integration test with a fake repository: edit of a used ADR on the base branch, one that never reached GitHub, and a conflict (Practice: Continuous integration) (Deferred with the pull-request flow. The backend behaviour that exists is covered by `AdrPersistenceIT`.)"
     }
   ]
 }
