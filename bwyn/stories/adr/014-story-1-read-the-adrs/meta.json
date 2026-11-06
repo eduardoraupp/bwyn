@@ -1,0 +1,63 @@
+{
+  "title": "Read the ADRs of my project on one screen",
+  "prompt": "# Story 1: Read the ADRs of my project from the menu\n\n- **Story**: XXX-list-adrs\n- **Created**: 2026-11-06\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to open \"ADR\" in the menu on the left and see all the architecture decisions of my project in one list, with\ntheir status, so that I know what was decided, what is still proposed and what is no longer valid.\n\n## Acceptance tests\n\nThe page\n\n- [ ] **Given** a project, **When** the user chooses \"ADR\" in the menu, **Then** it becomes the selected item (`aria-current=\"page\"`),\n  the header reads \"<project> / ADR\", and the page is titled \"Architecture decisions\" with the description \"The decision log of this\n  project.\"\n- [ ] **Given** the page, **Then** one card shows the sentence \"The decisions of this project. An ADR goes to GitHub the first time with\n  the story or the enabler that uses it. After that, saving an edit of a used ADR opens a pull request.\", an \"Add ADR\" button (story 2)\n  on its right, and below it the list.\n- [ ] **Given** the page, **Then** it can be read with no model connected and no repository connected.\n\nNo ADRs\n\n- [ ] **Given** a project with no ADR, **Then** the list shows an icon, \"No ADRs yet\", and \"Record the first architecture decision, or\n  connect GitHub in Integrations and sync a story to bring in the ones that are in the repository.\"\n\nThe rows\n\n- [ ] **Given** ADRs, **Then** each is a row with its number (4 digits, monospace), its title on one line (cut with \"...\" when long),\n  its date, its status and a pencil, and the rows are in order of number, from the lowest.\n- [ ] **Given** an ADR that stories or enablers use (a story links to it, or an enabler links to it or derives from it), **Then** its\n  row shows a small chip with the count and the hint \"Used by a story or an enabler\". An ADR that nothing uses shows no chip.\n- [ ] **Given** the status chip, **Then** Accepted is green, Proposed is amber, and Deprecated and Superseded are grey.\n- [ ] **Given** an ADR whose status is none of the four (for example an ADR that came from the repository with no Status line, which\n  shows \"Unknown\"), **Then** its chip is neutral and shows that text.\n- [ ] **Given** a row, **Then** it is one button with the accessible name \"Edit ADR 0004, <title>\". **When** the user presses it (or uses\n  Enter or Space), **Then** the dialog to edit it opens (story 3).\n- [ ] **Given** the list, **Then** no row, dialog or menu has a way to remove an ADR: no trash button and no \"Remove\".\n\nKeeping them\n\n- [ ] **Given** ADRs, **When** the page is reloaded, **Then** the same ADRs show.\n- [ ] **Given** two projects, **Then** each shows its own ADRs.\n- [ ] **Given** a repository with ADR files, **When** the project syncs, **Then** the ADRs that came down show in the list like the\n  ones written here (the template `0000` and files that do not start with a number are not ADRs).\n\n## Business rules and constraints\n\n- ADRs are shown by number. Nothing else orders them, and there is no filter or search.\n- The count on a row is the number of stories and enablers that use the ADR. A row never says which ones (the edit dialog does).\n- An ADR cannot be removed from BWYN. A decision that is no longer valid is kept and marked Deprecated or Superseded (story 4).\n\n## Out of scope\n\n- Adding, editing and changing the status (stories 2, 3 and 4), the sync with the repository, and linking an ADR to a story (the Builder).\n- A filter or search, grouping by status, and showing the ADR's text in the list.\n\n## Tasks\n\n- [ ] Add \"ADR\" to the menu with its icon, its title \"Architecture decisions\" and its description.\n- [ ] Keep, per project, the list of ADRs (number, title, status, date, file name, Markdown), in order of number.\n- [ ] Build the card with its sentence and the \"Add ADR\" button's place.\n- [ ] Build the row: number, title, \"used by\" chip, date, coloured status, pencil, and the button that opens the edit dialog.\n- [ ] Build the empty state.\n- [ ] Count the stories and enablers that use each ADR.\n- [ ] Take the trash button, the removal dialog and the removal itself out of the page (see the Reference: removal in the spike).",
+  "createdAt": "2026-11-06",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw4ph5wczkdkc6",
+      "text": "Add an \"ADR\" entry to the left-hand menu with its icon, route, title \"Architecture decisions\", and description \"The decision log of this project.\" (ADR-0020, Architecture: ui layer)"
+    },
+    {
+      "id": "mw4ph5wcikmrt7",
+      "text": "Define the `Adr` entity (number, title, status, date, file name, Markdown body) in the entities layer and export it from the layer barrel (ADR-0007, Architecture: entities layer)"
+    },
+    {
+      "id": "mw4ph5wcejtnt5",
+      "text": "Implement a `ListAdrsUseCase` interface in the use-cases layer that returns the ADRs of a project ordered by number, and a `GetAdrUsageCountUseCase` interface that returns the count of stories and enablers linked to each ADR (ADR-0007, Architecture: use-cases layer)"
+    },
+    {
+      "id": "mw4ph5wcmsc1ie",
+      "text": "Implement a `AdrRepository` port in the use-cases layer and a concrete in-memory implementation in the interface-adapters layer that persists ADRs per project (ADR-0007, Architecture: interface-adapters layer)"
+    },
+    {
+      "id": "mw4ph5wcmb5hmx",
+      "text": "Implement an `AdrListViewModel` in the interface-adapters layer that exposes the ordered ADR list, the usage counts, and the empty-state flag, injected via Inversify (ADR-0006, ADR-0007)"
+    },
+    {
+      "id": "mw4ph5wc050ubc",
+      "text": "Add the backend `GET /api/projects/{projectId}/adrs` query endpoint in `bwyn-rest` returning ADR number, title, status, date, and usage count; annotate with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014, ADR-0017, Architecture: inbound adapter)"
+    },
+    {
+      "id": "mw4ph5wc6dt6ka",
+      "text": "Add the `AdrQueryRepository` outbound port in `bwyn-core` and its Spring Data JPA implementation in `bwyn-infrastructure`; add a Flyway migration for the `adr` table (ADR-0010, ADR-0011, ADR-0017, Architecture: outbound adapter)"
+    },
+    {
+      "id": "mw4ph5wc19vjdq",
+      "text": "Build the `AdrListPage` React component: page header, info card with \"Add ADR\" button placeholder, list of rows, and empty state (ADR-0007, Architecture: ui layer)"
+    },
+    {
+      "id": "mw4ph5wcp3sgcc",
+      "text": "Build the `AdrRow` React component: monospace 4-digit number, truncated title, date, coloured status chip, usage chip (conditional), and accessible button with name \"Edit ADR &lt;number&gt;, &lt;title&gt;\" (ADR-0007, Architecture: ui layer)"
+    },
+    {
+      "id": "mw4ph5wca1gqwi",
+      "text": "Wire the `AdrListViewModel` into the Inversify composition root and connect it to `AdrListPage` (ADR-0006)"
+    },
+    {
+      "id": "mw4ph5wcx97i7f",
+      "text": "Write Jest unit tests for `ListAdrsUseCase`, `AdrListViewModel`, `AdrRow`, and `AdrListPage` covering ordering, status colours, usage chip visibility, empty state, and the no-removal invariant (ADR-0005)"
+    },
+    {
+      "id": "mw4ph5wcg873t0",
+      "text": "Write a `@DataJpaTest` integration test for `AdrQueryRepository` using the Testcontainers base class (ADR-0012)"
+    },
+    {
+      "id": "mw4ph5wclc072g",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
