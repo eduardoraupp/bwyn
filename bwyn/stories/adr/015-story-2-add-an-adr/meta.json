@@ -1,0 +1,56 @@
+{
+  "title": "Add an ADR",
+  "prompt": "Story 2: Add an ADR, with AI help if I want it\n\n- **Story**: XXX-add-adr\n- **Created**: 2026-11-06\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to record an architecture decision in my own words and, if I want, ask the AI to fill the ADR template from\nthem, so that the decision becomes an ADR that stories and enablers can use.\n\n## Acceptance tests\n\nOpening\n\n- [ ] **Given** ADRs 0001 to 0012, **When** the user presses \"Add ADR\", **Then** a dialog opens with \"ADR 0013\" and \"New ADR\": the number is\n  the highest existing number plus one, with 4 digits (\"ADR 0001\" when there is none).\n- [ ] **Given** the dialog, **Then** it shows a grey note \"Not used by any story or enabler. It stays here, and goes to GitHub the first\n  time together with the story or the enabler that uses it.\", the label \"Describe the decision\", a Status selector set to Proposed\n  (options Proposed, Accepted, Deprecated, Superseded), a box of 14 rows with the focus and the placeholder \"Describe the decision in your\n  own words. The first line is its title. Or let the AI suggest the ADR from it.\", an \"Improve with AI\" button, Cancel, and Save, which is\n  disabled.\n- [ ] **Given** the dialog, **Then** the user never sees Markdown: the box holds plain text, with the title on the first line and the\n  sections (Context, Decision, Consequences) as lines of their own.\n\nSaving\n\n- [ ] **Given** a title on the first line, **When** the user presses Save, **Then** the ADR is stored with the number, the title, the status\n  chosen, today's date and the file name `0013-<the title, up to 8 words, as a slug>.md`, the dialog closes, and the row is in the list in\n  its place.\n- [ ] **Given** the text, **Then** what is stored is `# 0013. <Title>`, a blank line, `- **Status**: <status>`, `- **Date**: <date>`, a blank\n  line, and the text, in which the lines \"Context\", \"Decision\" and \"Consequences\" that stand alone between blank lines become `##` headings.\n- [ ] **Given** a first line that starts with \"#\" or with \"ADR 0013.\", **Then** those are left out of the title.\n- [ ] **Given** no text, or a first line that is nothing after that, **When** the user presses Save, **Then** \"Write the title in the first\n  line, for example: Use PostgreSQL for persistence\" shows under the box, the dialog stays open and nothing is stored. Typing clears the\n  message.\n- [ ] **Given** GitHub is connected, **When** the ADR is saved, **Then** a notice says \"ADR 0013 was saved here. It reaches GitHub the first\n  time together with the story or the enabler that uses it.\" **Given** it is not connected, **Then** no notice shows.\n- [ ] **Given** the dialog, **When** the user presses Escape, the Close (X) button or Cancel, **Then** it closes and nothing is stored, and\n  the number is free again. **When** the user clicks outside, **Then** it closes only when nothing was typed or changed.\n\nImprove with AI (the shared component)\n\n- [ ] **Given** the dialog, **When** the user presses \"Improve with AI\", **Then** the shared panel opens, as in `story-improve-with-ai.md`,\n  with five quick actions (\"Write the ADR\", \"Improve the context\", \"Add consequences\", \"Shorten\", \"Ask me questions\") and the field\n  \"Ask for a change, for example: add the option of a managed service\". Enter in that field sends it and never submits the dialog.\n- [ ] **Given** the quick action \"Write the ADR\", **Then** the instruction asks for the complete ADR from the user's text (rough notes or a\n  draft), following the template and keeping their intent and facts, or, when the box is empty, from the title and the project context,\n  asking questions if something important is missing.\n- [ ] **Given** any request, **Then** the model receives, as stable context, the project name and the full text of every ADR of the\n  project, and with each instruction the ADR as it is in the box now: its number, its title (the first line), its date, its text. It\n  receives no drivers, stories, enablers or architecture.\n- [ ] **Given** a reply with an ADR, **Then** it shows a short comment and a card with the proposed ADR as readable text (the title large,\n  the section lines in bold), never as Markdown.\n- [ ] **Given** a proposed ADR, **When** the user presses \"Use this text\", **Then** the box holds the proposal as plain text, the Status\n  selector takes the status of the proposal when it has one, nothing is saved, and the button reads \"In the editor\" while the box holds it.\n- [ ] **Given** the shared panel, **Then** streaming, Stop, Retry, a reply that is cut off and the token counts work as the panel already\n  does for principles and drivers, and are not tested again here.\n\n## Business rules and constraints\n\n- A new ADR exists only once it is saved. Its number is chosen when the dialog opens and is taken only by saving.\n- The number is 4 digits and is never `0000` (that is the template). The date is today's date (YYYY-MM-DD) and is written on saving.\n- The first line of the text is the title. The Markdown is built on saving and is never typed by the user. The rules for turning plain text\n  into Markdown and back are in Appendix C of `story-adr-and-lateral-menu.md`.\n- The AI only suggests. It never saves and never changes the number or the date. The user chooses to use a proposal and then to save.\n- The AI follows the template (title, Status, Date, Context, Decision, Consequences), writes the decision as \"We will ...\", keeps the\n  user's facts, invents no numbers, names or technologies, uses Proposed unless the user says otherwise, and is consistent with the other\n  ADRs. When the user's notes contradict an Accepted ADR, its comment says so.\n- The conversation belongs to the open dialog and is lost when it closes.\n- \"Improve with AI\" is the one shared component. What belongs to ADRs (the instructions, the context, the quick actions, the turn, the\n  reply marker, and how a proposal is read) is given by the dialog, never written in the component.\n\n## Out of scope\n\n- Editing and changing the status (stories 3 and 4), and the pull request flow of the repository.\n- The model, the backend endpoint, and the token totals (`story-improve-with-ai.md`, Integrations and Settings).\n- Linking an ADR to a story or an enabler (the Builder), and \"Superseded by NNNN\" links between ADRs.\n\n## Tasks\n\n- [ ] Build the dialog: number, \"New ADR\", the note, the status selector, the box, Cancel and Save, and the closing rules.\n- [ ] Choose the next number from the ADRs that exist, and write the file name from the number and the title.\n- [ ] Turn the plain text into the ADR's Markdown on saving, and the title rule with its message.\n- [ ] Add the ADR to the list in its place, and show the notice when GitHub is connected.\n- [ ] Give the shared \"Improve with AI\" component what an ADR needs, so that it needs nothing of its own: the reply marker (`---ADR---`\n  instead of the driver's), the turn it sends (number, title, date, text, instruction), a way to read a proposal as plain text for showing it,\n  for comparing it with the box and for using it, the text of its field label and placeholder, and the id of its field.\n- [ ] Use the shared component in the dialog, with the ADR's instructions, the context (project name and all ADRs), and the five quick actions\n  (\"Write the ADR\" takes the place of the \"Generate from template with AI\" button).\n- [ ] Make \"Use this text\" replace the text and the status, and nothing else, and keep Enter in the panel from submitting the dialog.\n- [ ] Delete the ADR's own assistant, `AdrAssistant.tsx`, once the shared one does its job, and test the shared component with the ADR\n  dialog and with one more screen.",
+  "createdAt": "2026-11-06",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure",
+    "story:007-story-improve-a-text-with"
+  ],
+  "tasks": [
+    {
+      "id": "mw4plpz9qw9zr2",
+      "text": "Add a `CreateAdrCommand` and its handler in `bwyn-application`, with a repository port in `bwyn-core` that persists the new ADR (ADR-0017)."
+    },
+    {
+      "id": "mw4plpz9kfa2i8",
+      "text": "Add a Flyway migration for the ADR table (number, title, status, date, body, file name) in `bwyn-runtime` (ADR-0010)."
+    },
+    {
+      "id": "mw4plpz9qc40y5",
+      "text": "Implement the Spring Data JPA outbound adapter for the ADR repository port in `bwyn-infrastructure` (ADR-0011)."
+    },
+    {
+      "id": "mw4plpz9j82aga",
+      "text": "Implement the Spring MVC inbound adapter in `bwyn-rest` with a `POST /projects/{projectId}/adrs` endpoint annotated with OpenAPI metadata; the endpoint derives the next number, builds the Markdown, and delegates to the command handler (ADR-0008, ADR-0014)."
+    },
+    {
+      "id": "mw4plpz92lecn5",
+      "text": "Write a JUnit unit test for `CreateAdrCommandHandler` using a test-double repository port (ADR-0009)."
+    },
+    {
+      "id": "mw4plpz9mo72i4",
+      "text": "Write a Testcontainers integration test for the JPA adapter that verifies the ADR is persisted and the next-number query is correct (ADR-0012)."
+    },
+    {
+      "id": "mw4plpz9yhbhbx",
+      "text": "Build the `AddAdrDialog` React component in the `ui` layer: number label, grey note, status selector, plain-text box, validation message, Cancel and Save buttons, and the closing rules (click-outside only when unchanged) (ADR-0007)."
+    },
+    {
+      "id": "mw4plpz98bbv2o",
+      "text": "Implement the `useAddAdr` hook in the `interface-adapters` layer: next-number derivation, save call, validation, and GitHub-notice flag (ADR-0007)."
+    },
+    {
+      "id": "mw4plpz9km9z5r",
+      "text": "Wire the `ImproveWithAI` shared component into `AddAdrDialog`, supplying the ADR-specific quick actions, instructions, context builder (project name + all ADRs), reply-marker, and apply-proposal callback that updates the box and the status selector (ADR-0007)."
+    },
+    {
+      "id": "mw4plpz9pfptgd",
+      "text": "Delete `AdrAssistant.tsx` once the shared component handles the ADR dialog, and add a Jest test that mounts the shared component with the ADR dialog and with one additional screen to confirm no ADR-specific logic leaks into the component (ADR-0005)."
+    },
+    {
+      "id": "mw4plpz9dlywqa",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
