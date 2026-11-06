@@ -1,0 +1,59 @@
+{
+  "title": "Edit an ADR and change its status",
+  "prompt": "# Story 3: Edit the text of an ADR, with AI help if I want it\n\n- **Story**: XXX-edit-adr\n- **Created**: 2026-11-06\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to open an ADR and correct or complete its text, with the same help from the AI, so that the decision log says\nwhat we really decided.\n\n## Acceptance tests\n\nOpening\n\n- [ ] **Given** a row, **When** the user opens it, **Then** the same dialog opens as \"ADR 0004\", titled with the ADR's title, with its text as\n  plain text in the box, its status selected, and Save disabled.\n- [ ] **Given** an ADR that nothing uses, **Then** the note says \"Not used by any story or enabler. It stays here, and goes to GitHub the\n  first time together with the story or the enabler that uses it.\"\n- [ ] **Given** an ADR that stories or enablers use, **Then** the note, in blue, says \"Used by N documents. The first time, it goes to\n  GitHub with them when you sync. After that, saving an edit opens a pull request for it.\" (\"1 document\" when there is one).\n- [ ] **Given** the dialog, **Then** the AI is given the project name and every ADR except this one, and the ADR as it is in the box.\n\nSaving\n\n- [ ] **Given** the text changed, **When** the user presses Save, **Then** the Markdown is built again with the stored date, the title, status\n  and date of the row are read from it again, the dialog closes, and the row shows them.\n- [ ] **Given** the title (first line) was changed, **Then** the row shows the new title, and the number and the file name do not change.\n- [ ] **Given** the first line was emptied, **When** Save, **Then** the same message as when adding shows and nothing is stored.\n- [ ] **Given** nothing changed, **Then** Save is disabled.\n- [ ] **Given** the dialog, **Then** Escape, Close (X), Cancel and a click outside close it by the same rules as when adding, and nothing\n  is saved.\n\nImprove with AI\n\n- [ ] **Given** the dialog, **Then** the same panel, with the same five quick actions, works as in story 2, and \"Use this text\" replaces the text\n  (and the status, when the proposal has one) in the box without saving.\n\nAfter saving: the repository\n\n- [ ] **Given** GitHub is not connected, **Then** saving shows no notice.\n- [ ] **Given** GitHub is connected and no story or enabler uses the ADR, **Then** a notice says \"ADR 0004 was saved here. It reaches GitHub the\n  first time together with the story or the enabler that uses it.\"\n- [ ] **Given** GitHub is connected and the ADR is used, **Then** a notice says \"Opening a pull request for ADR 0004...\", and then:\n  - **when it is on the base branch**, \"Pull request #N opened for ADR 0004. Merge it on GitHub.\" with a link \"Open it\";\n  - **when it never reached GitHub**, \"ADR 0004 was saved here. It is not on GitHub yet, so it goes with the story or the enabler that uses\n    it, the next time you sync it.\";\n  - **when the base branch changed the same ADR**, a warning \"ADR 0004 was also changed on <branch>, so nothing was uploaded. Solve it on\n    GitHub, then sync.\";\n  - **when it is the same as on the base branch, or already in an open pull request**, \"ADR 0004 is already the same on GitHub, or already\n    waiting in an open pull request.\";\n  - **when the request fails**, an error \"ADR 0004 was saved here, but the pull request could not be opened: <reason>\".\n- [ ] **Given** a notice, **Then** it can be dismissed with its X.\n\n## Business rules and constraints\n\n- Saving never commits an ADR to GitHub for the first time. That happens with the story or the enabler that uses it, when it is synced.\n  Only an ADR that is already on GitHub and used by something goes up by itself, in a pull request, under the same rules as a sync (compared\n  with the base branch and with what was last synchronised; a conflict uploads nothing).\n- The number, the file name and the date of an ADR do not change when its text is edited.\n- Notices have a tone (info, success, warning, error), may carry a link, and can be dismissed.\n\n## Out of scope\n\n- Changing the status (story 4), the sync engine, and the pull request flows of stories and enablers.\n- Locking the text of an Accepted ADR (see \"Something to decide\" in the Reference).\n\n## Tasks\n\n- [ ] Open the same dialog from a row, filled from the stored ADR, with the used-by note and Save disabled until something changes.\n- [ ] Give the AI every ADR but this one as context.\n- [ ] Save the text: build the Markdown again with the stored date, read title, status and date again, and keep number and file name.\n- [ ] Show the five notices of the repository (pull request, not on GitHub, conflict, unchanged, error) with the link and the dismiss button.\n- [ ] Open the pull request for an ADR that is on GitHub and used (`publishAdr`), and keep its record for the next sync.\n- [ ] Test with a fake repository: an edit of a used ADR on the base branch, one that never reached GitHub, and a conflict.\n\n---\n\n# Story 4: Change the status of an ADR (an ADR is never removed)\n\n- **Story**: XXX-change-adr-status\n- **Created**: 2026-11-06\n- **Status**: Draft\n\n## Story\n\nAs a team member, I want to change the status of an ADR, instead of removing it, so that a decision that was overtaken stays in the log\nas history, marked as Deprecated or Superseded, and nothing that points to it is lost.\n\n## Acceptance tests\n\nChanging it\n\n- [ ] **Given** the edit dialog, **Then** a Status selector shows the status of the ADR, with the options Proposed, Accepted, Deprecated and\n  Superseded.\n- [ ] **Given** an ADR whose status is none of those (for example \"Unknown\"), **Then** that status is also in the selector, first, and is\n  kept until the user chooses another.\n- [ ] **Given** the user chose another status and did not touch the text, **Then** Save is enabled. **When** Save, **Then** only the\n  Status line of the stored Markdown changes (or is added under the title when there was none): the rest, and the date, stay byte for byte\n  as they were.\n- [ ] **Given** a saved status, **Then** the row shows its chip in the new colour, in the same place in the list.\n- [ ] **Given** the status and the text were both changed, **When** Save, **Then** the Markdown is built again as in story 3, with the new\n  status.\n- [ ] **Given** any status, **Then** the user can choose any other: the spike does not limit the changes.\n- [ ] **Given** GitHub is connected, **When** the status of an ADR is saved, **Then** the same notices as in story 3 apply.\n\nAn ADR cannot be removed\n\n- [ ] **Given** any ADR, in any status, **Then** the list and the dialog have no trash button, no \"Remove\" and no confirmation. There is no\n  way to delete an ADR in BWYN.\n- [ ] **Given** a Deprecated or Superseded ADR, **Then** it stays in the list and in the repository, with its text.\n\nWhat the status changes elsewhere\n\n- [ ] **Given** the Builder, **Then** only an ADR whose status is Accepted is offered to be linked to a story or an enabler. A story that is\n  already linked to an ADR that is not Accepted keeps the link, and the ADR still shows there, so it can be unlinked.\n\n## Business rules and constraints\n\n- The status is one of Proposed, Accepted, Deprecated and Superseded. A status read from the repository that is none of these is kept as it is.\n- A change of status only changes the Status line. The text, the title, the date, the number and the file name are not touched.\n- An ADR is never removed, so its number is never given again. The next number is always the highest existing number plus one.\n- Only an Accepted ADR can be newly linked. An ADR of any status still goes to the model as part of the project context in the Builder.\n\n## Out of scope\n\n- \"Superseded by NNNN\": choosing which ADR supersedes another, and the link between the two. The status is just the word.\n- Removing an ADR, restoring one, and hiding ADRs by status.\n- Warning about the stories that are linked to an ADR that stopped being Accepted.\n\n## Tasks\n\n- [ ] Show the status selector with the four statuses and the one the ADR has, and enable Save when only the status changed.\n- [ ] Save a status-only change by rewriting the Status line (or adding it under the title) and nothing else.\n- [ ] Colour the status chip of the row, with a neutral one for any other status.\n- [ ] Remove the removal from the spike: the confirmation dialog, the `removeAdr` of the builder store, `deleteFromRepo` for ADRs, and the\n  list of removed numbers that the sync and the other pages carry (see the Reference).\n- [ ] Choose the next number from the highest existing number only.\n- [ ] Test: a status-only save keeps the Markdown byte for byte; an unknown status is kept; there is no way to remove an ADR.\n\nmerge this two stories into one as changing status is also editing",
+  "createdAt": "2026-11-06",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw4pod7h90icmy",
+      "text": "Open the edit dialog from a row, pre-filled with the ADR's text, status selector, and used-by note, with Save disabled until something changes (ADR-0007)"
+    },
+    {
+      "id": "mw4pod7hj2i4xa",
+      "text": "Add the Status selector with the four statuses plus any unrecognised status kept as the first option (ADR-0007)"
+    },
+    {
+      "id": "mw4pod7hr3rh5o",
+      "text": "Wire the AI context: pass the project name and every ADR except the one being edited (ADR-0007)"
+    },
+    {
+      "id": "mw4pod7hzrawtw",
+      "text": "Implement text-only save: rebuild the full Markdown with the stored date, re-read title, status, and date, keep number and file name (ADR-0017)"
+    },
+    {
+      "id": "mw4pod7hy32yfp",
+      "text": "Implement status-only save: rewrite only the Status line (or insert it under the title when absent), leaving all other bytes unchanged (ADR-0017)"
+    },
+    {
+      "id": "mw4pod7h8ac92l",
+      "text": "Implement combined text-and-status save: rebuild Markdown with the new status and stored date (ADR-0017)"
+    },
+    {
+      "id": "mw4pod7hw9gf57",
+      "text": "Colour the status chip on the row for each of the four statuses, with a neutral colour for any other value (ADR-0007)"
+    },
+    {
+      "id": "mw4pod7h3h2ib1",
+      "text": "Remove all removal affordances: delete the confirmation dialog, `removeAdr` from the builder store, `deleteFromRepo` for ADRs, and the removed-numbers list; derive the next number from the highest existing number only (ADR-0017)"
+    },
+    {
+      "id": "mw4pod7h0s9f3x",
+      "text": "Implement the five repository notices (pull request opened, not on GitHub, conflict, unchanged/already open, error) with link and dismiss button (ADR-0007)"
+    },
+    {
+      "id": "mw4pod7hh7ursb",
+      "text": "Implement `publishAdr`: open a pull request for an ADR that is on GitHub and used, and record it for the next sync (ADR-0017)"
+    },
+    {
+      "id": "mw4pod7hkw0ma3",
+      "text": "Write unit tests: status-only save keeps Markdown byte-for-byte; unknown status is preserved; no removal path exists; text-and-status save rebuilds correctly (Practice: Pair programming, Practice: Continuous integration)"
+    },
+    {
+      "id": "mw4pod7hgwwigi",
+      "text": "Write an integration test with a fake repository: edit of a used ADR on the base branch, one that never reached GitHub, and a conflict (Practice: Continuous integration)"
+    }
+  ]
+}
