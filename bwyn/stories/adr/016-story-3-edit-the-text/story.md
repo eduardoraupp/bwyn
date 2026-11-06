@@ -10,43 +10,43 @@ As a team member, I want to open an ADR and correct or complete its text and sta
 ## Acceptance tests
 
 **Opening**
-- [ ] **Given** a row in the ADR list, **When** the user opens it, **Then** a dialog opens titled with the ADR's title, showing its text as plain text in the box, its status selected in a selector, and Save disabled.
-- [ ] **Given** an ADR that nothing uses, **Then** the note says "Not used by any story or enabler. It stays here, and goes to GitHub the first time together with the story or the enabler that uses it."
-- [ ] **Given** an ADR that stories or enablers use, **Then** the note, in blue, says "Used by N documents. The first time, it goes to GitHub with them when you sync. After that, saving an edit opens a pull request for it." ("1 document" when there is one).
-- [ ] **Given** the dialog is open, **Then** the AI is given the project name and every ADR except this one, and the ADR as it is in the box.
+- [X] **Given** a row in the ADR list, **When** the user opens it, **Then** a dialog opens titled with the ADR's title, showing its text as plain text in the box, its status selected in a selector, and Save disabled.
+- [X] **Given** an ADR that nothing uses, **Then** the note says "Not used by any story or enabler. It stays here, and goes to GitHub the first time together with the story or the enabler that uses it."
+- [X] **Given** an ADR that stories or enablers use, **Then** the note, in blue, says "Used by N documents. The first time, it goes to GitHub with them when you sync. After that, saving an edit opens a pull request for it." ("1 document" when there is one). (The count is always zero in the real backend for now, because nothing can link to an ADR yet. The blue note is verified with counts that the test backend gives.)
+- [X] **Given** the dialog is open, **Then** the AI is given the project name and every ADR except this one, and the ADR as it is in the box. (The dialog names the ADR as the subject; the backend leaves it out of the context, verified by `StreamTextImprovementCommandHandlerTest`.)
 
 **Status selector**
-- [ ] **Given** the dialog is open, **Then** a Status selector shows the current status of the ADR, with the options Proposed, Accepted, Deprecated, and Superseded.
-- [ ] **Given** an ADR whose status is none of those four (for example "Unknown"), **Then** that status is also in the selector, first, and is kept until the user chooses another.
-- [ ] **Given** any status, **Then** the user can choose any other; no transition is blocked.
+- [X] **Given** the dialog is open, **Then** a Status selector shows the current status of the ADR, with the options Proposed, Accepted, Deprecated, and Superseded.
+- [X] **Given** an ADR whose status is none of those four (for example "Unknown"), **Then** that status is also in the selector, first, and is kept until the user chooses another.
+- [X] **Given** any status, **Then** the user can choose any other; no transition is blocked.
 
 **Saving**
-- [ ] **Given** only the text changed, **When** the user presses Save, **Then** the Markdown is rebuilt with the stored date, the title, status, and date of the row are re-read from it, the dialog closes, and the row shows them.
-- [ ] **Given** only the status changed, **When** Save, **Then** only the Status line of the stored Markdown changes (or is added under the title when there was none); the rest of the text and the date stay byte for byte as they were.
-- [ ] **Given** both the text and the status changed, **When** Save, **Then** the Markdown is rebuilt with the new status and the stored date.
-- [ ] **Given** the title (first line) was changed, **Then** the row shows the new title, and the number and the file name do not change.
-- [ ] **Given** the first line was emptied, **When** Save, **Then** a validation message appears and nothing is stored.
-- [ ] **Given** nothing changed, **Then** Save is disabled.
-- [ ] **Given** the dialog is open, **Then** Escape, Close (X), Cancel, and a click outside close it without saving anything.
-- [ ] **Given** a status was saved, **Then** the row shows its chip in the new colour, in the same place in the list.
+- [X] **Given** only the text changed, **When** the user presses Save, **Then** the Markdown is rebuilt with the stored date, the title, status, and date of the row are re-read from it, the dialog closes, and the row shows them.
+- [X] **Given** only the status changed, **When** Save, **Then** only the Status line of the stored Markdown changes (or is added under the title when there was none); the rest of the text and the date stay byte for byte as they were. (Verified in the backend by `AdrDocumentTest`, `UpdateAdrCommandHandlerTest` and `AdrPersistenceIT`, including line endings.)
+- [X] **Given** both the text and the status changed, **When** Save, **Then** the Markdown is rebuilt with the new status and the stored date.
+- [X] **Given** the title (first line) was changed, **Then** the row shows the new title, and the number and the file name do not change.
+- [X] **Given** the first line was emptied, **When** Save, **Then** a validation message appears and nothing is stored.
+- [X] **Given** nothing changed, **Then** Save is disabled.
+- [X] **Given** the dialog is open, **Then** Escape, Close (X), Cancel, and a click outside close it without saving anything. (A click outside closes it only when nothing changed, as in the add dialog.)
+- [X] **Given** a status was saved, **Then** the row shows its chip in the new colour, in the same place in the list.
 
 **No removal**
-- [ ] **Given** any ADR in any status, **Then** the list and the dialog have no trash button, no "Remove" option, and no confirmation dialog; there is no way to delete an ADR.
-- [ ] **Given** a Deprecated or Superseded ADR, **Then** it stays in the list with its text.
+- [X] **Given** any ADR in any status, **Then** the list and the dialog have no trash button, no "Remove" option, and no confirmation dialog; there is no way to delete an ADR. (The backend has no delete endpoint either: a `DELETE` is a 405, tested in the integration test.)
+- [X] **Given** a Deprecated or Superseded ADR, **Then** it stays in the list with its text.
 
 **Improve with AI**
-- [ ] **Given** the dialog is open, **Then** the same AI improvement panel with the same five quick actions works as in story 007, and "Use this text" replaces the text (and the status, when the proposal contains one) in the box without saving.
+- [X] **Given** the dialog is open, **Then** the same AI improvement panel with the same five quick actions works as in story 007, and "Use this text" replaces the text (and the status, when the proposal contains one) in the box without saving.
 
 **After saving — repository**
-- [ ] **Given** GitHub is not connected, **Then** saving shows no notice.
-- [ ] **Given** GitHub is connected and no story or enabler uses the ADR, **Then** a notice says "ADR NNNN was saved here. It reaches GitHub the first time together with the story or the enabler that uses it."
-- [ ] **Given** GitHub is connected and the ADR is used, **Then** a notice says "Opening a pull request for ADR NNNN…", and then:
+- [X] **Given** GitHub is not connected, **Then** saving shows no notice. (No notice exists yet, so none is shown.)
+- [ ] **Given** GitHub is connected and no story or enabler uses the ADR, **Then** a notice says "ADR NNNN was saved here. It reaches GitHub the first time together with the story or the enabler that uses it." (Not verified: GitHub cannot be connected yet, so the notices and the pull request are not built.)
+- [ ] **Given** GitHub is connected and the ADR is used, **Then** a notice says "Opening a pull request for ADR NNNN…", and then: (Not verified: GitHub cannot be connected yet, so the notices and the pull request are not built.)
   - **When** it is on the base branch: "Pull request #N opened for ADR NNNN. Merge it on GitHub." with a link "Open it".
   - **When** it never reached GitHub: "ADR NNNN was saved here. It is not on GitHub yet, so it goes with the story or the enabler that uses it, the next time you sync it."
   - **When** the base branch changed the same ADR: a warning "ADR NNNN was also changed on \<branch\>, so nothing was uploaded. Solve it on GitHub, then sync."
   - **When** it is the same as on the base branch, or already in an open pull request: "ADR NNNN is already the same on GitHub, or already waiting in an open pull request."
   - **When** the request fails: an error "ADR NNNN was saved here, but the pull request could not be opened: \<reason\>."
-- [ ] **Given** a notice is shown, **Then** it can be dismissed with its X.
+- [ ] **Given** a notice is shown, **Then** it can be dismissed with its X. (Not verified: no notice exists yet.)
 
 ## Business rules and constraints
 - Saving never commits an ADR to GitHub for the first time. That happens with the story or the enabler that uses it when it is synced. Only an ADR that is already on GitHub and used by something goes up by itself, in a pull request, compared with the base branch and with what was last synchronised; a conflict uploads nothing.
@@ -67,18 +67,18 @@ As a team member, I want to open an ADR and correct or complete its text and sta
 - Connecting GitHub and the sync dialog (covered by a separate story).
 
 ## Tasks
-- [ ] Open the edit dialog from a row, pre-filled with the ADR's text, status selector, and used-by note, with Save disabled until something changes (ADR-0007)
-- [ ] Add the Status selector with the four statuses plus any unrecognised status kept as the first option (ADR-0007)
-- [ ] Wire the AI context: pass the project name and every ADR except the one being edited (ADR-0007)
-- [ ] Implement text-only save: rebuild the full Markdown with the stored date, re-read title, status, and date, keep number and file name (ADR-0017)
-- [ ] Implement status-only save: rewrite only the Status line (or insert it under the title when absent), leaving all other bytes unchanged (ADR-0017)
-- [ ] Implement combined text-and-status save: rebuild Markdown with the new status and stored date (ADR-0017)
-- [ ] Colour the status chip on the row for each of the four statuses, with a neutral colour for any other value (ADR-0007)
-- [ ] Remove all removal affordances: delete the confirmation dialog, `removeAdr` from the builder store, `deleteFromRepo` for ADRs, and the removed-numbers list; derive the next number from the highest existing number only (ADR-0017)
-- [ ] Implement the five repository notices (pull request opened, not on GitHub, conflict, unchanged/already open, error) with link and dismiss button (ADR-0007)
-- [ ] Implement `publishAdr`: open a pull request for an ADR that is on GitHub and used, and record it for the next sync (ADR-0017)
-- [ ] Write unit tests: status-only save keeps Markdown byte-for-byte; unknown status is preserved; no removal path exists; text-and-status save rebuilds correctly (Practice: Pair programming, Practice: Continuous integration)
-- [ ] Write an integration test with a fake repository: edit of a used ADR on the base branch, one that never reached GitHub, and a conflict (Practice: Continuous integration)
+- [X] Open the edit dialog from a row, pre-filled with the ADR's text, status selector, and used-by note, with Save disabled until something changes (ADR-0007) (The row asks the backend for the ADR with its text; the dialog opens from that. `GET /api/projects/{projectId}/adrs/{number}`.)
+- [X] Add the Status selector with the four statuses plus any unrecognised status kept as the first option (ADR-0007)
+- [X] Wire the AI context: pass the project name and every ADR except the one being edited (ADR-0007) (The backend `adrs` context kind, with the ADR named as the subject so it is left out.)
+- [X] Implement text-only save: rebuild the full Markdown with the stored date, re-read title, status, and date, keep number and file name (ADR-0017) (`PUT /api/projects/{projectId}/adrs/{number}`; `UpdateAdrCommandHandler` and `AdrDocument.markdown`.)
+- [X] Implement status-only save: rewrite only the Status line (or insert it under the title when absent), leaving all other bytes unchanged (ADR-0017) (`AdrDocument.withStatus`.)
+- [X] Implement combined text-and-status save: rebuild Markdown with the new status and stored date (ADR-0017)
+- [X] Colour the status chip on the row for each of the four statuses, with a neutral colour for any other value (ADR-0007) (Done with the list in story 014.)
+- [X] Remove all removal affordances: delete the confirmation dialog, `removeAdr` from the builder store, `deleteFromRepo` for ADRs, and the removed-numbers list; derive the next number from the highest existing number only (ADR-0017) (Nothing to remove in the product: the removal existed only in the spike. The list, the dialogs and the endpoints have none, and a test checks a `DELETE` is refused. The next number is the highest plus one.)
+- [ ] Implement the five repository notices (pull request opened, not on GitHub, conflict, unchanged/already open, error) with link and dismiss button (ADR-0007) (Deferred: GitHub cannot be connected yet.)
+- [ ] Implement `publishAdr`: open a pull request for an ADR that is on GitHub and used, and record it for the next sync (ADR-0017) (Deferred: GitHub cannot be connected yet, and nothing links to an ADR.)
+- [X] Write unit tests: status-only save keeps Markdown byte-for-byte; unknown status is preserved; no removal path exists; text-and-status save rebuilds correctly (Practice: Pair programming, Practice: Continuous integration)
+- [ ] Write an integration test with a fake repository: edit of a used ADR on the base branch, one that never reached GitHub, and a conflict (Practice: Continuous integration) (Deferred with the pull-request flow. The backend behaviour that exists is covered by `AdrPersistenceIT`.)
 
 Files of the spike
 
