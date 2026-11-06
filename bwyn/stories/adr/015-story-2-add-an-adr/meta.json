@@ -51,6 +51,42 @@
     {
       "id": "mw4plpz9dlywqa",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mw4zv008t2tyep",
+      "text": "Add a `CreateAdrCommand` and its handler in `bwyn-application`, with a repository port in `bwyn-core` that persists the new ADR (ADR-0017). (`CreateAdrCommandHandler`, with the `AdrRepository` port and the pure rules in `AdrDocument`.)"
+    },
+    {
+      "id": "mw4zv008nhlux3",
+      "text": "Add a Flyway migration for the ADR table (number, title, status, date, body, file name) in `bwyn-runtime` (ADR-0010). (Deviation: no new migration. The `adr` table of story 014 (`V10`) already holds all of it.)"
+    },
+    {
+      "id": "mw4zv0087p2lcc",
+      "text": "Implement the Spring Data JPA outbound adapter for the ADR repository port in `bwyn-infrastructure` (ADR-0011). (`AdrRepositoryAdapter`: one insert-only statement that never replaces an ADR, so two simultaneous adds get different numbers.)"
+    },
+    {
+      "id": "mw4zv0085zfd2o",
+      "text": "Implement the Spring MVC inbound adapter in `bwyn-rest` with a `POST /projects/{projectId}/adrs` endpoint annotated with OpenAPI metadata; the endpoint derives the next number, builds the Markdown, and delegates to the command handler (ADR-0008, ADR-0014). (Deviation: the number, the date and the Markdown are derived in `CreateAdrCommandHandler` and `AdrDocument`, not in the controller, so the adapter holds no rules. The path is `POST /api/projects/{projectId}/adrs`, next to the `GET`.)"
+    },
+    {
+      "id": "mw4zv0085honow",
+      "text": "Write a Testcontainers integration test for the JPA adapter that verifies the ADR is persisted and the next-number query is correct (ADR-0012). (`AdrPersistenceIT`, including two requests at once.)"
+    },
+    {
+      "id": "mw4zv008bifgxp",
+      "text": "Implement the `useAddAdr` hook in the `interface-adapters` layer: next-number derivation, save call, validation, and GitHub-notice flag (ADR-0007). (Deviation: it is part of `AdrListViewModel`, like the add dialog of drivers, and `AddAdrUseCase` does the validation and the call. The GitHub-notice flag is left out, as no GitHub can be connected yet.)"
+    },
+    {
+      "id": "mw4zv008s6hr3r",
+      "text": "Wire the `ImproveWithAI` shared component into `AddAdrDialog`, supplying the ADR-specific quick actions, instructions, context builder (project name + all ADRs), reply-marker, and apply-proposal callback that updates the box and the status selector (ADR-0007). (`AdrImproveWithAI`. The context builder is the backend's `adrs` kind. Deviation: the reply marker stays the backend's `---PROPOSAL---`, not `---ADR---`. The shared component gained props only: placeholder, how a proposal is read and drawn, details, and quick actions that see the box.)"
+    },
+    {
+      "id": "mw4zv00884jjii",
+      "text": "Delete `AdrAssistant.tsx` once the shared component handles the ADR dialog, and add a Jest test that mounts the shared component with the ADR dialog and with one additional screen to confirm no ADR-specific logic leaks into the component (ADR-0005). (`AdrAssistant.tsx` only existed in the spike, so there is nothing to delete here. `shared-improve-with-ai.acceptance.test.tsx` mounts the shared component with the ADR assistant and with another screen, and `layer-rules.test.ts` keeps ADR words out of the shared files.)"
+    },
+    {
+      "id": "mw4zv008hhtp9j",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build). (Not met yet: the Java modules build and pass in about 5 minutes, but the frontend module takes about 6 minutes and its `npm test` fails on two architecture rules (`layer-rules.test.ts`, \"Where the drivers live\") that need forward-slash paths and fail when node runs on this Windows drive.)"
     }
   ]
 }
