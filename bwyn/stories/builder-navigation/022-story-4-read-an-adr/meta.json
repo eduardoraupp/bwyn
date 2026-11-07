@@ -34,6 +34,14 @@
     {
       "id": "mw6lrpxjneq2w1",
       "text": "Verify the full frontend test suite, including ArchUnitTS fitness functions, passes within the ten-minute build budget (Practice: Ten-Minute Build, ADR-0016)"
+    },
+    {
+      "id": "mw6vum8r4h3wjk",
+      "text": "Reuse the file-panel component of the driver (`FileView`) for an ADR, giving it the ADR icon, the `adrs/<file>` path and the ADR read-only note, with no second panel component (ADR-0007, AE-0002)"
+    },
+    {
+      "id": "mw6vum8rb2l8me",
+      "text": "Write Jest unit tests for the ViewModel: ADRs of an accepted status in any case, ADR with only a title, an ADR that cannot be read, a slow ADR that a later choice replaces, and switching from a driver to an ADR and back"
     }
   ]
 }
