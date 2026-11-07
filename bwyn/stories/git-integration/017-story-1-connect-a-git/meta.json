@@ -78,6 +78,34 @@
     {
       "id": "mw6c657n1ey7d7",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    },
+    {
+      "id": "mw6hx005ze34cu",
+      "text": "Define the OpenAPI contract for `GET /providers`, `PUT /connection`, `GET /connection`, and `DELETE /connection`, with no key field in any response (ADR-0014) (`GET /api/git/providers` and `GET`, `PUT`, `DELETE /api/projects/{projectId}/git-connection`; checked in `GitConnectionIT`.)"
+    },
+    {
+      "id": "mw6hx005a3cljf",
+      "text": "Add the `GitProvider` port interface and `Connection` domain object to `bwyn-core` (ADR-0017, AE-0005) (`GitProviderPort`, `GitConnection`, `GitConnectionRules` and `GitApiKey` in `bwyn-core`.)"
+    },
+    {
+      "id": "mw6hx005crzhkv",
+      "text": "Add the `ConnectRepositoryCommand` and `GetConnectionQuery` application service interfaces to `bwyn-application` (ADR-0017) (Built as `GitConnectRepositoryCommand` and `GitGetConnectionQuery`, with their handlers, `GitRemoveConnectionCommand` and `ListGitProvidersQuery`: every Git class starts with `Git`.)"
+    },
+    {
+      "id": "mw6hx0058pnc8b",
+      "text": "Implement the `ConnectionController` inbound adapter in `bwyn-rest` with the OpenAPI annotations, wiring to the application service (ADR-0014, ADR-0017) (`GitConnectionController`.)"
+    },
+    {
+      "id": "mw6hx006utysla",
+      "text": "Read the enabled state of every Sync button from the connection status and show the hint when no connection exists (ADR-0007) (Deferred with the criterion above: it needs the connection status shared with the Drivers and Architecture pages, and a Sync that does something.)"
+    },
+    {
+      "id": "mw6hx006xc513y",
+      "text": "Extend ArchUnit rules to assert that `GitHubProviderAdapter` and `GitLabProviderAdapter` reside in `*.adapter.out.*` and that no key value appears in any type in `*.adapter.in.*` or `*.application.*` (ADR-0009) (`GitArchitectureTest`: the adapters live in `adapter.out` and implement the port; the key type and key-like fields stay out of the inbound adapters, the responses and the status.)"
+    },
+    {
+      "id": "mw6hx006jyencl",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration) (Not met yet: the Java modules build and pass in about 8 minutes, and the frontend module takes about 6 minutes and fails two architecture rules (`layer-rules.test.ts`, \"Where the drivers live\") on this machine.)"
     }
   ]
 }
