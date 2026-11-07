@@ -1,0 +1,63 @@
+{
+  "title": "Walk the folders of the builder",
+  "prompt": "# Story 2: Walk the folders of the builder\n\n- **Story**: XXX-walk-builder-folders\n- **Created**: 2026-11-07\n- **Status**: Draft\n- **Demo**: open the workspace, open `drivers` and `adrs` and see their files, open the two other folders and see that they are not\n  built yet.\n\n## Story\n\nAs a team member, I want to open and close the folders of the tree and see which drivers and ADRs my project has, so that I know what\nexists and where each file lives.\n\n## Acceptance tests\n\nOpening and closing\n\n- [ ] **Given** a closed folder, **When** the user presses its row (or uses Enter or Space on it), **Then** it opens, its chevron points\n  down, and its row has `aria-expanded=\"true\"`. **When** the user presses it again, **Then** it closes.\n- [ ] **Given** the four folders, **Then** each opens and closes on its own, and several can be open at once.\n- [ ] **Given** folders that are open, **When** a file is opened and closed (stories 3 and 4), **Then** they are as they were.\n- [ ] **Given** folders that are open, **When** the workspace is closed and opened again, **Then** they are all closed.\n\nThe folders\n\n- [ ] **Given** a folder row, **Then** it shows the chevron, the folder icon, the name (cut with \"...\" when long) and, on the right, a count.\n- [ ] **Given** the rows `drivers` and `adrs`, **Then** each also shows a small lock with the label \"Read-only\". The other two do not.\n- [ ] **Given** `drivers`, **Then** its count is the number of drivers the project has: the five fixed ones, written or not, plus the ones the\n  team added. **Given** `adrs`, **Then** its count is the number of ADRs. **Given** `architectural-enablers` and `stories`, **Then** each\n  shows how many the project holds.\n\n`drivers`\n\n- [ ] **Given** `drivers` is open, **Then** it lists one file per driver: first the five fixed ones, in this order,\n  `core-functionality.md`, `architectural-concerns.md`, `constraints.md`, `quality-attributes.md`, `design-purpose.md`, then the ones the\n  team added, in the order they were added, as `<identity>.md`.\n- [ ] **Given** a driver that has no text yet, **Then** it is listed all the same.\n- [ ] **Given** a file row, **Then** it shows an icon of the kind, the file name cut with \"...\" when long, and, as a tooltip, the driver's name\n  (\"Core Functionality\").\n\n`adrs`\n\n- [ ] **Given** `adrs` is open, **Then** it lists one file per ADR, in order of number, with the file name as it is in the repository, for\n  example `0011-use-typescript-for-the-frontend.md`, and, as a tooltip, \"ADR 0011. Use TypeScript for the frontend\".\n- [ ] **Given** the project has no ADR, **Then** `adrs` shows the italic line \"No ADRs yet.\" when it is open.\n- [ ] **Given** ADRs of any status (Proposed, Accepted, Deprecated, Superseded), **Then** all of them are listed.\n\n`architectural-enablers` and `stories`\n\n- [ ] **Given** one of these two folders, **When** it is opened, **Then** it shows, instead of files, the italic line \"Coming in another\n  story.\", and closes again as any folder.\n- [ ] **Given** the tree, **Then** it has no button to create a story, an enabler or a theme, no diagram button, no rename, and nothing can\n  be dragged or dropped.\n\nImmutable\n\n- [ ] **Given** a file or a folder of `drivers` or `adrs`, **Then** the tree has no way to create, rename, move, delete or change it: a double\n  click, F2, a drag, a right click and Delete do nothing to it.\n\nKeeping up with the project\n\n- [ ] **Given** a driver was added on the Drivers page, or an ADR on the ADR page, **When** the user opens the workspace, **Then** the tree\n  lists it, and the counts are right.\n- [ ] **Given** two projects, **Then** each shows its own drivers and ADRs.\n\n## Business rules and constraints\n\n- The tree only shows what the project has. It never writes anything.\n- A file's path is its path in the repository, relative to the folder of BWYN there: `drivers/<identity>.md` and\n  `adrs/<number>-<slug>.md`.\n- The five fixed drivers are always listed, written or not, because they are part of every project. A driver the team removed is not.\n- `architectural-enablers` and `stories` are placeholders. Their count is the number of items the project holds, but the items are not\n  listed, opened or acted on until their own stories.\n\n## Out of scope\n\n- Opening a file (stories 3 and 4).\n- Listing, opening, creating, editing, moving, linking or deleting anything in `architectural-enablers` and `stories`, themes, and the\n  prompt.\n- Writing drivers and ADRs (their own pages), and a search or a filter in the tree.\n\n## Tasks\n\n- [ ] Describe the four folders once (key, name, kind, whether locked), and draw the tree from that list.\n- [ ] Draw the folder row (chevron, icon, name, lock, count) with open and close by click, Enter and Space, and keep what is open for as\n  long as the workspace is.\n- [ ] List the drivers (the five fixed, then the added ones) and the ADRs (by number) as file rows, with their file name and tooltip.\n- [ ] Show \"No ADRs yet.\" for an empty `adrs`, and \"Coming in another story.\" inside the two folders that are not built.\n- [ ] Count the items of each folder.\n- [ ] Take out of the tree the themes, the dragging, the \"New theme\" and \"New story\" buttons and everything that edits (see the Reference).\n- [ ] Test: the order and the counts, the five fixed drivers with no text, an empty `adrs`, and that nothing in `drivers` or `adrs` reacts to\n  double click, F2 or drag.",
+  "createdAt": "2026-11-07",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw6lm3mgrn2kum",
+      "text": "Define a static folder-descriptor array (key, display name, kind, lock flag, placeholder text) in the `ui` layer and derive the tree from it (ADR-0007, Principle: Declarative over imperative)"
+    },
+    {
+      "id": "mw6lm3mgp7w7bf",
+      "text": "Implement the `BuilderTreeViewModel` in the `interface-adapters` layer, exposing folder open/closed state, item lists for `drivers` and `adrs`, and counts for all four folders (ADR-0007)"
+    },
+    {
+      "id": "mw6lm3mg2xg37e",
+      "text": "Bind `BuilderTreeViewModel` in the Inversify composition root; inject the existing driver and ADR query use cases (ADR-0006)"
+    },
+    {
+      "id": "mw6lm3mg8kkelv",
+      "text": "Build the `FolderRow` React component: chevron, folder icon, name with overflow ellipsis, optional lock badge, count; toggle on click, Enter, and Space; set `aria-expanded` (ADR-0005)"
+    },
+    {
+      "id": "mw6lm3mgt38rjb",
+      "text": "Build the `FileRow` React component: file icon, file name with overflow ellipsis, tooltip with display name (ADR-0005)"
+    },
+    {
+      "id": "mw6lm3mgdct74w",
+      "text": "Render `drivers` file list: five fixed drivers first in specified order, then team-added drivers in creation order, each as `<identity>.md`"
+    },
+    {
+      "id": "mw6lm3mgbcd6hc",
+      "text": "Render `adrs` file list: ADRs in ascending number order; show italic \"No ADRs yet.\" when the list is empty; include all statuses"
+    },
+    {
+      "id": "mw6lm3mgugxl4u",
+      "text": "Render `architectural-enablers` and `stories` with italic \"Coming in another story.\" placeholder when open; omit all create/rename/drag controls"
+    },
+    {
+      "id": "mw6lm3mgahji24",
+      "text": "Suppress all mutation interactions on `drivers` and `adrs` rows: double-click, F2, drag, right-click context menu, and Delete key do nothing"
+    },
+    {
+      "id": "mw6lm3mg114u89",
+      "text": "Reset all folder open/closed state to closed when the workspace is closed"
+    },
+    {
+      "id": "mw6lm3mgxx8l0i",
+      "text": "Write Jest unit tests for `BuilderTreeViewModel`: correct order and counts for drivers (including unwritten fixed drivers), empty-ADR case, multi-project isolation (ADR-0005)"
+    },
+    {
+      "id": "mw6lm3mgnsgxzd",
+      "text": "Write Jest unit tests for `FolderRow` and `FileRow`: aria attributes, truncation, lock badge presence/absence, tooltip content"
+    },
+    {
+      "id": "mw6lm3mg6sfu6u",
+      "text": "Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
