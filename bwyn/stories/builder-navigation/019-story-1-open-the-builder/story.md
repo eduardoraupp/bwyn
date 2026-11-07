@@ -11,26 +11,26 @@ As a team member, I want to reach the builder from the Builder page and have the
 
 **The Builder page**
 
-- [ ] **Given** a project, **When** the user chooses "Builder" in the menu, **Then** the item is the selected one, the header reads "<project> / Builder", and the page shows the Builder icon, the title "Builder", and the description "Turn intent into working software, one guided step at a time."
-- [ ] **Given** the Builder page, **Then** three numbered cards show side by side on a wide screen (one under the other on a narrow one): "1 Prompt: Describe what a user needs in plain language, like a chat.", "2 Story: Claude drafts a user story with acceptance tests, and BWYN creates its folder once you approve.", and "3 Link: Connect the story to drivers, ADRs and architectural enablers."
-- [ ] **Given** the Builder page, **Then** under the three cards a card "Start a new build" says "Prompt your way to a new story, or to an architectural enabler." and has a button "Open the builder" with an arrow.
-- [ ] **Given** the application starts, or a project is created, **Then** the Builder page is shown with the workspace closed.
-- [ ] **Given** the Builder page, **Then** it can be read with no model connected and no repository connected.
+- [X] **Given** a project, **When** the user chooses "Builder" in the menu, **Then** the item is the selected one, the header reads "<project> / Builder", and the page shows the Builder icon, the title "Builder", and the description "Turn intent into working software, one guided step at a time."
+- [X] **Given** the Builder page, **Then** three numbered cards show side by side on a wide screen (one under the other on a narrow one): "1 Prompt: Describe what a user needs in plain language, like a chat.", "2 Story: Claude drafts a user story with acceptance tests, and BWYN creates its folder once you approve.", and "3 Link: Connect the story to drivers, ADRs and architectural enablers."
+- [X] **Given** the Builder page, **Then** under the three cards a card "Start a new build" says "Prompt your way to a new story, or to an architectural enabler." and has a button "Open the builder" with an arrow.
+- [X] **Given** the application starts, or a project is created, **Then** the Builder page is shown with the workspace closed.
+- [X] **Given** the Builder page, **Then** it can be read with no model connected and no repository connected.
 
 **Opening the builder**
 
-- [ ] **Given** the Builder page, **When** the user presses "Open the builder", **Then** the main menu shrinks to a rail of icons (each item keeps its icon, its name as a tooltip, and the selected mark), the page is replaced by the workspace, and the header reads "<project> / Builder / Files".
-- [ ] **Given** the workspace, **Then** on the left a tree titled "Files", with the project name under it, shows four folders in this order: `drivers`, `adrs`, `architectural-enablers`, `stories`; each has a chevron and a folder icon, and they are all closed.
-- [ ] **Given** the workspace with no file open, **Then** the rest of the area shows a centred message "Select a file in the tree to read it.", with no prompt box and no "New story" button.
-- [ ] **Given** the rail, **When** the user presses the project's avatar or "Expand menu", **Then** the menu is full again and the workspace stays open; **When** the user presses "Collapse menu", **Then** the rail is back.
-- [ ] **Given** the keyboard, **Then** "Open the builder", every menu item, and every row of the tree can be reached with Tab, and a visible focus ring shows where the focus is.
+- [X] **Given** the Builder page, **When** the user presses "Open the builder", **Then** the main menu shrinks to a rail of icons (each item keeps its icon, its name as a tooltip, and the selected mark), the page is replaced by the workspace, and the header reads "<project> / Builder / Files".
+- [X] **Given** the workspace, **Then** on the left a tree titled "Files", with the project name under it, shows four folders in this order: `drivers`, `adrs`, `architectural-enablers`, `stories`; each has a chevron and a folder icon, and they are all closed.
+- [X] **Given** the workspace with no file open, **Then** the rest of the area shows a centred message "Select a file in the tree to read it.", with no prompt box and no "New story" button.
+- [X] **Given** the rail, **When** the user presses the project's avatar or "Expand menu", **Then** the menu is full again and the workspace stays open; **When** the user presses "Collapse menu", **Then** the rail is back.
+- [X] **Given** the keyboard, **Then** "Open the builder", every menu item, and every row of the tree can be reached with Tab, and a visible focus ring shows where the focus is.
 
 **Going away and coming back**
 
-- [ ] **Given** the workspace, **When** the user chooses another item of the menu (not Settings), **Then** the workspace closes, the menu is full, and that page shows; **When** the user chooses "Builder" again, **Then** the Builder page shows with the workspace closed.
-- [ ] **Given** the workspace, **When** the user chooses "Builder" in the menu, **Then** the workspace stays open.
-- [ ] **Given** the workspace, **When** the user chooses another project, **Then** the workspace shows that project's tree with every folder closed and no file open.
-- [ ] **Given** the workspace, **When** the page is reloaded, **Then** the Builder page shows with the workspace closed.
+- [X] **Given** the workspace, **When** the user chooses another item of the menu (not Settings), **Then** the workspace closes, the menu is full, and that page shows; **When** the user chooses "Builder" again, **Then** the Builder page shows with the workspace closed.
+- [X] **Given** the workspace, **When** the user chooses "Builder" in the menu, **Then** the workspace stays open.
+- [X] **Given** the workspace, **When** the user chooses another project, **Then** the workspace shows that project's tree with every folder closed and no file open.
+- [X] **Given** the workspace, **When** the page is reloaded, **Then** the Builder page shows with the workspace closed.
 
 ## Business rules and constraints
 
@@ -55,16 +55,16 @@ As a team member, I want to reach the builder from the Builder page and have the
 
 - [ ] Add a `BuilderViewModel` in the interface-adapters layer that holds `isWorkspaceOpen: boolean` and exposes `openWorkspace()` and `closeWorkspace()` commands, with a Jest unit test (ADR-0007, Architecture)
 - [ ] Bind `BuilderViewModel` in the Inversify composition root (ADR-0006)
-- [ ] Build the `BuilderPage` React component in the UI layer: Builder icon, title, description, three numbered step cards (responsive layout), and the "Start a new build" card with the "Open the builder" button; wire it to `BuilderViewModel.openWorkspace()` (ADR-0007)
-- [ ] Build the `BuilderWorkspace` React component in the UI layer: the file tree (title "Files", project name, four closed folders with chevrons) and the empty-state message "Select a file in the tree to read it." (ADR-0007)
-- [ ] Implement menu-rail mode in the existing menu component: when `isWorkspaceOpen` is true, collapse to icon-only rail with tooltips and selected mark; expose "Expand menu" / "Collapse menu" controls (ADR-0020, Architecture)
-- [ ] Update the breadcrumb in the UI layer to append "/ Files" when the workspace is open (ADR-0007)
-- [ ] Wire navigation so that choosing any non-Builder menu item calls `closeWorkspace()` and navigating back to Builder shows the page with the workspace closed; choosing Builder while the workspace is open leaves it open (ADR-0020)
-- [ ] Reset workspace state to closed on project switch and on page reload (ADR-0007)
-- [ ] Add keyboard focus management: verify Tab order reaches "Open the builder", every menu item, and every tree row; add visible focus rings where missing (Architecture)
-- [ ] Write Jest rendering tests for `BuilderPage` and `BuilderWorkspace` covering the acceptance tests above (ADR-0005)
+- [X] Build the `BuilderPage` React component in the UI layer: Builder icon, title, description, three numbered step cards (responsive layout), and the "Start a new build" card with the "Open the builder" button; wire it to `BuilderViewModel.openWorkspace()` (ADR-0007)
+- [X] Build the `BuilderWorkspace` React component in the UI layer: the file tree (title "Files", project name, four closed folders with chevrons) and the empty-state message "Select a file in the tree to read it." (ADR-0007)
+- [X] Implement menu-rail mode in the existing menu component: when `isWorkspaceOpen` is true, collapse to icon-only rail with tooltips and selected mark; expose "Expand menu" / "Collapse menu" controls (ADR-0020, Architecture)
+- [X] Update the breadcrumb in the UI layer to append "/ Files" when the workspace is open (ADR-0007)
+- [X] Wire navigation so that choosing any non-Builder menu item calls `closeWorkspace()` and navigating back to Builder shows the page with the workspace closed; choosing Builder while the workspace is open leaves it open (ADR-0020)
+- [X] Reset workspace state to closed on project switch and on page reload (ADR-0007)
+- [X] Add keyboard focus management: verify Tab order reaches "Open the builder", every menu item, and every tree row; add visible focus rings where missing (Architecture)
+- [X] Write Jest rendering tests for `BuilderPage` and `BuilderWorkspace` covering the acceptance tests above (ADR-0005)
 - [ ] Confirm ArchUnitTS rules still pass with the new files in place (ADR-0016)
-- [ ] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+- [X] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
 
 ## Files of the spike
 
