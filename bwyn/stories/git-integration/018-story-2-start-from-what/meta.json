@@ -1,0 +1,59 @@
+{
+  "title": "Start from what the repository already has",
+  "prompt": "# Story 2: Start from what the repository already has\n\n- **Story**: XXX-first-download\n- **Created**: 2026-11-07\n- **Status**: Draft\n- **Demo**: connect to an empty repository and see the note about its first commit; connect to a repository with documents, on GitHub\n  and on GitLab, and see them appear in the project, with a summary.\n\n## Story\n\nAs a team member, I want that connecting to a repository brings in the documents that are already there (and prepares an empty\nrepository), so that I start from what my team has and never from a blank project.\n\n## Acceptance tests\n\nAn empty repository\n\n- [ ] **Given** a repository with no commit, **When** the user connects, **Then** BWYN makes its first commit on the base branch: an empty\n  `README.md` in the folder, with the message \"BWYN: first commit\", and the connection goes on. If the provider refuses an empty file, the\n  file holds the title line \"# <repository name>\".\n- [ ] **Given** that, **Then** a note says \"The repository was empty, so BWYN made its first commit: an empty README.md in <folder>/ on\n  <branch>.\" and BWYN never reads that `README.md` as a document.\n\nThe one-time download\n\n- [ ] **Given** a repository with files in the folder, **When** the user connects, **Then** everything in the folder that BWYN knows is\n  downloaded once from the base branch: drivers, architecture, runways, principles, ADRs, architectural enablers, and stories with their\n  diagrams, task lists and UI examples. Files outside the folder, and files BWYN does not know, are ignored.\n- [ ] **Given** a document with the same identity already exists here (a driver with text, a principle, a story, an enabler, the\n  architecture, a runway), **Then** it is left alone and is compared at the next sync.\n- [ ] **Given** the practices (`practices.md`), **Then** they are not downloaded: they are fixed in BWYN.\n- [ ] **Given** the download is over, **Then** a note says \"Downloaded once from main when connecting: 3 drivers, the architecture, 2\n  principles, 2 ADRs and 4 stories with 3 diagrams. Documents that already exist here were left alone, and the practices are fixed in\n  BWYN, so they are not downloaded.\"\n- [ ] **Given** nothing was brought in, **Then** the note says \"There was nothing to download from main yet, or everything is already\n  here.\"\n- [ ] **Given** the provider could not list the whole repository, **Then** an amber line says \"<Provider> could not list the whole\n  repository, so some files may be missing. Sync a document to get it.\"\n- [ ] **Given** a file that could not be understood (for example a story that is in two folders), **Then** a warning says so, and nothing is\n  deleted.\n- [ ] **Given** the files that came down, **Then** their versions are remembered as the last synchronised ones, so that the first Sync\n  compares against them.\n\nWhen the download fails\n\n- [ ] **Given** the connection worked and the download failed, **Then** an error says \"Connected, but what is in the repository could not\n  be downloaded: <reason>\", the card stays \"Connected\", and an amber box says \"What is in main has not been downloaded into this project\n  yet.\" with a button \"Download from main\" (it reads \"Downloading...\" while it works).\n- [ ] **Given** the download was done once, **Then** it is not done again by itself. **Given** the page is reloaded, **Then** the box does not\n  come back.\n\nOn GitLab\n\n- [ ] **Given** a GitLab project, **Then** every test above holds, with \"GitLab\" in the place of \"GitHub\" (and \"project\" for\n  \"repository\" where the screen says so).\n- [ ] **Given** a GitLab project with more files than one page of answers holds, **Then** all of them are listed, and the list is never\n  reported as cut.\n- [ ] **Given** a project inside groups and subgroups, **Then** its files are found and downloaded.\n\n## Business rules and constraints\n\n- The download is **once**, when connecting, or by the button after a failure. After that, Sync moves changes (stories 3 to 6).\n- It never overwrites what exists here. It never deletes anything.\n- The first commit of an empty repository is the only time BWYN writes to the base branch directly. Everything else goes through a\n  pull request (or merge request).\n- The files come through the backend (`tree` and `blob`). The browser never has the key.\n\n## Out of scope\n\n- Sending and receiving after that (stories 3 to 6).\n- Choosing what to download, and downloading again to replace what exists here (the \"force pull\" of a story is story 4).\n\n## Tasks\n\n- [ ] **Task 1. Start from a GitHub repository**\n  - Describe `tree` (the files under a folder with their blob SHA, and whether the list is cut), `blob` (the text of one file by SHA) and\n    `init` (the first commit) in the OpenAPI document.\n  - Implement the three in the GitHub provider.\n  - Move the one-time download (`importExisting`) to use them, with the \"exists here, leave alone\" rules per kind of document.\n  - Show the first-commit note, the summary of what came down, the cut-list line and the warnings.\n  - Add \"Download from main\" after a failure, and remember that the download was done.\n  - Test with a fake GitHub server: an empty repository (and one that refuses an empty file), a repository with every kind of document,\n    one with documents that exist here, and a cut list.\n- [ ] **Task 2. Start from a GitLab project**\n  - Implement the three calls in the GitLab provider: the first commit of an empty project, the list of files through all its pages, and a\n    file by SHA.\n  - Run the tests of Task 1 against a fake GitLab server, with the same cases, a project with many pages of files, and a subgroup.",
+  "createdAt": "2026-11-07",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw6c7ropzldvjz",
+      "text": "Define `tree`, `blob`, and `init` operations in the OpenAPI document (ADR-0014), placing the controller in `bwyn-rest` and the port interfaces in `bwyn-core` (ADR-0017)"
+    },
+    {
+      "id": "mw6c7ropy84quw",
+      "text": "Implement the `init` operation in the GitHub outbound adapter (`bwyn-infrastructure`): commit an empty `README.md` (falling back to `# <repo name>` if the provider rejects an empty file) on the base branch with the message \"BWYN: first commit\" (ADR-0017)"
+    },
+    {
+      "id": "mw6c7ropejed30",
+      "text": "Implement the `tree` operation in the GitHub outbound adapter: list all files under the configured folder from the base branch, returning each file's path and blob SHA and a flag indicating whether the list was truncated (ADR-0017)"
+    },
+    {
+      "id": "mw6c7rophur13d",
+      "text": "Implement the `blob` operation in the GitHub outbound adapter: fetch the text of one file by its SHA (ADR-0017)"
+    },
+    {
+      "id": "mw6c7rop0n8g2u",
+      "text": "Implement the `importExisting` application service in `bwyn-application`: orchestrate `tree` + `blob` calls, apply the \"exists here, leave alone\" rule per document kind, skip `practices.md`, store downloaded versions as the last-synchronised baseline, and record that the download was completed (ADR-0017)"
+    },
+    {
+      "id": "mw6c7ropq01l2d",
+      "text": "Implement the frontend ViewModel and UI feedback in the interface-adapter and UI layers: first-commit note, download summary note, cut-list amber line, per-file warnings, download-failure amber box with \"Download from &lt;branch&gt;\" button, and suppression of the box after a successful download (AE-0002, ADR-0007)"
+    },
+    {
+      "id": "mw6c7rop8x1r5y",
+      "text": "Write Jest unit tests for the download ViewModel covering: empty-repository note, full-download summary, nothing-to-download note, cut-list line, unrecognised-file warning, failure state with retry button, and post-success suppression (ADR-0005)"
+    },
+    {
+      "id": "mw6c7ropexh8bv",
+      "text": "Write backend unit tests (`*Test.java`) for the `importExisting` application service covering: empty repository, repository with every document kind, documents that already exist, `practices.md` skipped, truncated list, and unrecognisable file (ADR-0009)"
+    },
+    {
+      "id": "mw6c7rop2gg1kz",
+      "text": "Write a GitHub integration test (`*IT.java`) against a fake GitHub server covering: empty repository (and provider-rejects-empty-file variant), repository with every document kind, documents that already exist, and a truncated file list (ADR-0012)"
+    },
+    {
+      "id": "mw6c7rop8i5wfh",
+      "text": "Implement the `init`, `tree`, and `blob` operations in the GitLab outbound adapter, handling pagination so the full file list is always returned regardless of page count, and supporting projects nested in groups and subgroups (ADR-0017)"
+    },
+    {
+      "id": "mw6c7ropoadthn",
+      "text": "Write a GitLab integration test (`*IT.java`) against a fake GitLab server covering: all cases from the GitHub test, a multi-page file list, and a subgroup-nested project (ADR-0012)"
+    },
+    {
+      "id": "mw6c7ropymwycm",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
