@@ -1,0 +1,39 @@
+{
+  "title": "Read an ADR from the tree, read-only",
+  "prompt": "# Story 4: Read an ADR from the tree, read-only\n\n- **Story**: XXX-read-adr-from-builder\n- **Created**: 2026-11-07\n- **Status**: Draft\n- **Demo**: open `adrs`, press an ADR file, read it, and move to a driver from the tree.\n\n## Story\n\nAs a team member, I want to open an ADR from the tree and read it, so that I can check a decision of my project from the builder, knowing\nthat I cannot change it there.\n\n## Acceptance tests\n\n- [ ] **Given** `adrs` is open, **When** the user presses an ADR file, **Then** everything of story 3 holds for it (the panel, the rail, \"Show\n  files\", the two views, Close, and no control that edits), with these differences.\n- [ ] **Given** the open ADR, **Then** the header shows the ADR icon and the path `adrs/0011-use-typescript-for-the-frontend.md`, and the lock\n  says \"Read-only here. Edit this ADR from the ADRs page.\"\n- [ ] **Given** the ADR, **Then** its text is the Markdown stored for it, as it is: the title, the Status and Date lines, and the sections\n  Context, Decision and Consequences. Nothing is added or taken out.\n- [ ] **Given** an ADR of any status, **Then** it opens. **Given** a status that is none of the usual four, **Then** it opens all the same.\n- [ ] **Given** an ADR with no text beyond its title, **Then** it shows that title, and no placeholder line.\n- [ ] **Given** the user changed an ADR on the ADR page and opened the workspace again, **Then** the file shows the saved text.\n- [ ] **Given** an ADR is open, **When** the user opens a driver, **Then** the driver takes its place, with its own icon and note, and the rail\n  shows the icon of `drivers`. **Given** the other way round, **Then** the rail shows the icon of `adrs`.\n\n## Business rules and constraints\n\n- An ADR is immutable here. It is written on the ADR page, and nothing in the builder changes, moves, deletes or approves it. Which ADRs a\n  story can link to (only the Accepted ones) is a rule of the stories, not of this tree.\n- The file keeps the name it has in the repository, and its number and name never change when it is shown.\n\n## Out of scope\n\n- Writing, editing and changing the status of an ADR (`story-adrs.md`), and linking an ADR to a story or an enabler.\n- Anything about stories and architectural enablers.\n\n## Tasks\n\n- [ ] Give the ADR the same file panel as a driver, with its own icon, path and read-only note.\n- [ ] Show the stored Markdown of the ADR unchanged in both views.\n- [ ] Make the rail show the icon of the folder of the file that is open, for both kinds.\n- [ ] Test: an ADR of each status, an ADR with only a title, and the move between a driver and an ADR.",
+  "createdAt": "2026-11-07",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw6lrpxjdphrgz",
+      "text": "Extend the file-panel component in the `ui` layer to accept an ADR file type, rendering its icon, path, and read-only note distinct from a driver's (ADR-0007, AE-0002)"
+    },
+    {
+      "id": "mw6lrpxjwwwaj8",
+      "text": "Wire the ADR selection in the builder tree to the existing read-ADR use case (or introduce a minimal one if absent), following the Clean Architecture inward-dependency rule (ADR-0007, AE-0002)"
+    },
+    {
+      "id": "mw6lrpxjmp991l",
+      "text": "Display the stored ADR Markdown unchanged in both the rendered and raw-Markdown views, reusing the view-toggle already present for drivers (story 021)"
+    },
+    {
+      "id": "mw6lrpxj9viut7",
+      "text": "Update the rail so it reflects the folder icon (`adrs` or `drivers`) of whichever file is currently open, covering the switch in both directions"
+    },
+    {
+      "id": "mw6lrpxjc1oxjr",
+      "text": "Write Jest unit tests for the ViewModel: ADR with each of the four standard statuses, ADR with a non-standard status, ADR with only a title, and switching from a driver to an ADR and back"
+    },
+    {
+      "id": "mw6lrpxj2k90id",
+      "text": "Write a Jest rendering test for the file-panel component confirming no edit controls are present when an ADR is displayed"
+    },
+    {
+      "id": "mw6lrpxjneq2w1",
+      "text": "Verify the full frontend test suite, including ArchUnitTS fitness functions, passes within the ten-minute build budget (Practice: Ten-Minute Build, ADR-0016)"
+    }
+  ]
+}
