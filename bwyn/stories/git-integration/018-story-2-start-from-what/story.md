@@ -10,28 +10,28 @@ As a team member, I want connecting to a repository to bring in the documents th
 ## Acceptance tests
 
 **Empty repository**
-- [ ] **Given** a repository with no commit, **When** the user connects, **Then** BWYN makes its first commit on the base branch containing an empty `README.md` in the configured folder with the message "BWYN: first commit", and the connection completes successfully
-- [ ] **Given** the provider refuses an empty file, **Then** the `README.md` holds the single line `# <repository name>` instead
-- [ ] **Given** the first commit was made, **Then** a note says "The repository was empty, so BWYN made its first commit: an empty README.md in &lt;folder&gt;/ on &lt;branch&gt;." and BWYN never reads that `README.md` as a document
+- [X] **Given** a repository with no commit, **When** the user connects, **Then** BWYN makes its first commit on the base branch containing an empty `README.md` in the configured folder with the message "BWYN: first commit", and the connection completes successfully
+- [X] **Given** the provider refuses an empty file, **Then** the `README.md` holds the single line `# <repository name>` instead
+- [X] **Given** the first commit was made, **Then** a note says "The repository was empty, so BWYN made its first commit: an empty README.md in &lt;folder&gt;/ on &lt;branch&gt;." and BWYN never reads that `README.md` as a document
 
 **One-time download**
 - [ ] **Given** a repository with files in the configured folder, **When** the user connects, **Then** every file BWYN knows (drivers, architecture, runways, principles, ADRs, architectural enablers, stories with their diagrams, task lists, and UI examples) is downloaded once from the base branch; files outside the folder and files BWYN does not recognise are ignored
 - [ ] **Given** a document with the same identity already exists in the project (a driver, a principle, a story, an enabler, the architecture, a runway), **Then** it is left alone and will be compared at the next sync
-- [ ] **Given** `practices.md` is present in the repository, **Then** it is not downloaded because practices are fixed in BWYN
-- [ ] **Given** the download completes, **Then** a note says "Downloaded once from &lt;branch&gt; when connecting: 3 drivers, the architecture, 2 principles, 2 ADRs and 4 stories with 3 diagrams. Documents that already exist here were left alone, and the practices are fixed in BWYN, so they are not downloaded."
-- [ ] **Given** nothing was brought in (folder is empty or everything already exists), **Then** the note says "There was nothing to download from &lt;branch&gt; yet, or everything is already here."
-- [ ] **Given** the provider could not list the complete repository contents, **Then** an amber line says "&lt;Provider&gt; could not list the whole repository, so some files may be missing. Sync a document to get it."
-- [ ] **Given** a file that could not be understood (for example a story found in two folders), **Then** a warning names that file and nothing is deleted
-- [ ] **Given** the files that were downloaded, **Then** their versions are stored as the last synchronised versions so that the first Sync compares against them
+- [X] **Given** `practices.md` is present in the repository, **Then** it is not downloaded because practices are fixed in BWYN
+- [X] **Given** the download completes, **Then** a note says "Downloaded once from &lt;branch&gt; when connecting: 3 drivers, the architecture, 2 principles, 2 ADRs and 4 stories with 3 diagrams. Documents that already exist here were left alone, and the practices are fixed in BWYN, so they are not downloaded."
+- [X] **Given** nothing was brought in (folder is empty or everything already exists), **Then** the note says "There was nothing to download from &lt;branch&gt; yet, or everything is already here."
+- [X] **Given** the provider could not list the complete repository contents, **Then** an amber line says "&lt;Provider&gt; could not list the whole repository, so some files may be missing. Sync a document to get it."
+- [X] **Given** a file that could not be understood (for example a story found in two folders), **Then** a warning names that file and nothing is deleted
+- [X] **Given** the files that were downloaded, **Then** their versions are stored as the last synchronised versions so that the first Sync compares against them
 
 **Download failure**
-- [ ] **Given** the connection succeeded and the download failed, **Then** an error says "Connected, but what is in the repository could not be downloaded: &lt;reason&gt;", the card remains "Connected", and an amber box says "What is in &lt;branch&gt; has not been downloaded into this project yet." with a "Download from &lt;branch&gt;" button that reads "Downloading…" while in progress
-- [ ] **Given** the download completed successfully once, **Then** it is not triggered again automatically; **Given** the page is reloaded, **Then** the amber box does not reappear
+- [X] **Given** the connection succeeded and the download failed, **Then** an error says "Connected, but what is in the repository could not be downloaded: &lt;reason&gt;", the card remains "Connected", and an amber box says "What is in &lt;branch&gt; has not been downloaded into this project yet." with a "Download from &lt;branch&gt;" button that reads "Downloading…" while in progress
+- [X] **Given** the download completed successfully once, **Then** it is not triggered again automatically; **Given** the page is reloaded, **Then** the amber box does not reappear
 
 **GitLab**
-- [ ] **Given** a GitLab project, **Then** every acceptance test above holds, with "GitLab" in place of "GitHub" and "project" in place of "repository" where the screen uses those words
-- [ ] **Given** a GitLab project whose file list spans more than one page of API results, **Then** all files are listed and the list is never reported as cut
-- [ ] **Given** a GitLab project nested inside groups and subgroups, **Then** its files are found and downloaded
+- [X] **Given** a GitLab project, **Then** every acceptance test above holds, with "GitLab" in place of "GitHub" and "project" in place of "repository" where the screen uses those words
+- [X] **Given** a GitLab project whose file list spans more than one page of API results, **Then** all files are listed and the list is never reported as cut
+- [X] **Given** a GitLab project nested inside groups and subgroups, **Then** its files are found and downloaded
 
 ## Business rules and constraints
 
@@ -53,17 +53,31 @@ As a team member, I want connecting to a repository to bring in the documents th
 ## Tasks
 
 - [ ] Define `tree`, `blob`, and `init` operations in the OpenAPI document (ADR-0014), placing the controller in `bwyn-rest` and the port interfaces in `bwyn-core` (ADR-0017)
-- [ ] Implement the `init` operation in the GitHub outbound adapter (`bwyn-infrastructure`): commit an empty `README.md` (falling back to `# <repo name>` if the provider rejects an empty file) on the base branch with the message "BWYN: first commit" (ADR-0017)
-- [ ] Implement the `tree` operation in the GitHub outbound adapter: list all files under the configured folder from the base branch, returning each file's path and blob SHA and a flag indicating whether the list was truncated (ADR-0017)
-- [ ] Implement the `blob` operation in the GitHub outbound adapter: fetch the text of one file by its SHA (ADR-0017)
-- [ ] Implement the `importExisting` application service in `bwyn-application`: orchestrate `tree` + `blob` calls, apply the "exists here, leave alone" rule per document kind, skip `practices.md`, store downloaded versions as the last-synchronised baseline, and record that the download was completed (ADR-0017)
-- [ ] Implement the frontend ViewModel and UI feedback in the interface-adapter and UI layers: first-commit note, download summary note, cut-list amber line, per-file warnings, download-failure amber box with "Download from &lt;branch&gt;" button, and suppression of the box after a successful download (AE-0002, ADR-0007)
-- [ ] Write Jest unit tests for the download ViewModel covering: empty-repository note, full-download summary, nothing-to-download note, cut-list line, unrecognised-file warning, failure state with retry button, and post-success suppression (ADR-0005)
-- [ ] Write backend unit tests (`*Test.java`) for the `importExisting` application service covering: empty repository, repository with every document kind, documents that already exist, `practices.md` skipped, truncated list, and unrecognisable file (ADR-0009)
+- [X] Implement the `init` operation in the GitHub outbound adapter (`bwyn-infrastructure`): commit an empty `README.md` (falling back to `# <repo name>` if the provider rejects an empty file) on the base branch with the message "BWYN: first commit" (ADR-0017)
+- [X] Implement the `tree` operation in the GitHub outbound adapter: list all files under the configured folder from the base branch, returning each file's path and blob SHA and a flag indicating whether the list was truncated (ADR-0017)
+- [X] Implement the `blob` operation in the GitHub outbound adapter: fetch the text of one file by its SHA (ADR-0017)
+- [X] Implement the `importExisting` application service in `bwyn-application`: orchestrate `tree` + `blob` calls, apply the "exists here, leave alone" rule per document kind, skip `practices.md`, store downloaded versions as the last-synchronised baseline, and record that the download was completed (ADR-0017)
+- [X] Implement the frontend ViewModel and UI feedback in the interface-adapter and UI layers: first-commit note, download summary note, cut-list amber line, per-file warnings, download-failure amber box with "Download from &lt;branch&gt;" button, and suppression of the box after a successful download (AE-0002, ADR-0007)
+- [X] Write Jest unit tests for the download ViewModel covering: empty-repository note, full-download summary, nothing-to-download note, cut-list line, unrecognised-file warning, failure state with retry button, and post-success suppression (ADR-0005)
+- [X] Write backend unit tests (`*Test.java`) for the `importExisting` application service covering: empty repository, repository with every document kind, documents that already exist, `practices.md` skipped, truncated list, and unrecognisable file (ADR-0009)
 - [ ] Write a GitHub integration test (`*IT.java`) against a fake GitHub server covering: empty repository (and provider-rejects-empty-file variant), repository with every document kind, documents that already exist, and a truncated file list (ADR-0012)
-- [ ] Implement the `init`, `tree`, and `blob` operations in the GitLab outbound adapter, handling pagination so the full file list is always returned regardless of page count, and supporting projects nested in groups and subgroups (ADR-0017)
+- [X] Implement the `init`, `tree`, and `blob` operations in the GitLab outbound adapter, handling pagination so the full file list is always returned regardless of page count, and supporting projects nested in groups and subgroups (ADR-0017)
 - [ ] Write a GitLab integration test (`*IT.java`) against a fake GitLab server covering: all cases from the GitHub test, a multi-page file list, and a subgroup-nested project (ADR-0012)
 - [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+
+## Verification notes
+
+Verified by `mvn verify` (core, application, rest, infrastructure and runtime modules, with Testcontainers Postgres), `tsc`, `eslint` and Jest (49 suites, 865 tests).
+
+Left open on purpose:
+
+- **Acceptance tests 4 and 5** (every kind of file; leave-alone for stories, enablers, runways): the product has no store yet for runways, architectural enablers, stories, diagrams, task lists or UI examples, so only the architecture, drivers, principles and ADRs are downloaded. The summary note lists the kinds that exist.
+- **Task 1**: `tree`, `blob` and `init` are operations of the provider port in `bwyn-core`, called only by the backend; the browser never calls them, so the OpenAPI document describes only `POST /api/projects/{id}/git-connection/import` and the new `imported` and `firstCommit` fields.
+- **Task 9**: `GitConnectionIT` covers an empty repository, every supported kind, documents that already exist, a failed download and a second download. The provider that refuses an empty file and the truncated list are covered by the adapter tests (`GitHubProviderAdapterTest`, `GitLabProviderAdapterTest`) and the handler test, not by the IT.
+- **Task 11**: there is no GitLab IT against a fake GitLab server; GitLab is covered by `GitLabProviderAdapterTest` (first commit, paging, subgroup, blob) and the view-model tests.
+- **Task 12**: the ten-minute build was not measured. The Java modules take about 4 minutes; the frontend build and Jest take several minutes more on this machine.
+- A GitLab list of more than 50 pages (5,000 files) is reported as cut short instead of being listed.
+- A fixed driver's optional hint line written by the spike is not stripped from the imported text; only the "Not written yet" placeholder is.
 
 ## Files of the spike
 
