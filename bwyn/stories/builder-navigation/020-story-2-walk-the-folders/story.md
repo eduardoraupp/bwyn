@@ -5,46 +5,50 @@
 - **Status**: Draft
 
 ## Story
-As a team member, I want to open and close the folders of the builder tree and see which drivers and ADRs my project has, so that I know what exists and where each file lives.
+As a team member, I want to open and close the folders of the builder tree and see which drivers and accepted ADRs my project has, so that I know what exists and where each file lives.
 
 ## Acceptance tests
 
 **Opening and closing**
-- [ ] **Given** a closed folder, **When** the user clicks its row or presses Enter or Space on it, **Then** it opens, its chevron points down, and its row has `aria-expanded="true"`; **When** the user activates it again, **Then** it closes and `aria-expanded="false"`.
-- [ ] **Given** the four folders, **Then** each opens and closes independently and several can be open at the same time.
+- [X] **Given** a closed folder, **When** the user clicks its row or presses Enter or Space on it, **Then** it opens, its chevron points down, and its row has `aria-expanded="true"`; **When** the user activates it again, **Then** it closes and `aria-expanded="false"`.
+- [X] **Given** the four folders, **Then** each opens and closes independently and several can be open at the same time.
 - [ ] **Given** folders that are open, **When** a file is opened and closed (stories 3 and 4), **Then** the open/closed state of every folder is unchanged.
-- [ ] **Given** folders that are open, **When** the workspace is closed and reopened, **Then** all folders are closed.
+- [X] **Given** folders that are open, **When** the workspace is closed and reopened, **Then** all folders are closed.
 
 **Folder rows**
-- [ ] **Given** any folder row, **Then** it shows a chevron, a folder icon, the folder name (truncated with "…" when long), and a count of items on the right.
-- [ ] **Given** the `drivers` and `adrs` folder rows, **Then** each shows a lock icon labelled "Read-only"; the `architectural-enablers` and `stories` rows do not.
-- [ ] **Given** the `drivers` folder, **Then** its count equals the five fixed drivers plus any drivers the team added; **Given** `adrs`, **Then** its count equals the number of ADRs; **Given** `architectural-enablers` and `stories`, **Then** each count equals the number of items the project holds.
+- [X] **Given** any folder row, **Then** it shows a chevron, a folder icon, the folder name (truncated with "…" when long), and a count of items on the right.
+- [X] **Given** the four folder rows, **Then** all of them show the same plain folder icon; the icons of the menu items are used for the files inside `drivers` and `adrs`, not for the folders.
+- [X] **Given** the `drivers` and `adrs` folder rows, **Then** each shows a lock icon labelled "Read-only"; the `architectural-enablers` and `stories` rows do not.
+- [X] **Given** the `drivers` folder, **Then** its count equals the five fixed drivers plus any drivers the team added; **Given** `adrs`, **Then** its count equals the number of accepted ADRs; **Given** `architectural-enablers` and `stories`, **Then** each count equals the number of items the project holds.
 
 **`drivers` folder**
-- [ ] **Given** `drivers` is open, **Then** it lists the five fixed drivers first, in this order: `core-functionality.md`, `architectural-concerns.md`, `constraints.md`, `quality-attributes.md`, `design-purpose.md`, followed by team-added drivers in the order they were added, each as `<identity>.md`.
-- [ ] **Given** a fixed driver that has no text yet, **Then** it is listed all the same.
-- [ ] **Given** a file row in `drivers`, **Then** it shows a file icon, the file name truncated with "…" when long, and a tooltip containing the driver's display name (e.g. "Core Functionality").
+- [X] **Given** `drivers` is open, **Then** it lists the five fixed drivers first, in this order: `core-functionality.md`, `architectural-concerns.md`, `constraints.md`, `quality-attributes.md`, `design-purpose.md`, followed by team-added drivers in the order they were added, each as `<identity>.md`.
+- [X] **Given** a fixed driver that has no text yet, **Then** it is listed all the same.
+- [X] **Given** a file row in `drivers`, **Then** it shows the icon of the Drivers item in the menu on the left, the file name truncated with "…" when long, and a tooltip containing the driver's display name (e.g. "Core Functionality").
 
 **`adrs` folder**
-- [ ] **Given** `adrs` is open and the project has at least one ADR, **Then** it lists one file per ADR in ascending order of number, with the repository file name (e.g. `0011-use-typescript-for-the-frontend.md`) and a tooltip of the form "ADR 0011. Use TypeScript for the frontend".
-- [ ] **Given** `adrs` is open and the project has no ADRs, **Then** it shows the italic line "No ADRs yet."
-- [ ] **Given** ADRs of any status (Proposed, Accepted, Deprecated, Superseded), **Then** all are listed.
+- [X] **Given** `adrs` is open and the project has at least one accepted ADR, **Then** it lists one file per accepted ADR in ascending order of number, with the repository file name as the backend gives it (e.g. `0011-use-typescript-for-the-frontend.md`) and a tooltip of the form "ADR 0011. Use TypeScript for the frontend".
+- [X] **Given** a file row in `adrs`, **Then** it shows the icon of the ADR item in the menu on the left, which is not the icon of the drivers.
+- [X] **Given** `adrs` is open and the project has no accepted ADR (it has no ADRs, or only Proposed, Deprecated or Superseded ones), **Then** it shows the italic line "No ADRs yet."
+- [X] **Given** ADRs of the statuses Proposed, Deprecated and Superseded, or of any other status, **Then** none is listed and none is counted; only ADRs with the status Accepted are.
+- [X] **Given** the backend, **When** the accepted ADRs of a project are asked (`GET /api/projects/{projectId}/adrs/accepted`), **Then** it answers only the ADRs whose status reads Accepted (in any case), by number from the lowest, each with its number, title and repository file name, and never the ADRs of another project; the existing `GET /api/projects/{projectId}/adrs` still answers all of them.
 
 **`architectural-enablers` and `stories` folders**
-- [ ] **Given** either of these two folders is opened, **Then** it shows the italic line "Coming in another story." and can be closed again like any folder.
-- [ ] **Given** the tree, **Then** there is no button to create a story, an enabler, or a theme; nothing can be dragged or dropped.
+- [X] **Given** either of these two folders is opened, **Then** it shows the italic line "Coming in another story." and can be closed again like any folder.
+- [X] **Given** the tree, **Then** there is no button to create a story, an enabler, or a theme; nothing can be dragged or dropped.
 
 **Immutability**
-- [ ] **Given** any file or folder row inside `drivers` or `adrs`, **Then** a double-click, F2, a drag, a right-click, and Delete each have no effect on the tree.
+- [X] **Given** any file or folder row inside `drivers` or `adrs`, **Then** a double-click, F2, a drag, a right-click, and Delete each have no effect on the tree.
 
 **Keeping up with the project**
-- [ ] **Given** a driver was added on the Drivers page, **When** the user opens the workspace, **Then** the tree lists it and the `drivers` count is correct.
-- [ ] **Given** an ADR was added on the ADR page, **When** the user opens the workspace, **Then** the tree lists it and the `adrs` count is correct.
-- [ ] **Given** two projects, **Then** each shows only its own drivers and ADRs.
+- [X] **Given** a driver was added on the Drivers page, **When** the user opens the workspace, **Then** the tree lists it and the `drivers` count is correct.
+- [X] **Given** an ADR was added on the ADR page, **When** the user opens the workspace, **Then** the tree lists it and the `adrs` count is correct.
+- [X] **Given** two projects, **Then** each shows only its own drivers and ADRs.
 
 ## Business rules and constraints
 - The tree is read-only: it displays what the project holds and never writes anything (Architecture: UI layer, no side effects).
 - A file's path is its path in the repository relative to the BWYN folder: `drivers/<identity>.md` and `adrs/<number>-<slug>.md`.
+- Only ADRs with the status Accepted are listed and counted in `adrs`; the others stay on the ADR page. The filter belongs to the backend (the domain decides what is accepted): the frontend asks for the accepted ADRs and shows what it is answered, so the folder never lists a file that the count leaves out. The backend also gives the file name of each ADR; the frontend does not work it out.
 - The five fixed drivers are always listed, written or not, because they belong to every project. A driver the team has removed is not listed.
 - `architectural-enablers` and `stories` are placeholders: their counts reflect the items the project holds, but the items are not listed, opened, or acted on until their own stories.
 - Folder open/closed state is session-local UI state; it is not persisted across workspace sessions (ADR-0007: state lives in the ViewModel, not in the entity or use-case layer).
@@ -57,22 +61,28 @@ As a team member, I want to open and close the folders of the builder tree and s
 - Writing drivers and ADRs (covered by their own pages).
 - Search or filter within the tree.
 - Persisting folder open/closed state across browser sessions or devices.
-- Backend endpoints: this story is entirely frontend state and presentation; no new API calls are introduced.
+- Backend changes other than the one read-only endpoint that lists the accepted ADRs: nothing is written, no table or migration changes, and the existing endpoints keep their answers.
 
 ## Tasks
-- [ ] Define a static folder-descriptor array (key, display name, kind, lock flag, placeholder text) in the `ui` layer and derive the tree from it (ADR-0007, Principle: Declarative over imperative)
-- [ ] Implement the `BuilderTreeViewModel` in the `interface-adapters` layer, exposing folder open/closed state, item lists for `drivers` and `adrs`, and counts for all four folders (ADR-0007)
+- [X] Define a static folder-descriptor array (key, display name, kind, lock flag, placeholder text) in the `ui` layer and derive the tree from it (ADR-0007, Principle: Declarative over imperative)
+- [X] Implement the `BuilderTreeViewModel` in the `interface-adapters` layer, exposing folder open/closed state, item lists for `drivers` and `adrs` (the accepted ADRs the backend answers), and counts for all four folders (ADR-0007)
+- [X] Backend, domain: give `Adr` the rule `isAccepted()` (status reads Accepted in any case) with a unit test (ADR-0017)
+- [X] Backend, application: add `GetAcceptedAdrsQuery` and `GetAcceptedAdrsQueryHandler` (accepted ADRs of one project by number, on the existing `AdrQueryRepository` port) with unit tests, and register the handler in `AdrConfig` (ADR-0017)
+- [X] Backend, REST: add `GET /api/projects/{projectId}/adrs/accepted` to `AdrsController` answering `AcceptedAdrsResponse` (number, title, fileName), documented with OpenAPI annotations, with controller tests and an integration test against PostgreSQL (ADR-0008, ADR-0012, ADR-0014)
+- [X] Frontend: add `listAccepted` to `AdrGateway` and `HttpAdrGateway`, and a `ListAcceptedAdrsUseCase`; drop the file-name derivation and the status filter from the frontend (ADR-0007)
+- [X] Confirm the backend ArchUnit and hexagonal rules still pass with the new classes (ADR-0009, ADR-0017)
 - [ ] Bind `BuilderTreeViewModel` in the Inversify composition root; inject the existing driver and ADR query use cases (ADR-0006)
-- [ ] Build the `FolderRow` React component: chevron, folder icon, name with overflow ellipsis, optional lock badge, count; toggle on click, Enter, and Space; set `aria-expanded` (ADR-0005)
-- [ ] Build the `FileRow` React component: file icon, file name with overflow ellipsis, tooltip with display name (ADR-0005)
-- [ ] Render `drivers` file list: five fixed drivers first in specified order, then team-added drivers in creation order, each as `<identity>.md`
-- [ ] Render `adrs` file list: ADRs in ascending number order; show italic "No ADRs yet." when the list is empty; include all statuses
-- [ ] Render `architectural-enablers` and `stories` with italic "Coming in another story." placeholder when open; omit all create/rename/drag controls
-- [ ] Suppress all mutation interactions on `drivers` and `adrs` rows: double-click, F2, drag, right-click context menu, and Delete key do nothing
-- [ ] Reset all folder open/closed state to closed when the workspace is closed
-- [ ] Write Jest unit tests for `BuilderTreeViewModel`: correct order and counts for drivers (including unwritten fixed drivers), empty-ADR case, multi-project isolation (ADR-0005)
-- [ ] Write Jest unit tests for `FolderRow` and `FileRow`: aria attributes, truncation, lock badge presence/absence, tooltip content
-- [ ] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+- [X] Build the `FolderRow` React component: chevron, folder icon, name with overflow ellipsis, optional lock badge, count; toggle on click, Enter, and Space; set `aria-expanded` (ADR-0005)
+- [X] Build the `FileRow` React component: icon (a plain file unless given one), file name with overflow ellipsis, tooltip with display name (ADR-0005)
+- [X] Give the file rows inside `drivers` and `adrs` the icons of the Drivers and ADR menu items, taken from the menu's own item list so the two cannot drift apart (Principle: DRY and KISS)
+- [X] Render `drivers` file list: five fixed drivers first in specified order, then team-added drivers in creation order, each as `<identity>.md`
+- [X] Render `adrs` file list: the accepted ADRs the backend answers, in the order it answers them; show italic "No ADRs yet." when the list is empty
+- [X] Render `architectural-enablers` and `stories` with italic "Coming in another story." placeholder when open; omit all create/rename/drag controls
+- [X] Suppress all mutation interactions on `drivers` and `adrs` rows: double-click, F2, drag, right-click context menu, and Delete key do nothing
+- [X] Reset all folder open/closed state to closed when the workspace is closed
+- [X] Write Jest unit tests for `BuilderTreeViewModel`: correct order and counts for drivers (including unwritten fixed drivers), ADR list and count from the accepted endpoint, empty-ADR case, multi-project isolation (ADR-0005)
+- [X] Write Jest unit tests for `FolderRow` and `FileRow`: aria attributes, truncation, lock badge presence/absence, tooltip content
+- [ ] Verify the full frontend and backend build and test suites complete within the ten-minute budget (Practice: Ten-Minute Build)
 
 ## Files of the spike
 
