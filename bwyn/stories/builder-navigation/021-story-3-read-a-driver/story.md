@@ -10,24 +10,24 @@ As a team member, I want to open a driver from the builder tree and read it rend
 ## Acceptance tests
 
 **Opening a file**
-- [ ] **Given** the `drivers` folder is open in the tree, **When** the user presses a driver file row, **Then** the file opens in a panel to the right of the tree, its row is marked `aria-current`, and its folder stays open.
-- [ ] **Given** a file is open, **Then** the tree shrinks to a rail showing a "Show files" button, a thin separator, and the icon of the open file's kind labelled "Viewing a file from drivers" with a tooltip "drivers".
-- [ ] **Given** the rail is shown, **When** the user presses "Show files", **Then** the full tree appears beside the open file. **When** the user selects another driver from the full tree, **Then** that driver opens and the tree returns to the rail.
-- [ ] **Given** a file is open, **When** the user presses the same file row again, **Then** nothing changes. **When** the user presses a different driver row, **Then** that driver replaces the first in the panel.
+- [X] **Given** the `drivers` folder is open in the tree, **When** the user presses a driver file row, **Then** the file opens in a panel to the right of the tree, its row is marked `aria-current`, and its folder stays open.
+- [X] **Given** a file is open, **Then** the tree shrinks to a rail showing a "Show files" button, a thin separator, and the icon of the open file's kind labelled "Viewing a file from drivers" with a tooltip "drivers".
+- [X] **Given** the rail is shown, **When** the user presses "Show files", **Then** the full tree appears beside the open file. **When** the user selects another driver from the full tree, **Then** that driver opens and the tree returns to the rail.
+- [X] **Given** a file is open, **When** the user presses the same file row again, **Then** nothing changes. **When** the user presses a different driver row, **Then** that driver replaces the first in the panel.
 
 **The file panel**
-- [ ] **Given** the file panel is open for `constraints.md`, **Then** the header shows the driver icon, the path `drivers/constraints.md` in monospace (truncated with "…" and shown in full as a tooltip), a lock icon with the note "Read-only here. Edit this driver from the Drivers page.", and a Close button labelled "Close drivers/constraints.md".
-- [ ] **Given** the file panel is open, **Then** it contains no Save, Delete, Sync, "Add link", "Add task", diagram, UI, or "Cross enabler" button, and no field that accepts keyboard input.
-- [ ] **Given** the file panel is open, **Then** two icon buttons let the user choose between the rendered view (active when the file first opens) and the Markdown source view.
-- [ ] **Given** the rendered view is active, **Then** headings, paragraphs, lists, bold, italic, inline code, block quotes, tables, and links are rendered as HTML elements built from React components, never from `dangerouslySetInnerHTML`. A link whose `href` begins with `https://` or `http://` opens in a new tab; any other address is rendered as plain text only.
-- [ ] **Given** the Markdown source view is active, **Then** the raw Markdown is displayed in a read-only block with long lines wrapped; the user can select and copy the text but cannot type into it.
-- [ ] **Given** a driver that has text, **Then** the Markdown content is `# <name>`, the driver's meaning (fixed drivers only), and the saved text, in that order.
-- [ ] **Given** a driver that has no text, **Then** the panel shows "_Not written yet. Edit this driver from the Drivers page._" in italics in the rendered view and the equivalent Markdown literal in the source view.
-- [ ] **Given** the user edited the driver on the Drivers page and then opens the builder workspace, **Then** the file panel shows the saved text, not any unsaved draft.
-- [ ] **Given** the user has switched to the Markdown source view and then opens a different file, **Then** the new file opens in the rendered view.
+- [X] **Given** the file panel is open for `constraints.md`, **Then** the header shows the driver icon, the path `drivers/constraints.md` in monospace (truncated with "…" and shown in full as a tooltip), a lock icon with the note "Read-only here. Edit this driver from the Drivers page.", and a Close button labelled "Close drivers/constraints.md".
+- [X] **Given** the file panel is open, **Then** it contains no Save, Delete, Sync, "Add link", "Add task", diagram, UI, or "Cross enabler" button, and no field that accepts keyboard input.
+- [X] **Given** the file panel is open, **Then** two icon buttons let the user choose between the rendered view (active when the file first opens) and the Markdown source view.
+- [X] **Given** the rendered view is active, **Then** headings, paragraphs, lists, bold, italic, inline code, block quotes, tables, and links are rendered as HTML elements built from React components, never from `dangerouslySetInnerHTML`. A link whose `href` begins with `https://` or `http://` opens in a new tab; any other address is rendered as plain text only.
+- [X] **Given** the Markdown source view is active, **Then** the raw Markdown is displayed in a read-only block with long lines wrapped; the user can select and copy the text but cannot type into it.
+- [X] **Given** a driver that has text, **Then** the Markdown content is `# <name>`, the driver's meaning (fixed drivers only), and the saved text, in that order.
+- [X] **Given** a driver that has no text, **Then** the panel shows "_Not written yet. Edit this driver from the Drivers page._" in italics in the rendered view and the equivalent Markdown literal in the source view.
+- [X] **Given** the user edited the driver on the Drivers page and then opens the builder workspace, **Then** the file panel shows the saved text, not any unsaved draft.
+- [X] **Given** the user has switched to the Markdown source view and then opens a different file, **Then** the new file opens in the rendered view.
 
 **Closing**
-- [ ] **Given** the file panel is open, **When** the user presses the Close button, **Then** the panel closes, the tree returns to its full width, the empty state "Select a file in the tree to read it." is shown in the content area, and the folders that were open before the file was opened remain open.
+- [X] **Given** the file panel is open, **When** the user presses the Close button, **Then** the panel closes, the tree returns to its full width, the empty state "Select a file in the tree to read it." is shown in the content area, and the folders that were open before the file was opened remain open.
 
 ## Business rules and constraints
 - A driver is immutable in the builder. No write operation (edit, save, rename, move, delete) is available from the file panel (ADR-0007, Architecture).
@@ -46,17 +46,17 @@ As a team member, I want to open a driver from the builder tree and read it rend
 - The prompt box, "New story" button, runway diagram, and any builder interaction that creates or edits documents.
 
 ## Tasks
-- [ ] Add open-file state to the workspace: track which entry is open, mark its tree row `aria-current`, keep its folder open, and collapse the tree to the rail on open.
-- [ ] Build the rail: "Show files" button, separator, and kind icon with label and tooltip; restore the full tree on "Show files" and return to the rail when a new file is chosen from the full tree.
-- [ ] Build the read-only file panel shell: driver icon, truncated path with tooltip, lock note, and Close button; wire Close to clear the open-file state and restore the full tree.
-- [ ] Enforce read-only: confirm the panel contains no Save, Delete, Sync, "Add link", "Add task", diagram, UI, "Cross enabler" button, or editable field.
-- [ ] Add the rendered/source toggle: default to rendered on every file open; switch to source on demand; reset to rendered when a new file opens.
-- [ ] Implement the Markdown renderer using React elements (no `dangerouslySetInnerHTML`): headings, paragraphs, lists, bold, italic, inline code, block quotes, tables, and safe external links in a new tab.
-- [ ] Implement the Markdown source block: read-only, wrappable, selectable and copyable plain-text display.
-- [ ] Implement `driverMarkdown`: compose `# <name>`, the meaning line for fixed drivers, and the saved text; substitute the "Not written yet" italic placeholder when text is absent.
-- [ ] Read driver text from the project store so the panel always reflects the last saved state from the Drivers page.
-- [ ] Show the empty state "Select a file in the tree to read it." when no file is open; restore it and the pre-open folder state on Close.
-- [ ] Write Jest tests covering: opening a driver, switching files, the rail and "Show files" toggle, closing, both views, a driver with text, a driver without text, and the absence of any editable control in the panel.
+- [X] Add open-file state to the workspace: track which entry is open, mark its tree row `aria-current`, keep its folder open, and collapse the tree to the rail on open.
+- [X] Build the rail: "Show files" button, separator, and kind icon with label and tooltip; restore the full tree on "Show files" and return to the rail when a new file is chosen from the full tree.
+- [X] Build the read-only file panel shell: driver icon, truncated path with tooltip, lock note, and Close button; wire Close to clear the open-file state and restore the full tree.
+- [X] Enforce read-only: confirm the panel contains no Save, Delete, Sync, "Add link", "Add task", diagram, UI, "Cross enabler" button, or editable field.
+- [X] Add the rendered/source toggle: default to rendered on every file open; switch to source on demand; reset to rendered when a new file opens.
+- [X] Implement the Markdown renderer using React elements (no `dangerouslySetInnerHTML`): headings, paragraphs, lists, bold, italic, inline code, block quotes, tables, and safe external links in a new tab.
+- [X] Implement the Markdown source block: read-only, wrappable, selectable and copyable plain-text display.
+- [X] Implement `driverMarkdown`: compose `# <name>`, the meaning line for fixed drivers, and the saved text; substitute the "Not written yet" italic placeholder when text is absent.
+- [X] Read driver text from the project store so the panel always reflects the last saved state from the Drivers page.
+- [X] Show the empty state "Select a file in the tree to read it." when no file is open; restore it and the pre-open folder state on Close.
+- [X] Write Jest tests covering: opening a driver, switching files, the rail and "Show files" toggle, closing, both views, a driver with text, a driver without text, and the absence of any editable control in the panel.
 
 ## Files of the spike
 
