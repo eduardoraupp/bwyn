@@ -10,32 +10,32 @@ As a team member, I want to see the state of the draft and to stop it, retry it 
 ## Acceptance tests
 
 **State**
-- [ ] **Given** the draft is being written, **Then** its chip reads "Writing..." (pulsing), the card shows the text as it arrives, and shows "Waiting for the first tokens..." until the first text arrives.
-- [ ] **Given** the draft ended normally, **Then** its chip reads "Ready for review" (green).
-- [ ] **Given** the model stopped because it ran out of tokens, **Then** the chip reads "Incomplete" (amber) and the card says "The draft is incomplete, so it cannot be approved. Ask for changes, or discard it."
-- [ ] **Given** the request failed, **Then** the chip reads "Failed" (red) and the card shows the error under the text.
-- [ ] **Given** the model answered with no text, **Then** the chip reads "Failed" and the error is "No text was received from the model."
+- [X] **Given** the draft is being written, **Then** its chip reads "Writing..." (pulsing), the card shows the text as it arrives, and shows "Waiting for the first tokens..." until the first text arrives.
+- [X] **Given** the draft ended normally, **Then** its chip reads "Ready for review" (green).
+- [X] **Given** the model stopped because it ran out of tokens, **Then** the chip reads "Incomplete" (amber) and the card says "The draft is incomplete, so it cannot be approved. Ask for changes, or discard it."
+- [X] **Given** the request failed, **Then** the chip reads "Failed" (red) and the card shows the error under the text.
+- [X] **Given** the model answered with no text, **Then** the chip reads "Failed" and the error is "No text was received from the model."
 
 **Stop, Retry, Discard**
-- [ ] **Given** the draft is being written, **Then** the round send button is replaced by a white Stop button ("Stop writing"), and the card has a Stop button. **When** the user presses either, **Then** the request is cancelled, the text received so far stays, and the chip reads "Incomplete".
-- [ ] **Given** a Stop before any text arrived, **Then** the chip reads "Failed" with "No text was received from the model."
-- [ ] **Given** the draft failed, **Then** the card has "Retry" and "Discard". **When** the user presses Retry, **Then** the same turns are sent again, without adding a message.
-- [ ] **Given** a draft that is not being written, **Then** Discard shows. **When** the user presses it, **Then** the draft disappears and nothing is stored.
-- [ ] **Given** the draft is being written, **Then** there is no Discard (the user stops it first).
+- [X] **Given** the draft is being written, **Then** the round send button is replaced by a white Stop button ("Stop writing"), and the card has a Stop button. **When** the user presses either, **Then** the request is cancelled, the text received so far stays, and the chip reads "Incomplete".
+- [X] **Given** a Stop before any text arrived, **Then** the chip reads "Failed" with "No text was received from the model."
+- [X] **Given** the draft failed, **Then** the card has "Retry" and "Discard". **When** the user presses Retry, **Then** the same turns are sent again, without adding a message.
+- [X] **Given** a draft that is not being written, **Then** Discard shows. **When** the user presses it, **Then** the draft disappears and nothing is stored.
+- [X] **Given** the draft is being written, **Then** there is no Discard (the user stops it first).
 
 **The composer while there is a draft**
-- [ ] **Given** the draft is being written, **Then** the box says "Waiting for the draft..." and sending is blocked.
-- [ ] **Given** the draft failed, **Then** the box says "Retry or discard the draft first." and sending is blocked.
+- [X] **Given** the draft is being written, **Then** the box says "Waiting for the draft..." and sending is blocked.
+- [X] **Given** the draft failed, **Then** the box says "Retry or discard the draft first." and sending is blocked.
 - [ ] **Given** a draft that is Ready or Incomplete, **Then** the box asks for changes (story 4).
 
 **Tokens**
-- [ ] **Given** the draft ended (or was stopped after the model reported them), **Then** the card lists "Input 5230", "Output 812", "Cache read 4102" and "Cache write 0". **Given** the cache read is more than 0, **Then** that chip is green; the tooltips say "Input tokens read from the prompt cache" and "Input tokens written to the prompt cache".
-- [ ] **Given** the draft failed before the model answered, **Then** there are no token counts.
+- [X] **Given** the draft ended (or was stopped after the model reported them), **Then** the card lists "Input 5230", "Output 812", "Cache read 4102" and "Cache write 0". **Given** the cache read is more than 0, **Then** that chip is green; the tooltips say "Input tokens read from the prompt cache" and "Input tokens written to the prompt cache".
+- [X] **Given** the draft failed before the model answered, **Then** there are no token counts.
 
 **The call**
-- [ ] **Given** the backend answers before the stream starts with a 400, 503 or 502, **Then** the error shows in the card as a normal message (for 503: the project has no connection to the model).
-- [ ] **Given** the stream fails after it started, **Then** the chip reads "Failed" and the card shows the error. The text received so far is not kept, and Retry writes the draft again from the start.
-- [ ] **Given** the user closes the workspace, leaves the page or sends something new, **Then** the call in flight is cancelled and the backend stops asking the model.
+- [X] **Given** the backend answers before the stream starts with a 400, 503 or 502, **Then** the error shows in the card as a normal message (for 503: the project has no connection to the model).
+- [X] **Given** the stream fails after it started, **Then** the chip reads "Failed" and the card shows the error. The text received so far is not kept, and Retry writes the draft again from the start.
+- [X] **Given** the user closes the workspace, leaves the page or sends something new, **Then** the call in flight is cancelled and the backend stops asking the model.
 
 ## Business rules and constraints
 - A draft has exactly four states: *streaming*, *ready*, *stopped* (cut by Stop or by the token length limit), or *error*. Only a draft in the *ready* state can be approved (ADR-0007, Architecture).
@@ -56,18 +56,18 @@ As a team member, I want to see the state of the draft and to stop it, retry it 
 - The prompt box, "New story" toggle, and any builder interaction beyond the draft card and composer state described here.
 
 ## Tasks
-- [ ] Define a `DraftState` union type (`streaming | ready | stopped | error`) and a `Draft` value object holding state, text, turns, error, and usage in the entities or use-cases layer (ADR-0007, Architecture)
-- [ ] Implement a `DraftViewModel` in the interface-adapter layer that owns the `Draft` object, exposes observable state, and drives transitions between the four states (ADR-0007, Architecture)
-- [ ] Wire `DraftViewModel` in the Inversify composition root (ADR-0006)
-- [ ] Implement the streaming use case: open the SSE/chunked response, append text tokens to the draft, record usage on the end signal, and transition to *ready*, *stopped*, or *error* accordingly
-- [ ] Implement cancellation: abort the in-flight request when Stop is pressed, when a new request starts, or when the component unmounts; verify the backend receives the cancellation and stops the model call
-- [ ] Build the draft card React component: "Waiting for the first tokens..." placeholder, streaming text, status chip (pulsing / green / amber / red), incomplete note, error message, Stop button, Retry button, Discard button (ADR-0005, Architecture)
-- [ ] Build the token chip row: Input, Output, Cache read (green when > 0 with tooltip), Cache write chips; hide the row when usage is absent
-- [ ] Update the composer React component: block sending and show the correct placeholder text for each draft state; replace the send button with Stop while streaming
-- [ ] Handle pre-stream HTTP errors (400, 502, 503) by displaying the error message in the card without entering the streaming state
-- [ ] Write Jest unit tests for `DraftViewModel` state transitions using a fake streaming backend (streams normally, ends at token limit, returns no text, fails before first token, fails after first token) (ADR-0005)
-- [ ] Write Jest unit tests for the token chip row rendering with and without usage data
-- [ ] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
+- [X] Define a `DraftState` union type (`streaming | ready | stopped | error`) and a `Draft` value object holding state, text, turns, error, and usage in the entities or use-cases layer (ADR-0007, Architecture)
+- [X] Implement a `DraftViewModel` in the interface-adapter layer that owns the `Draft` object, exposes observable state, and drives transitions between the four states (ADR-0007, Architecture)
+- [X] Wire `DraftViewModel` in the Inversify composition root (ADR-0006)
+- [X] Implement the streaming use case: open the SSE/chunked response, append text tokens to the draft, record usage on the end signal, and transition to *ready*, *stopped*, or *error* accordingly
+- [X] Implement cancellation: abort the in-flight request when Stop is pressed, when a new request starts, or when the component unmounts; verify the backend receives the cancellation and stops the model call
+- [X] Build the draft card React component: "Waiting for the first tokens..." placeholder, streaming text, status chip (pulsing / green / amber / red), incomplete note, error message, Stop button, Retry button, Discard button (ADR-0005, Architecture)
+- [X] Build the token chip row: Input, Output, Cache read (green when > 0 with tooltip), Cache write chips; hide the row when usage is absent
+- [X] Update the composer React component: block sending and show the correct placeholder text for each draft state; replace the send button with Stop while streaming
+- [X] Handle pre-stream HTTP errors (400, 502, 503) by displaying the error message in the card without entering the streaming state
+- [X] Write Jest unit tests for `DraftViewModel` state transitions using a fake streaming backend (streams normally, ends at token limit, returns no text, fails before first token, fails after first token) (ADR-0005)
+- [X] Write Jest unit tests for the token chip row rendering with and without usage data
+- [X] Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)
 
 ## Files of the spike
 
