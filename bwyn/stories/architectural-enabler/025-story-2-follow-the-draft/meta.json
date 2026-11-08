@@ -1,0 +1,59 @@
+{
+  "title": "Follow the draft as it is written",
+  "prompt": "# Story 2: Follow the draft as it is written\n\n- **Story**: XXX-follow-enabler-draft\n- **Created**: 2026-11-08\n- **Status**: Draft\n- **Demo**: send a prompt, press Stop halfway and see \"Incomplete\"; stop the backend and see \"Failed\" with Retry; send again and see\n  \"Ready for review\" with the token counts.\n\n## Story\n\nAs a team member, I want to see the state of the draft and to stop it, retry it or discard it, so that I never wait without knowing what is\nhappening and never approve a text that is cut off.\n\n## Acceptance tests\n\nThe state\n\n- [ ] **Given** the draft is being written, **Then** its chip reads \"Writing...\" (pulsing), the card shows the text as it arrives, and\n  \"Waiting for the first tokens...\" until the first text arrives.\n- [ ] **Given** the draft ended normally, **Then** its chip reads \"Ready for review\" (green).\n- [ ] **Given** the model stopped because it ran out of tokens, **Then** the chip reads \"Incomplete\" (amber) and the card says \"The draft is\n  incomplete, so it cannot be approved. Ask for changes, or discard it.\"\n- [ ] **Given** the request failed, **Then** the chip reads \"Failed\" (red) and the card shows the error under the text.\n- [ ] **Given** the model answered with no text, **Then** the chip reads \"Failed\" and the error is \"No text was received from the model.\"\n\nStop, Retry, Discard\n\n- [ ] **Given** the draft is being written, **Then** the round send button is replaced by a white Stop button (\"Stop writing\"), and the card\n  has a Stop button. **When** the user presses either, **Then** the request is cancelled, the text received so far stays, and the chip\n  reads \"Incomplete\".\n- [ ] **Given** a Stop before any text arrived, **Then** the chip reads \"Failed\" with \"No text was received from the model.\"\n- [ ] **Given** the draft failed, **Then** the card has \"Retry\" and \"Discard\". **When** the user presses Retry, **Then** the same turns are\n  sent again, without adding a message.\n- [ ] **Given** a draft that is not being written, **Then** Discard shows. **When** the user presses it, **Then** the draft disappears and\n  nothing is stored.\n- [ ] **Given** the draft is being written, **Then** there is no Discard (the user stops it first).\n\nThe composer while there is a draft\n\n- [ ] **Given** the draft is being written, **Then** the box says \"Waiting for the draft...\" and sending is blocked.\n- [ ] **Given** the draft failed, **Then** the box says \"Retry or discard the draft first.\" and sending is blocked.\n- [ ] **Given** a draft that is Ready or Incomplete, **Then** the box asks for changes (story 4).\n\nTokens\n\n- [ ] **Given** the draft ended (or was stopped after the model reported them), **Then** the card lists \"Input 5230\", \"Output 812\", \"Cache\n  read 4102\" and \"Cache write 0\". **Given** the cache read is more than 0, **Then** that chip is green; the tooltips say \"Input tokens\n  read from the prompt cache\" and \"Input tokens written to the prompt cache\".\n- [ ] **Given** the draft failed before the model answered, **Then** there are no counts.\n\nThe call\n\n- [ ] **Given** the backend answers before the stream starts with a 400, 503 or 502, **Then** the error shows in the card as a normal message\n  (for 503: the project has no connection to the model).\n- [ ] **Given** the stream fails after it started, **Then** the chip reads \"Failed\" and the card shows the error. The text received so far is\n  not kept (as in the spike), and Retry writes the draft again from the start.\n- [ ] **Given** the user closes the workspace, leaves the page or sends something new, **Then** the call in flight is cancelled and the\n  backend stops asking the model.\n\n## Business rules and constraints\n\n- A draft has one state: *streaming*, *ready*, *stopped* (cut by Stop or by the length limit) or *error*. **Only a ready draft can be\n  approved.**\n- A stopped draft can still be revised (story 4) or discarded, and an error one can be retried or discarded.\n- A draft lives on screen. It is not stored, and it is lost if the page is reloaded.\n- The reply is a stream of text, then the usage, then the end, or an error (`story-improve-with-ai.md`).\n- Default maximum answer 4096 tokens, temperature 0.3.\n\n## Out of scope\n\n- Approving and asking for changes (stories 3 and 4), a history of drafts, and keeping a draft after a reload.\n- The connection to the model, and the totals of tokens in Settings.\n\n## Tasks\n\n- [ ] Keep the draft as one object with its state, its text, its turns, its error and its usage, and move it between the four states.\n- [ ] Draw the status chip, the \"waiting\" line, the incomplete note and the error.\n- [ ] Add Stop (card and composer), Retry (same turns, no new message) and Discard.\n- [ ] Set the composer's text and its blocking from the state.\n- [ ] Show the four token chips, with the green cache read.\n- [ ] Cancel the call when a new one starts, the user stops it, or the workspace goes away.\n- [ ] Test with a fake backend that streams, ends, stops at the limit, answers with no text, fails before and fails after the first text.",
+  "createdAt": "2026-11-08",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw81vfv4g5g5y2",
+      "text": "Define a `DraftState` union type (`streaming | ready | stopped | error`) and a `Draft` value object holding state, text, turns, error, and usage in the entities or use-cases layer (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw81vfv57o3mrz",
+      "text": "Implement a `DraftViewModel` in the interface-adapter layer that owns the `Draft` object, exposes observable state, and drives transitions between the four states (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mw81vfv5w9rpmv",
+      "text": "Wire `DraftViewModel` in the Inversify composition root (ADR-0006)"
+    },
+    {
+      "id": "mw81vfv5s20snq",
+      "text": "Implement the streaming use case: open the SSE/chunked response, append text tokens to the draft, record usage on the end signal, and transition to *ready*, *stopped*, or *error* accordingly"
+    },
+    {
+      "id": "mw81vfv582t91g",
+      "text": "Implement cancellation: abort the in-flight request when Stop is pressed, when a new request starts, or when the component unmounts; verify the backend receives the cancellation and stops the model call"
+    },
+    {
+      "id": "mw81vfv5ug213g",
+      "text": "Build the draft card React component: \"Waiting for the first tokens...\" placeholder, streaming text, status chip (pulsing / green / amber / red), incomplete note, error message, Stop button, Retry button, Discard button (ADR-0005, Architecture)"
+    },
+    {
+      "id": "mw81vfv5dm88j6",
+      "text": "Build the token chip row: Input, Output, Cache read (green when > 0 with tooltip), Cache write chips; hide the row when usage is absent"
+    },
+    {
+      "id": "mw81vfv50lzmhk",
+      "text": "Update the composer React component: block sending and show the correct placeholder text for each draft state; replace the send button with Stop while streaming"
+    },
+    {
+      "id": "mw81vfv5vooh9m",
+      "text": "Handle pre-stream HTTP errors (400, 502, 503) by displaying the error message in the card without entering the streaming state"
+    },
+    {
+      "id": "mw81vfv5e08mud",
+      "text": "Write Jest unit tests for `DraftViewModel` state transitions using a fake streaming backend (streams normally, ends at token limit, returns no text, fails before first token, fails after first token) (ADR-0005)"
+    },
+    {
+      "id": "mw81vfv50w9l3i",
+      "text": "Write Jest unit tests for the token chip row rendering with and without usage data"
+    },
+    {
+      "id": "mw81vfv5iorl7r",
+      "text": "Verify the full frontend build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
