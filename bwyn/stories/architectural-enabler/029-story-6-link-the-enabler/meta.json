@@ -1,0 +1,55 @@
+{
+  "title": "Link the enabler to other documents",
+  "prompt": "# Story 6: Link the enabler to other documents\n\n- **Story**: XXX-link-enabler\n- **Created**: 2026-11-08\n- **Status**: Draft\n- **Demo**: draft an enabler, link a driver and another enabler with the Link button, see their chips, and see the draft use what they say;\n  approve it and open its links from the file.\n\n## Story\n\nAs a team member, I want to link the enabler to the drivers and other enablers that shape it, so that the AI uses what they say, and the\nconnection is kept with the enabler.\n\n## Acceptance tests\n\nChoosing links\n\n- [ ] **Given** the prompt, **Then** a button \"Link\" (with a link icon) sits under the box. **When** the user presses it, **Then** a list\n  opens (`role=\"dialog\"`, \"Choose what to link\") above or below it, groups it by kind with the headings \"Drivers\", \"Architectural\n  enablers\" and \"Stories\", and shows a checkbox and the label of each document.\n- [ ] **Given** an enabler prompt, **Then** the ADRs are **not** in the list: they are chosen as chips in the green panel (story 1).\n- [ ] **Given** a driver, **Then** it is listed whether or not it has text. **Given** nothing to link, **Then** the list says \"Nothing to\n  link yet.\"\n- [ ] **Given** a document is checked, **Then** the button shows a count, and a chip with its icon and label appears above the box, with a\n  button \"Remove link to <label>\". **When** the user removes the chip, **Then** it is unchecked.\n- [ ] **Given** the list is open, **When** the user presses Escape or clicks outside it, **Then** it closes and the choice stays.\n- [ ] **Given** the user sends, **Then** the links are cleared from the composer, as the text is.\n- [ ] **Given** a draft, **Then** the card shows the chips of the ADRs and of the links, and they cannot be changed there. **Given** a revision\n  (story 4), **Then** the Link button is not shown.\n\nWhat the model gets\n\n- [ ] **Given** links, **Then** the request has \"## Linked documents (full text)\" and, for each document, \"### <label> (<relation>, <path>)\"\n  and its full text, cut at 12,000 characters. The ADRs it derives from come first, with the relation \"derives from\", then the others with\n  \"linked\". A document is listed once.\n- [ ] **Given** a linked enabler, **Then** the request also brings, with it, the ADRs it derives from (\"derived from by the linked AE-0001...\")\n  and the enablers and stories it links to (\"linked from the linked AE-0001...\"), one step only, not the document itself.\n- [ ] **Given** no link, **Then** the section reads \"## Linked documents\" and \"- None\" (and the ADRs it derives from are listed in full).\n- [ ] **Given** the system prompt, **Then** it tells the model to treat the linked documents as context and to cite one only when a rule\n  comes from it, for example (Driver: Constraints).\n\nKeeping them\n\n- [ ] **Given** approval, **Then** the links are stored with the enabler (not the ADRs, which are kept as the ones it derives from), and the\n  message says \"It is linked to N other items.\"\n- [ ] **Given** the open enabler, **Then** \"Linked to\" shows a chip for each, and each chip opens that file. **Given** the file it links to,\n  **Then** it shows the enabler under \"Referenced by\".\n- [ ] **Given** a document that is removed later, **Then** a link to it is hidden, not an error.\n\n## Business rules and constraints\n\n- The model sees the **outgoing** links only: what the enabler links to and the ADRs it derives from. Documents that merely link to it are\n  not sent.\n- Only one step is followed through a linked enabler, and never through a story, a driver or an ADR.\n- A reference is a stable text: `driver:constraints`, `enabler:0001-set-up-...`, `story:...` and `adr:0006`. It comes from the name of the\n  file, never from a random id.\n- An enabler's links are chosen when it is drafted. Changing them afterwards is another story.\n\n## Out of scope\n\n- Adding or removing links of an approved enabler, the *Cross enabler* flag (a cross enabler would be linked to every new story, and does\n  nothing for an enabler), and links between stories.\n- Showing the links of a document as a graph.\n\n## Tasks\n\n- [ ] Add the Link button and its list to the composer, grouped by kind, without the ADRs, with the count and the removable chips.\n- [ ] Add the links to the draft and the card, and to the stored enabler without the ADRs.\n- [ ] Put the linked documents in the request: derives from first, linked after, once each, cut at 12,000 characters.\n- [ ] Add the documents reached through a linked enabler, one step.\n- [ ] Show \"Referenced by\" in the read-only panel for the documents that are linked from an enabler.\n- [ ] Test: the list and its kinds, no ADR in it, the chips, the request with and without links, the cut, the one step, and a removed target.",
+  "createdAt": "2026-11-08",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw8248sj8bcpqr",
+      "text": "Add the Link button and dialog to the enabler composer: grouped by kind (Drivers, Architectural enablers, Stories), no ADRs, with checkboxes, count badge, and removable chips above the prompt box (ADR-0007, AE-0002)."
+    },
+    {
+      "id": "mw8248sjt8qo7a",
+      "text": "Wire the dialog open/close behaviour: Escape and outside-click close it while preserving selection; chips clear on submit."
+    },
+    {
+      "id": "mw8248sjlsuq7c",
+      "text": "Display link chips on the draft card alongside ADR chips, read-only; hide the Link button from the revision prompt (story 027)."
+    },
+    {
+      "id": "mw8248sjowwjpb",
+      "text": "Extend the backend request builder to assemble \"## Linked documents (full text)\": derives-from ADRs first, then linked documents, each truncated at 12,000 characters, each appearing once (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw8248sjw6v8pl",
+      "text": "Implement one-step transitive expansion for linked enablers: include their derives-from ADRs and their own links, without recursing further (ADR-0017)."
+    },
+    {
+      "id": "mw8248sj3fkk7m",
+      "text": "Update the system-prompt template to instruct the model to treat linked documents as context and cite them only when a rule comes from them."
+    },
+    {
+      "id": "mw8248sj9pmnon",
+      "text": "Persist the chosen links (excluding derives-from ADRs) on the enabler aggregate in `bwyn-core`; expose them via the approval command in `bwyn-application` (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw8248sj7y6ufh",
+      "text": "Add the confirmation message \"It is linked to N other items.\" to the approval response (story 026)."
+    },
+    {
+      "id": "mw8248sjcaip8s",
+      "text": "Render \"Linked to\" chips in the read-only file panel and \"Referenced by\" on the panels of linked documents; suppress missing-document chips silently (AE-0002)."
+    },
+    {
+      "id": "mw8248sjmx7t12",
+      "text": "Write Jest tests: dialog grouping, ADR absence, chip add/remove, request assembly with and without links, 12,000-character truncation, one-step transitive expansion, and silent handling of a removed link target (ADR-0005, ADR-0016)."
+    },
+    {
+      "id": "mw8248sjaoqi99",
+      "text": "Write a JUnit test asserting that the link-persistence command and the transitive-expansion query reside in the correct hexagonal layers and that no domain class references adapter types (ADR-0009, ADR-0017)."
+    }
+  ]
+}
