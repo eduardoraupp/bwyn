@@ -74,6 +74,18 @@
     {
       "id": "mw7l9nk99rnaht",
       "text": "Run the full build and test suite and confirm it completes within ten minutes (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mw7xxtuzrvtz41",
+      "text": "Add migration `V13__practices_create_tables.sql` to `src/main/resources/db/migration/` with the two tables, in the default `public` schema (no new schema is created), exactly as in the Reference."
+    },
+    {
+      "id": "mw7xxtuziv3aqg",
+      "text": "Add migration `V14__practices_load_practices.sql` to `src/main/resources/db/migration/` with the two groups and fourteen practices exactly as in the Reference."
+    },
+    {
+      "id": "mw7xxtuzuec5hc",
+      "text": "Add JPA mappings for `practice_group` and `practice` in the infrastructure layer, annotated with `@Table(name = ...)` and no schema, so they live in the default `public` schema; confirm `ddl-auto` remains `validate` (ADR 0011)."
     }
   ]
 }
