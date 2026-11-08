@@ -1,0 +1,47 @@
+{
+  "title": "Ask for changes to the draft",
+  "prompt": "# Story 4: Ask for changes to the draft\n\n- **Story**: XXX-revise-enabler-draft\n- **Created**: 2026-11-08\n- **Status**: Draft\n- **Demo**: with a Ready draft, write \"Add a task to verify the migration on an empty database\", press Enter and see the whole draft written\n  again with the change; ask again, and approve.\n\n## Story\n\nAs a team member, I want to tell the AI what to change in the draft, in my own words, so that I get the enabler I mean before I approve it.\n\n## Acceptance tests\n\n- [ ] **Given** a draft that is Ready or Incomplete, **Then** the box says \"Ask for changes to the draft...\", the send button is named \"Send\n  changes\", the ADR panel and the Link button are gone, and a line says \"Revising the draft below\".\n- [ ] **Given** the user types a change and presses Enter (or the button), **Then** it shows as a message on the right, the draft chip\n  reads \"Writing...\", and the card shows the new text as it arrives, in place of the old one.\n- [ ] **Given** the reply, **Then** it is the **complete** revised document, not a difference. **When** it ends, **Then** the chip reads\n  \"Ready for review\" and the card shows it.\n- [ ] **Given** the request, **Then** the turns sent are the first request, the previous draft as the assistant's turn, and the change as the\n  user's turn, as typed. Earlier revisions are in the turns too.\n- [ ] **Given** a revision that failed, **Then** Retry sends the same turns again.\n- [ ] **Given** a draft that is being written or has failed, **Then** a change cannot be sent (the box says why, as in story 2).\n- [ ] **Given** a revision, **Then** the number, the slug, the planned path, the chosen ADRs and the links of the draft do not change.\n- [ ] **Given** a draft revised twice, **Then** approving stores the last text, and the stored prompt is the first one.\n- [ ] **Given** the conversation reaches 40 turns, **Then** the backend refuses the next change, and its error shows in the card with Retry.\n- [ ] **Given** the user discards the draft, **Then** the box goes back to the prompt for a new enabler.\n- [ ] **Given** the prompt cache, **Then** a point is set after the system prompt, after the project context, and after the previous draft, so\n  that a revision reads most of its input from the cache. The token chips show it (story 2).\n\n## Business rules and constraints\n\n- A change is an instruction on the whole draft. The AI returns the whole document, keeps the identifier and the date, and changes only what\n  was asked.\n- A request carries at most 40 turns, alternating user and assistant, starting and ending with a user turn.\n- The text of the user's change is sent as typed. The draft that is sent back is the one on screen, not an older one.\n\n## Out of scope\n\n- Changing the ADRs or the links of a draft (discard it and start again), going back to an earlier version of the draft, and comparing two\n  versions.\n- Asking for changes to an enabler that was approved (another story).\n\n## Tasks\n\n- [ ] Change the composer when there is a Ready or Incomplete draft: placeholder, button name, hidden panels, the \"Revising\" line.\n- [ ] Add a user turn to the draft and run the request again, keeping the number, the slug, the ADRs and the links.\n- [ ] Send the turns with the previous draft, and replace the card's text with the new one.\n- [ ] Set the cache points on the system prompt, the context and the previous assistant turn in the backend call.\n- [ ] Refuse more than 40 turns in the backend, with a clear message.\n- [ ] Test with a fake backend: one revision, two, a failed one with Retry, and the turns that are sent.",
+  "createdAt": "2026-11-08",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw81z8l8n97ru0",
+      "text": "Update the composer ViewModel to expose a `revisionMode` state that activates when the draft status is Ready or Incomplete, setting the placeholder text, button label, and visibility flags for the ADR panel and Link button"
+    },
+    {
+      "id": "mw81z8l87a7lsq",
+      "text": "Add a `requestRevision(changeText: string)` command to the draft use case that appends a user turn and re-invokes the generation port, preserving the draft's identifier, slug, planned path, ADRs, and links"
+    },
+    {
+      "id": "mw81z8l8tuwjik",
+      "text": "Update the draft card component to replace its displayed text in place as the revised stream arrives, reusing the streaming display established in story 025"
+    },
+    {
+      "id": "mw81z8l8ac2o9n",
+      "text": "Implement turn accumulation in the backend application service: build the full turn list (original prompt → previous draft → change → …) and pass it to the AI provider port"
+    },
+    {
+      "id": "mw81z8l8y4xjqn",
+      "text": "Add a cache-point instruction to the backend AI provider adapter after the system prompt, after the project context, and after the most recent assistant turn"
+    },
+    {
+      "id": "mw81z8l8n52v19",
+      "text": "Add a guard in the backend application service that rejects a revision request when the turn count would exceed 40, returning a descriptive error"
+    },
+    {
+      "id": "mw81z8l82qf3lb",
+      "text": "Map the 40-turn error to an HTTP response in the inbound REST adapter and surface it in the draft card with a Retry option"
+    },
+    {
+      "id": "mw81z8l8xkjh6u",
+      "text": "Write ViewModel unit tests covering: entering revision mode, a successful single revision, two successive revisions, a failed revision followed by Retry, and discard returning to new-enabler state"
+    },
+    {
+      "id": "mw81z8l897r4zz",
+      "text": "Write a backend unit test verifying the exact turns sent for a first revision, a second revision, and the 40-turn rejection"
+    }
+  ]
+}
