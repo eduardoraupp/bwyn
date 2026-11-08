@@ -1,0 +1,79 @@
+{
+  "title": "Describe an enabler and choose the ADRs it implements",
+  "prompt": "# Story 1: Describe an enabler and choose the ADRs it implements\n\n- **Story**: XXX-describe-enabler\n- **Created**: 2026-11-08\n- **Status**: Draft\n- **Demo**: open the builder, write \"Set up PostgreSQL and Flyway so that stories can use a database\", choose ADR 0006 and ADR 0007, press\n  Enter, and see the draft card with its planned path and the draft appear in the card as the model writes it.\n\n## Story\n\nAs a team member, I want to describe in the prompt the technical work that stories need first, and choose the Accepted ADRs it\nimplements, so that the AI drafts an architectural enabler that is tied to the decisions we already made.\n\n## Acceptance tests\n\nThe prompt\n\n- [ ] **Given** the workspace with no file open, **Then** the middle shows the prompt: a sparkles icon, the title \"Which architectural\n  enabler shall we build?\", the line \"Describe the technical work that stories need first. Claude drafts the enabler, and once you approve\n  it BWYN creates its file.\", a box with the placeholder \"Describe the architectural enabler...\" and the focus in it, and a round send\n  button.\n- [ ] **Given** the prompt, **Then** below the box there is one example the user can press, \"Set up continuous integration for the\n  frontend build.\", which puts that text in the box and keeps the focus there.\n- [ ] **Given** the box, **When** the user types more than one line, **Then** it grows with the text up to 200 px and then scrolls.\n- [ ] **Given** a file is open in the tree, **Then** the prompt is a narrower column on the right of the file (about 26 rem), with the same\n  box. **Given** no file is open, **Then** it is in the middle.\n- [ ] **Given** the workspace opens, or the user presses \"New\" (story 3), **Then** the focus goes to the box.\n\nThe ADRs\n\n- [ ] **Given** the prompt, **Then** a green panel inside the box says \"Derives from an Accepted ADR (required)\" and lists one chip per\n  Accepted ADR of the project, named `ADR 0011`, with the full label (\"ADR 0011. Use TypeScript for the frontend\") as its tooltip.\n- [ ] **Given** the chips, **When** the user presses one, **Then** it turns selected (`aria-pressed`, a solid green chip with dark text).\n  **When** the user presses it again, **Then** it is not selected. Several can be selected.\n- [ ] **Given** ADRs whose status is Proposed, Deprecated or Superseded, **Then** they are not offered.\n- [ ] **Given** no ADR is Accepted, **Then** the panel says \"There are no Accepted ADRs yet. Only an Accepted ADR can be linked. Accept one on\n  the ADRs page, or sync a story to bring in the ones in the repository.\" and the send button stays disabled.\n- [ ] **Given** the box has text and no ADR is selected, **Then** the panel says \"Select at least one ADR to derive the enabler from.\" and\n  the send button is disabled.\n- [ ] **Given** the prompt, **Then** the box has a green border. **Given** the box has the focus, **Then** the border is indigo.\n\nSending\n\n- [ ] **Given** text (not only spaces) and at least one selected ADR, **Then** the send button is enabled, named \"Draft architectural\n  enabler\". **Given** either is missing, **Then** it is disabled.\n- [ ] **Given** the box has the focus, **When** the user presses Enter, **Then** the prompt is sent. **When** the user presses Shift+Enter,\n  **Then** a new line is added. **Given** an input method is composing text, **Then** Enter does not send.\n- [ ] **Given** no model is connected for the project, **Then** a banner above the box says \"No model is connected for this project.\n  Connect one in Integrations, then the prompt works. No restart is needed.\" **When** the user sends, **Then** the draft fails with the\n  message \"No model is connected for this project. Connect one in Integrations.\" (story 2 shows how a failure looks).\n- [ ] **Given** the prompt, **Then** a caption under it names the model and its provider, for example \"Claude Sonnet 4.6 on Amazon Bedrock\n  (us-east-1) · prompt cache 5m\", or \"Claude on Amazon Bedrock\" while the status is not known yet.\n- [ ] **Given** the user sends, **Then** the box, the chosen ADRs and the links are cleared, the prompt appears as a message on the right\n  (text as typed, line breaks kept), and a draft card appears under it.\n- [ ] **Given** the draft card, **Then** it shows the enabler icon, the planned path `architectural-enablers/0003-<slug>.md` (complete as a\n  tooltip), the chip \"Writing...\", the chips of the ADRs it derives from, and the text as it is written.\n\nThe number and the name\n\n- [ ] **Given** enablers 0001 and 0002 exist, **Then** the planned number is `0003`: the highest existing number plus one, with 4 digits\n  (`0001` when there is none). The identifier sent to the model is `AE-0003`.\n- [ ] **Given** the prompt \"Set up PostgreSQL and Flyway so that stories can use a database\", **Then** the slug is\n  `set-up-postgresql-and-flyway-so`: the first five words, lower case, without accents, only `a-z` and `0-9` joined by \"-\", at most 48\n  characters, and `untitled` when nothing is left.\n- [ ] **Given** the same first words as another enabler, **Then** the paths differ by their number.\n\nThe call\n\n- [ ] **Given** the user sends, **Then** the browser calls only the BWYN backend, as `story-improve-with-ai.md` describes, and sends the\n  project, the system prompt, the context and the turns. It never calls the model provider, and no key is in the browser.\n- [ ] **Given** the request, **Then** it says \"Document type: architectural enabler\", \"Assigned identifier: AE-0003\", today's date, the\n  ADRs it derives from (by label), their full text, and the user's text under \"Description\". Story 5 adds the project context and the lists\n  of enablers and stories.\n- [ ] **Given** a new request while another is being written, **Then** the one in flight is cancelled.\n\n## Business rules and constraints\n\n- An enabler implements **at least one Accepted ADR**. Only an Accepted ADR can be chosen (`story-adrs.md`).\n- The AI only drafts. Nothing is kept until the user approves (story 3).\n- The prompt belongs to the open workspace. The text and the chosen ADRs are not kept if the workspace is closed.\n- The number is the highest existing enabler number plus one. The slug comes from the user's text. Together they are the identity of the\n  enabler (`0003-<slug>`), which never changes.\n- The model is asked for one Markdown document, with no introduction, no closing remark and no code fence.\n- The keys of the model stay on the backend. Each project has its own connection (`story-llm-provider.md`).\n\n## Out of scope\n\n- Following the draft in detail (Stop, Retry, failures, token counts): story 2. Approving: story 3. Asking for changes: story 4. The\n  project context: story 5. Links: story 6.\n- Stories. The same box writes them in the spike, with a tick \"Mark as architectural enabler\". Here the box writes enablers only, and the\n  tick is not shown (see the Reference).\n- The architecture of the system, which goes with stories only.\n\n## Tasks\n\n- [ ] Bring the prompt back to the middle of the workspace (and to the narrow column when a file is open), as an enabler prompt: title,\n  line, example, box that grows, focus rules, green border.\n- [ ] Build the ADR panel: chips for the Accepted ADRs, toggle, the two messages, and the rule that enables the send button.\n- [ ] Send with Enter (not Shift+Enter, not while composing) and with the button, clear the composer, and show the prompt as a message.\n- [ ] Choose the next number and the slug, and set the planned path and the identifier.\n- [ ] Write the system prompt for enablers and the request text (document type, identifier, date, derives from with full text, description).\n- [ ] Call the backend's draft endpoint with them, as the client of `story-improve-with-ai.md` does, and show the text in the draft card.\n- [ ] Show the banner and the caption from the status of the model's connection, and the message for a project with none.\n- [ ] Test with a fake backend: the send rules, the number and the slug, and the request that is sent.",
+  "createdAt": "2026-11-08",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw81s7hmwv2x2f",
+      "text": "Add a `GetAcceptedAdrsUseCase` in the use-case layer that returns the Accepted ADRs for the current project, sourced from the existing ADR store (AE-0002, ADR-0007)."
+    },
+    {
+      "id": "mw81s7hmp0xiib",
+      "text": "Build the `EnablerPromptViewModel` in the interface-adapter layer: holds textarea text, selected ADR ids, send-enabled rule, next number, and slug derivation logic; bind it in the composition root (AE-0002, ADR-0006)."
+    },
+    {
+      "id": "mw81s7hmeryrmz",
+      "text": "Render the enabler prompt panel in the UI layer: sparkles icon, title, description line, growing textarea (max 200 px), green/indigo border, example chip, and focus-on-open behaviour (ADR-0007, AE-0002)."
+    },
+    {
+      "id": "mw81s7hmohxvla",
+      "text": "Render the ADR chips panel inside the prompt box: fetch Accepted ADRs via the ViewModel, toggle selection with `aria-pressed`, and show the two validation messages (ADR-0007)."
+    },
+    {
+      "id": "mw81s7hmiu4khs",
+      "text": "Implement send-on-Enter (not Shift+Enter, not while composing) and send-on-button-click; clear the composer and append the user message to the conversation on send."
+    },
+    {
+      "id": "mw81s7hm1uw6if",
+      "text": "Implement next-number and slug derivation (highest existing number + 1, zero-padded; first five normalised words, max 48 chars, fallback `untitled`) and expose them from the ViewModel."
+    },
+    {
+      "id": "mw81s7hmsribwk",
+      "text": "Write the system prompt for architectural enablers and assemble the request body (document type, identifier, date, selected ADR labels and full texts, description)."
+    },
+    {
+      "id": "mw81s7hmwgkwg7",
+      "text": "Call the backend draft endpoint (reusing the streaming client from story 007), cancel any in-flight request before starting a new one, and stream the response text into the draft card."
+    },
+    {
+      "id": "mw81s7hmquck1c",
+      "text": "Render the draft card: enabler icon, planned path with full-path tooltip, \"Writing...\" chip, ADR-derives-from chips, and streaming text."
+    },
+    {
+      "id": "mw81s7hmbvowu6",
+      "text": "Render the model-connection banner and caption from the project's provider status; surface the \"no model connected\" error message on send failure."
+    },
+    {
+      "id": "mw81s7hm2ashwj",
+      "text": "Position the prompt panel in the middle when no file is open and in a ~26 rem right column when a file is open (ADR-0007, AE-0002)."
+    },
+    {
+      "id": "mw81s7hme83p3i",
+      "text": "Write Jest unit tests for the ViewModel: send-enabled rule, number and slug derivation, and the request body that is assembled (AE-0002, ADR-0005)."
+    },
+    {
+      "id": "mw82iwbiamz1kh",
+      "text": "Add an `ArchitecturalEnabler` entity in the domain layer (`bwyn-core`) with fields for identifier, number, slug, description, and a list of ADR identifiers it derives from (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw82l43pv06pyc",
+      "text": "Add an `Adr` entity in the domain layer (`bwyn-core`) with fields for identifier, number, title, status, and project foreign key; add a `AdrRepository` port interface (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw82l43pxwq0wg",
+      "text": "Add an `ArchitecturalEnabler` entity in the domain layer (`bwyn-core`) with fields for identifier, number, slug, description, and a `derivesFrom` collection holding foreign keys to `Adr`; enforce at construction that every referenced `Adr` exists and has status Accepted (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw82l43p93kjzl",
+      "text": "Add an `ArchitecturalEnablerRepository` port interface in `bwyn-core` with a `nextNumber(projectId)` query (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw82l43p5agw6q",
+      "text": "Add a `GetAcceptedAdrsUseCase` in the application layer (`bwyn-application`) that returns the Accepted ADRs for the current project via `AdrRepository` (AE-0005, ADR-0017)."
+    }
+  ]
+}
