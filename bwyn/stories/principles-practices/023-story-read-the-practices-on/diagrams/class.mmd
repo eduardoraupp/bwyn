@@ -1,0 +1,60 @@
+classDiagram
+  direction LR
+
+  class PracticeGroup:::entity {
+    <<Entity>>
+    +id: string
+    +displayOrder: number
+    +headline: string
+    +badge: string
+    +rule: string
+    +practices: Practice[]
+  }
+
+  class Practice:::entity {
+    <<Entity>>
+    +id: string
+    +groupId: string
+    +displayOrder: number
+    +name: string
+    +description: string
+    +inBwyn: string
+    +nonNegotiable: boolean
+    +note: string
+  }
+
+  class GetPracticesUseCase:::component {
+    <<Interface>>
+    +execute(): Promise~PracticeGroup[]~
+  }
+
+  class PracticesApiClient:::component {
+    <<Component>>
+    +fetchPractices(): Promise~PracticeGroup[]~
+  }
+
+  class PracticesViewModel:::component {
+    <<Component>>
+    +groups: PracticeGroup[]
+    +loading: boolean
+    +error: string | null
+    +load(): void
+    +retry(): void
+  }
+
+  class PracticesTab:::component {
+    <<Component>>
+    +render(): ReactElement
+  }
+
+  PracticeGroup "1" *-- "many" Practice : contains
+
+  GetPracticesUseCase <|.. PracticesApiClient : implements
+
+  PracticesViewModel --> GetPracticesUseCase : Calls to load practices
+
+  PracticesTab --> PracticesViewModel : Reads state and calls
+
+  classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+  classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff

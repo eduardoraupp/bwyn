@@ -1,0 +1,30 @@
+sequenceDiagram
+  actor user as "Team Member<br/>[Person]"
+  box rgba(17,104,189,0.12) bwyn (Software System boundary)
+    participant tab as "PracticesTab<br/>[Component: React]"
+    participant client as "PracticesClient<br/>[Component: TypeScript]"
+    participant controller as "PracticesController<br/>[Component: Spring MVC]"
+    participant handler as "PracticesQueryHandler<br/>[Component: Spring Boot]"
+    participant adapter as "PracticesQueryAdapter<br/>[Component: Spring Data JPA]"
+  end
+  participant db as "PostgreSQL<br/>[External Software System]"
+
+  user->>tab: Opens Practices tab
+  tab->>tab: Shows loading state
+  tab->>client: Fetches practices
+  client->>controller: GET /api/practices
+  controller->>handler: Executes PracticesQuery
+  handler->>adapter: Loads groups and practices
+  adapter->>db: Queries practice_group and practice
+  db-->>adapter: Returns rows in display order
+  adapter-->>handler: Returns read models
+  handler-->>controller: Returns PracticesResult
+  controller-->>client: 200 OK with groups and practices
+  client-->>tab: Returns mapped PracticeGroup list
+  tab-->>user: Renders two groups and fourteen practices
+
+  alt backend unreachable or error
+    controller-->>client: Error response
+    client-->>tab: Signals load failure
+    tab-->>user: Shows error with Try Again button
+  end
