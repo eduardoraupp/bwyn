@@ -1,0 +1,21 @@
+flowchart LR
+  classDef enabler fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+  classDef story fill:#85BBF0,stroke:#5D82A8,color:#000000
+  subgraph S0["Step 1"]
+    N0["AE-0002<br/>Clean Architecture Folder Structure for the Frontend"]:::enabler
+    N1["AE-0005<br/>Hexagonal Architecture and DDD Package Structure fo..."]:::enabler
+  end
+  subgraph S1["Step 2"]
+    N2["Story 002<br/>View and manage principles on the P&P screen"]:::story
+    N3["Story 004<br/>Edit a principle"]:::story
+    N4["Story 005<br/>Remove a Principle"]:::story
+    N5["Story 023<br/>Read the practices on the Practices tab of P&P"]:::story
+  end
+  N0 --> N2
+  N1 --> N2
+  N0 --> N3
+  N1 --> N3
+  N0 --> N4
+  N1 --> N4
+  N0 --> N5
+  N1 --> N5
