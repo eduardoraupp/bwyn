@@ -11,31 +11,31 @@ As a team member, I want to approve a ready draft so that it becomes an architec
 
 **Approving**
 
-- [ ] **Given** a Ready draft, **Then** the card shows "Discard" and "Approve and create enabler", and "Approve and create enabler" is enabled. **Given** any other draft state, **Then** "Approve and create enabler" is disabled.
-- [ ] **Given** a Ready draft, **When** the user presses "Approve and create enabler", **Then** the enabler is stored with: id `0003-<slug>`, number, slug, title, the user's first prompt, today's date, the Markdown as drafted (trimmed, with one final newline), the links, and the ADRs it derives from.
-- [ ] **Given** the stored Markdown has a first `# ` line, **Then** the title is read from that line with the prefixes "Story:", "Feature specification:", and "AE-`<digits>`." stripped. **Given** the Markdown has no such line, **Then** the title is built from the first sentence of the prompt, capped at 70 characters (cut with "..."), with the first letter in capitals.
-- [ ] **Given** approval, **Then** two messages are added to the conversation: the user's original prompt, and "Approved. I created architectural enabler AE-0003 in architectural-enablers/0003-`<slug>`.md. It derives from ADR 0006, ADR 0007." with " It is linked to 2 other items." appended when there are two or more links, or " It is linked to 1 other item." for exactly one link; and a card showing the file path and an "Open file" button.
-- [ ] **Given** approval, **Then** the draft is gone, the prompt box is empty, the ADR chips are cleared, and the `architectural-enablers` folder is open in the tree.
-- [ ] **Given** the user approves a second draft whose prompt starts with the same words as the first, **Then** its number is `0004`.
+- [X] **Given** a Ready draft, **Then** the card shows "Discard" and "Approve and create enabler", and "Approve and create enabler" is enabled. **Given** any other draft state, **Then** "Approve and create enabler" is disabled.
+- [X] **Given** a Ready draft, **When** the user presses "Approve and create enabler", **Then** the enabler is stored with: id `0003-<slug>`, number, slug, title, the user's first prompt, today's date, the Markdown as drafted (trimmed, with one final newline), the links, and the ADRs it derives from.
+- [X] **Given** the stored Markdown has a first `# ` line, **Then** the title is read from that line with the prefixes "Story:", "Feature specification:", and "AE-`<digits>`." stripped. **Given** the Markdown has no such line, **Then** the title is built from the first sentence of the prompt, capped at 70 characters (cut with "..."), with the first letter in capitals.
+- [X] **Given** approval, **Then** two messages are added to the conversation: the user's original prompt, and "Approved. I created architectural enabler AE-0003 in architectural-enablers/0003-`<slug>`.md. It derives from ADR 0006, ADR 0007." with " It is linked to 2 other items." appended when there are two or more links, or " It is linked to 1 other item." for exactly one link; and a card showing the file path and an "Open file" button.
+- [X] **Given** approval, **Then** the draft is gone, the prompt box is empty, the ADR chips are cleared, and the `architectural-enablers` folder is open in the tree.
+- [X] **Given** the user approves a second draft whose prompt starts with the same words as the first, **Then** its number is `0004`.
 
 **The tree**
 
-- [ ] **Given** at least one approved enabler, **Then** the `architectural-enablers` folder lists `0003-<slug>.md` in ascending order of number, each entry has a tooltip showing "AE-0003. `<title>`", and the folder's item count is correct.
-- [ ] **Given** no approved enabler exists, **Then** the open `architectural-enablers` folder shows the italic line "No architectural enablers yet. Write a prompt." (replacing the previous placeholder "Coming in another story.").
-- [ ] **Given** the `stories` folder, **Then** it remains inert, unchanged from story 019.
+- [X] **Given** at least one approved enabler, **Then** the `architectural-enablers` folder lists `0003-<slug>.md` in ascending order of number, each entry has a tooltip showing "AE-0003. `<title>`", and the folder's item count is correct.
+- [X] **Given** no approved enabler exists, **Then** the open `architectural-enablers` folder shows the italic line "No architectural enablers yet. Write a prompt." (replacing the previous placeholder "Coming in another story.").
+- [X] **Given** the `stories` folder, **Then** it remains inert, unchanged from story 019.
 
 **Reading the enabler**
 
-- [ ] **Given** the user presses "Open file" on the approval card, or presses the file entry in the tree, **Then** the enabler opens in the same file panel used for drivers and ADRs: icon, file path, Close button, rendered and Markdown views, the tree as a thin rail, and the prompt as a narrow column on the right.
-- [ ] **Given** the open enabler panel, **Then** it shows a "Derives from" section with a chip for each ADR, and a "Linked to" section with a chip for each linked item when links exist. **When** the user presses a chip, **Then** that file opens in the panel.
-- [ ] **Given** the open enabler panel, **Then** it displays a locked read-only notice "Read-only here. Changing an architectural enabler comes in another story." and shows no Save, Delete, Sync, "Add link", or "Cross enabler" control.
+- [X] **Given** the user presses "Open file" on the approval card, or presses the file entry in the tree, **Then** the enabler opens in the same file panel used for drivers and ADRs: icon, file path, Close button, rendered and Markdown views, the tree as a thin rail, and the prompt as a narrow column on the right.
+- [X] **Given** the open enabler panel, **Then** it shows a "Derives from" section with a chip for each ADR, and a "Linked to" section with a chip for each linked item when links exist. **When** the user presses a chip, **Then** that file opens in the panel.
+- [X] **Given** the open enabler panel, **Then** it displays a locked read-only notice "Read-only here. Changing an architectural enabler comes in another story." and shows no Save, Delete, Sync, "Add link", or "Cross enabler" control.
 
 **Discarding and keeping**
 
-- [ ] **Given** a draft is on screen, **When** the user presses "Discard", **Then** nothing is stored and the draft is removed.
-- [ ] **Given** a draft is on screen, **When** the user presses "New" in the tree header, **Then** a confirmation "Discard the draft that is waiting for approval?" appears. **When** the user confirms, **Then** the draft is dropped. **When** the user cancels, **Then** nothing changes.
-- [ ] **Given** the user presses "New", **Then** any open file panel closes, the prompt appears in the centre with an empty conversation (earlier messages are hidden, not deleted), focus moves to the prompt box, and the main menu collapses to its rail.
-- [ ] **Given** the page is reloaded, **Then** all approved enablers, their links, and the conversation are still present. **Given** two projects, **Then** each project keeps its own enablers and conversation independently.
+- [X] **Given** a draft is on screen, **When** the user presses "Discard", **Then** nothing is stored and the draft is removed.
+- [X] **Given** a draft is on screen, **When** the user presses "New" in the tree header, **Then** a confirmation "Discard the draft that is waiting for approval?" appears. **When** the user confirms, **Then** the draft is dropped. **When** the user cancels, **Then** nothing changes.
+- [X] **Given** the user presses "New", **Then** any open file panel closes, the prompt appears in the centre with an empty conversation (earlier messages are hidden, not deleted), focus moves to the prompt box, and the main menu collapses to its rail.
+- [X] **Given** the page is reloaded, **Then** all approved enablers, their links, and the conversation are still present. **Given** two projects, **Then** each project keeps its own enablers and conversation independently.
 
 ## Business rules and constraints
 
@@ -57,16 +57,16 @@ As a team member, I want to approve a ready draft so that it becomes an architec
 
 ## Tasks
 
-- [ ] Add `addEnabler` to the project store: persist the enabler record (id, number, slug, title, prompt, date, trimmed Markdown, links, derivesFrom) and the two conversation messages together in `localStorage`, keyed by project
-- [ ] Implement the title-extraction function: read the first `# ` line and strip the prefixes "Story:", "Feature specification:", and "AE-`<digits>`."; fall back to the first sentence of the prompt capped at 70 characters with "..."
-- [ ] Implement sequential number assignment across existing enablers and slug derivation from the title
-- [ ] Wire "Approve and create enabler" to call `addEnabler`, clear the draft, clear the prompt box and ADR chips, and open the `architectural-enablers` folder in the tree; keep the button disabled for non-Ready states
-- [ ] Build the approval confirmation message text (ADR list, link count) and the "Open file" card, and append both messages to the conversation
-- [ ] Update the `architectural-enablers` folder to list approved enablers in ascending number order with tooltips, and show the italic empty-state line "No architectural enablers yet. Write a prompt." when none exist
-- [ ] Implement the enabler file panel: icon, path, Close, rendered and Markdown views, "Derives from" chips, "Linked to" chips (when present), chip navigation to other files, and the locked read-only notice with no editing controls
-- [ ] Wire the "Open file" card and the tree file entry to open the enabler file panel
-- [ ] Add the "New" button to the tree header: show the confirmation dialog when a draft is present, hide earlier messages without deleting them, clear the prompt box, move focus to it, and collapse the main menu to its rail
-- [ ] Test: approve stores the correct record; title extraction from Markdown and from the prompt; second enabler gets number `0004`; reload restores enablers and conversation; two projects stay independent; Discard stores nothing; "New" with and without a draft in progress
+- [X] Add `addEnabler` to the project store: persist the enabler record (id, number, slug, title, prompt, date, trimmed Markdown, links, derivesFrom) and the two conversation messages together in `localStorage`, keyed by project
+- [X] Implement the title-extraction function: read the first `# ` line and strip the prefixes "Story:", "Feature specification:", and "AE-`<digits>`."; fall back to the first sentence of the prompt capped at 70 characters with "..."
+- [X] Implement sequential number assignment across existing enablers and slug derivation from the title
+- [X] Wire "Approve and create enabler" to call `addEnabler`, clear the draft, clear the prompt box and ADR chips, and open the `architectural-enablers` folder in the tree; keep the button disabled for non-Ready states
+- [X] Build the approval confirmation message text (ADR list, link count) and the "Open file" card, and append both messages to the conversation
+- [X] Update the `architectural-enablers` folder to list approved enablers in ascending number order with tooltips, and show the italic empty-state line "No architectural enablers yet. Write a prompt." when none exist
+- [X] Implement the enabler file panel: icon, path, Close, rendered and Markdown views, "Derives from" chips, "Linked to" chips (when present), chip navigation to other files, and the locked read-only notice with no editing controls
+- [X] Wire the "Open file" card and the tree file entry to open the enabler file panel
+- [X] Add the "New" button to the tree header: show the confirmation dialog when a draft is present, hide earlier messages without deleting them, clear the prompt box, move focus to it, and collapse the main menu to its rail
+- [X] Test: approve stores the correct record; title extraction from Markdown and from the prompt; second enabler gets number `0004`; reload restores enablers and conversation; two projects stay independent; Discard stores nothing; "New" with and without a draft in progress
 
 ## Files of the spike
 
