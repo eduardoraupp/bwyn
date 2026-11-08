@@ -74,6 +74,22 @@
     {
       "id": "mw82l43p5agw6q",
       "text": "Add a `GetAcceptedAdrsUseCase` in the application layer (`bwyn-application`) that returns the Accepted ADRs for the current project via `AdrRepository` (AE-0005, ADR-0017)."
+    },
+    {
+      "id": "mw82sglvy46b61",
+      "text": "Add a `FetchLinkedDocumentsPort` outbound port in `bwyn-core` that, given a set of ADR identifiers, returns the goal-or-decision, scope, and description of every document directly linked from those ADRs (one level deep) (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw82sglvgtb3c1",
+      "text": "Implement `FetchLinkedDocumentsPort` in `bwyn-infrastructure` by querying the stored document links for the given ADR identifiers and loading the relevant fields of each linked document (ADR-0011, AE-0005)."
+    },
+    {
+      "id": "mw82sglv18q5bt",
+      "text": "Extend the draft application service in `bwyn-application` to call `FetchLinkedDocumentsPort` before invoking the model, and include the returned linked content in the request body under a \"Linked documents\" section (ADR-0017)."
+    },
+    {
+      "id": "mw82sglvv7mz7w",
+      "text": "Write a unit test for the draft application service asserting that linked document content is included in the request body when the selected ADRs have linked documents, and absent when they have none (ADR-0017, AE-0005)."
     }
   ]
 }

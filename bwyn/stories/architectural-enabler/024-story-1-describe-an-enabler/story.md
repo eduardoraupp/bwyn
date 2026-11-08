@@ -1,4 +1,4 @@
-# Story: Describe an enabler and choose the ADRs it implements
+# Story: Describe an architectural enabler and choose the ADRs it implements
 
 - **Story**: 024-story-1-describe-an-enabler
 - **Created**: 2026-11-08
@@ -39,7 +39,9 @@ As a team member, I want to describe in the prompt the technical work that stori
 
 **The call**
 - [ ] **Given** the user sends, **Then** the browser calls only the BWYN backend draft endpoint and never calls the model provider directly; no API key is present in the browser.
-- [ ] **Given** the request body, **Then** it contains: `"Document type: architectural enabler"`, `"Assigned identifier: AE-0003"`, today's date, the full text of each selected ADR (identified by label), and the user's description under `"Description"`; it does not yet include the project context or the lists of enablers and stories (added in story 5).
+- [ ] **Given** the request body, **Then** it contains: `"Document type: architectural enabler"`, `"Assigned identifier: AE-0003"`, today's date, the full text of each selected ADR (identified by label), the user's description under `"Description"`, and the enriched linked content fetched by the backend (see below); it does not yet include the project context or the lists of enablers and stories (added in story 5).
+- [ ] **Given** a selected ADR that links to other documents (other ADRs, enablers, or drivers), **Then** the backend fetches the full text of each linked document and includes it in the request body under a "Linked documents" section, so the model receives the goal, scope, and decisions of every document reachable through the selected ADRs.
+- [ ] **Given** a linked document that is itself linked to further documents, **Then** the backend follows links one level deep only; it does not recurse beyond the directly linked documents.
 - [ ] **Given** a new send while a previous draft is still streaming, **Then** the in-flight request is cancelled before the new one is started.
 
 ## Business rules and constraints
@@ -53,6 +55,8 @@ As a team member, I want to describe in the prompt the technical work that stori
 - The prompt and draft card reside in the framework/UI layer; the use case that builds the request and calls the backend resides in the use-case layer (ADR-0007, AE-0002).
 - The `ArchitecturalEnabler` entity in the domain layer holds the list of ADR identifiers it derives from as foreign keys to the `Adr` entity; this relationship is part of the entity model and is not stored until the user approves (ADR-0017, AE-0005).
 - Each selected ADR identifier is a foreign key from `ArchitecturalEnabler` to `Adr`; the domain model must enforce that every referenced ADR exists and has status Accepted before a draft is started.
+- Before calling the model, the backend fetches the full content of every document linked from the selected ADRs (one level deep) and appends it to the request body; this enrichment happens entirely on the backend and is never delegated to the frontend (Architecture, Principle: DIP).
+- Linked content included in the request body is limited to the document's goal or decision, scope, and description fields; raw file bytes are not forwarded.
 
 ## Out of scope
 - Stop, Retry, failure display, and token counts for the draft in progress (story 2 of the builder).
@@ -62,12 +66,16 @@ As a team member, I want to describe in the prompt the technical work that stori
 - Linking an enabler to stories or other documents (story 6 of the builder).
 - Writing stories from the same prompt box; the "Mark as architectural enabler" toggle is not shown here.
 - Sending the architecture of the system description with the request (that applies to stories only).
+- Following links more than one level deep from the selected ADRs.
 
 ## Tasks
 - [ ] Add an `Adr` entity in the domain layer (`bwyn-core`) with fields for identifier, number, title, status, and project foreign key; add a `AdrRepository` port interface (ADR-0017, AE-0005).
 - [ ] Add an `ArchitecturalEnabler` entity in the domain layer (`bwyn-core`) with fields for identifier, number, slug, description, and a `derivesFrom` collection holding foreign keys to `Adr`; enforce at construction that every referenced `Adr` exists and has status Accepted (ADR-0017, AE-0005).
 - [ ] Add an `ArchitecturalEnablerRepository` port interface in `bwyn-core` with a `nextNumber(projectId)` query (ADR-0017, AE-0005).
 - [ ] Add a `GetAcceptedAdrsUseCase` in the application layer (`bwyn-application`) that returns the Accepted ADRs for the current project via `AdrRepository` (AE-0005, ADR-0017).
+- [ ] Add a `FetchLinkedDocumentsPort` outbound port in `bwyn-core` that, given a set of ADR identifiers, returns the goal-or-decision, scope, and description of every document directly linked from those ADRs (one level deep) (ADR-0017, AE-0005).
+- [ ] Implement `FetchLinkedDocumentsPort` in `bwyn-infrastructure` by querying the stored document links for the given ADR identifiers and loading the relevant fields of each linked document (ADR-0011, AE-0005).
+- [ ] Extend the draft application service in `bwyn-application` to call `FetchLinkedDocumentsPort` before invoking the model, and include the returned linked content in the request body under a "Linked documents" section (ADR-0017).
 - [ ] Build the `EnablerPromptViewModel` in the interface-adapter layer: holds textarea text, selected ADR ids, send-enabled rule, next number, and slug derivation logic; bind it in the composition root (AE-0002, ADR-0006).
 - [ ] Render the enabler prompt panel in the UI layer: sparkles icon, title, description line, growing textarea (max 200 px), green/indigo border, example chip, and focus-on-open behaviour (ADR-0007, AE-0002).
 - [ ] Render the ADR chips panel inside the prompt box: fetch Accepted ADRs via the ViewModel, toggle selection with `aria-pressed`, and show the two validation messages (ADR-0007).
@@ -79,6 +87,7 @@ As a team member, I want to describe in the prompt the technical work that stori
 - [ ] Render the model-connection banner and caption from the project's provider status; surface the "no model connected" error message on send failure.
 - [ ] Position the prompt panel in the middle when no file is open and in a ~26 rem right column when a file is open (ADR-0007, AE-0002).
 - [ ] Write Jest unit tests for the ViewModel: send-enabled rule, number and slug derivation, and the request body that is assembled (AE-0002, ADR-0005).
+- [ ] Write a unit test for the draft application service asserting that linked document content is included in the request body when the selected ADRs have linked documents, and absent when they have none (ADR-0017, AE-0005).
 
 ## Files of the spike
 
@@ -121,3 +130,4 @@ these stories ask for. The column says which part is the base.
 - **The workspace's middle** is the prompt again (in `story-builder-folders.md` it was an empty state), and with a file open the prompt is a
   narrow column on the right of the file.
 - **The call to the model** is the backend's, not the dev server's.
+- **Linked content enrichment** happens on the backend: before calling the model, the backend fetches the goal-or-decision, scope, and description of every document directly linked from the selected ADRs and includes them in the request body. The frontend sends only the selected ADR identifiers; it does not fetch or forward linked content itself.
