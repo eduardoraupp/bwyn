@@ -1,0 +1,73 @@
+classDiagram
+direction LR
+
+class EnablerPromptViewModel:::component {
+    <<Component>>
+    +promptText: string
+    +selectedAdrIds: string[]
+    +isSendEnabled: boolean
+    +nextNumber: string
+    +slug: string
+    +plannedPath: string
+    +setPromptText(text: string)
+    +toggleAdr(id: string)
+    +send()
+    +clear()
+}
+
+class GetAcceptedAdrsUseCase:::component {
+    <<Interface>>
+    +execute(projectId: string): Adr[]
+}
+
+class DraftEnablerUseCase:::component {
+    <<Interface>>
+    +execute(request: DraftRequest): Observable~string~
+}
+
+class Adr:::entity {
+    <<Entity>>
+    +identifier: string
+    +number: string
+    +title: string
+    +status: AdrStatus
+    +projectId: string
+}
+
+class ArchitecturalEnabler:::entity {
+    <<Entity>>
+    +identifier: string
+    +number: string
+    +slug: string
+    +description: string
+    +derivesFrom: string[]
+    +validate()
+}
+
+class AdrRepository:::component {
+    <<Interface>>
+    +findAcceptedByProjectId(projectId: string): Adr[]
+}
+
+class ArchitecturalEnablerRepository:::component {
+    <<Interface>>
+    +nextNumber(projectId: string): number
+}
+
+class DraftEndpointClient:::external {
+    <<External>>
+    +post(path: string, body: object): Observable~string~
+}
+
+EnablerPromptViewModel --> GetAcceptedAdrsUseCase : Fetches accepted ADRs
+EnablerPromptViewModel --> DraftEnablerUseCase : Sends draft request
+EnablerPromptViewModel ..> ArchitecturalEnabler : Creates transiently
+GetAcceptedAdrsUseCase --> AdrRepository : Reads accepted ADRs
+DraftEnablerUseCase --> ArchitecturalEnablerRepository : Reads next number
+DraftEnablerUseCase --> AdrRepository : Validates ADR status
+DraftEnablerUseCase --> DraftEndpointClient : Streams draft response
+DraftEnablerUseCase ..> ArchitecturalEnabler : Validates before send
+
+classDef component fill:#85BBF0,stroke:#5D82A8,color:#000000
+classDef entity fill:#438DD5,stroke:#3C7FC0,color:#ffffff
+classDef external fill:#999999,stroke:#6B6B6B,color:#ffffff
