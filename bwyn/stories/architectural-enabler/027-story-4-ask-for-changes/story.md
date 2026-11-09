@@ -15,9 +15,11 @@ As a team member, I want to tell the AI what to change in the draft, in my own w
 - [X] **Given** a revision that failed, **When** the user presses Retry, **Then** the same turns are sent again without alteration
 - [X] **Given** a draft that is Writing or Failed, **Then** the change box is disabled and explains why, consistent with the behaviour established in story 025
 - [X] **Given** a revision completes, **Then** the draft's identifier, slug, planned path, chosen ADRs, and links are unchanged
-- [X] **Given** a draft revised twice and then approved, **Then** the stored document text is the last revision and the stored prompt is the original first prompt
+- [X] **Given** a draft revised twice and then approved, **Then** the browser sends one approval request (story 026) with the text on screen, which is the last revision, and the original first prompt; the backend stores that document (trimmed, with one final newline) and that prompt, and the enabler derives from the same ADRs as the draft
 - [X] **Given** the accumulated turns reach 40, **Then** the backend refuses the next change request and returns a clear error message, which the card displays with a Retry option
-- [X] **Given** the user discards the draft while in revision mode, **Then** the composer returns to the new-enabler prompt state established in story 024
+- [X] **Given** the user discards the draft while in revision mode, **Then** the composer returns to the new-enabler prompt state established in story 024, and nothing is sent to the backend
+- [X] **Given** the backend refuses the approval of a revised draft (for example because an ADR it derives from is no longer Accepted), **Then** nothing is stored, the draft stays Ready with its last revision, the card shows the reason, "Approve and create enabler" is available again, and the change box still takes changes; **When** the user sends a change, **Then** the reason disappears and a later approval carries the newest revision
+- [X] **Given** the approval of a revised draft is on its way to the backend, **Then** the change box is disabled and no change is sent until the backend answers
 - [X] **Given** a revision request, **Then** the backend sets a prompt-cache point after the system prompt, after the project context, and after the previous assistant turn; the token chips reflect cache hits as shown in story 025
 
 ## Business rules and constraints
@@ -27,6 +29,7 @@ As a team member, I want to tell the AI what to change in the draft, in my own w
 - The composer state (placeholder, button label, hidden panels, "Revising" line) is driven by the draft's status value, keeping presentation logic in the ViewModel layer (ADR-0007, Architecture)
 - The composer ViewModel and the draft-revision use case reside in the interface-adapter and use-case layers respectively; no routing or AI-provider concern leaks into those layers (ADR-0007, Architecture)
 - The backend turn-limit enforcement belongs in the application layer; the inbound REST adapter translates the error into an HTTP response, and the outbound AI-provider adapter is not called (ADR-0017, Architecture)
+- Approving a revised draft is the approval of story 026, unchanged: one backend request with the text on screen and the original first prompt; the number on the card stays the one planned when the draft began, and the number the backend stores is the one that counts (ADR-0017)
 
 ## Out of scope
 - Changing the ADRs or the links of a draft after it has been created (the user must discard and restart)
@@ -45,6 +48,9 @@ As a team member, I want to tell the AI what to change in the draft, in my own w
 - [X] Map the 40-turn error to an HTTP response in the inbound REST adapter and surface it in the draft card with a Retry option
 - [X] Write ViewModel unit tests covering: entering revision mode, a successful single revision, two successive revisions, a failed revision followed by Retry, and discard returning to new-enabler state
 - [X] Write a backend unit test verifying the exact turns sent for a first revision, a second revision, and the 40-turn rejection
+- [X] Write a ViewModel unit test and an acceptance test that a draft revised twice is approved with one request carrying the last revision, the first prompt, the planned number, the slug and the ADRs
+- [X] Write ViewModel and acceptance tests that a refused approval of a revised draft keeps it Ready with its last revision and its reason, still takes changes (which clear the reason), and approves the newest revision when pressed again
+- [X] Write a ViewModel test that the change box takes no change while the approval of a revised draft is on its way
 
 ## Files of the spike
 
@@ -61,7 +67,7 @@ these stories ask for. The column says which part is the base.
 | `builder/linkedDocs.ts` | `linkedDocumentsText` (the section, the relations, the 12,000-character cut) and `throughLinkedEnablers` (one step through a linked enabler). | 1, 5, 6 |
 | `builder/LinkPicker.tsx` | `RefChip` and `LinkPicker` (the Link button, the popover grouped by kind, `hideKinds`, Escape and outside click, the count). Only an Accepted ADR is offered, in the spike. | 6 |
 | `builder/generate.ts` | `makeId`, `today`, `slugify` (first words, accents out, 48 characters, `untitled`), `titleFrom` (first sentence of the prompt, 70 characters), `nextNumber`, `extractTitle` (the first `# ` line without "Story:", "Feature specification:", "AE-n."), `isAcceptedAdr`. | 1, 3 |
-| `builder/useBuilder.ts` | The project's store in the browser (`bwyn-spike-home-page.builder`): `enablers`, `messages`, `addEnabler(enabler, messages)`. | 3 |
+| `builder/useBuilder.ts` | The project's store in the browser (`bwyn-spike-home-page.builder`): `enablers`, `messages`, `addEnabler(enabler, messages)`. Here the backend and its database take its place. | 3 |
 | `builder/types.ts` | `StoredEnabler` (extends `StoredStory` with `derivesFrom` and `cross`), `Entry`, `ChatMessage`, `Submission`. | 1, 3, 6 |
 | `builder/catalog.ts` | `buildEntries`: each enabler is an `Entry` with ref `enabler:<id>`, file name `<number>-<slug>.md`, folder `architectural-enablers`, label `AE-<number>. <title>`, `editable: true` (here: false). `KIND_META` for its icon (`ZapIcon`) and colour. | 3 |
 | `builder/FolderTree.tsx` | The folder `architectural-enablers` (key `enablers`) and its file rows; the "New story" button of the header. | 3 |
@@ -87,3 +93,6 @@ these stories ask for. The column says which part is the base.
 - **The workspace's middle** is the prompt again (in `story-builder-folders.md` it was an empty state), and with a file open the prompt is a
   narrow column on the right of the file.
 - **The call to the model** is the backend's, not the dev server's.
+- **The enablers and the conversation are kept in the database, not in the browser.** The spike's `useBuilder.ts` writes them to
+  `localStorage`; here the backend stores them, and the title, the Markdown, the number and the approval messages are made by the backend.
+  This is needed before the project context of story 028 and the links of story 029, which both read the approved enablers on the backend.
