@@ -47,6 +47,66 @@
     {
       "id": "mw81wq011fzu4u",
       "text": "Test: approve stores the correct record; title extraction from Markdown and from the prompt; second enabler gets number `0004`; reload restores enablers and conversation; two projects stay independent; Discard stores nothing; \"New\" with and without a draft in progress"
+    },
+    {
+      "id": "mw94i97kwez236",
+      "text": "Add a Flyway migration (V16, leaving the applied V15 as it is) that extends `architectural_enabler` with the title, the first prompt, the approved date, and the links and the ADRs it derives from (foreign key to the project's ADRs), and adds a `builder_message` table that keeps the conversation of each project in order (ADR-0010, ADR-0011)"
+    },
+    {
+      "id": "mw94i97ltuljap",
+      "text": "Domain (`bwyn-core`): turn an approved draft into an enabler with id `0003-<slug>`; extract the title (first `# ` line without the prefixes \"Story:\", \"Feature specification:\" and \"AE-`<digits>`.\"; else the first sentence of the prompt capped at 70 characters with \"...\"); trim the Markdown to one final newline; model the conversation message; extend `ArchitecturalEnablerRepository` with `save`, `findAll` and `findById` next to `nextNumber`, and add a port for the conversation (ADR-0017, AE-0005)"
+    },
+    {
+      "id": "mw94i97ldwcnod",
+      "text": "Application (`bwyn-application`): `ApproveArchitecturalEnablerCommand` and its handler: check that every derived ADR exists and is Accepted, assign the number (highest stored plus one when the planned one is taken), build the two messages (ADR list, link count), store the enabler and the messages in one transaction, and return what was stored (ADR-0017)"
+    },
+    {
+      "id": "mw94i97lym6dg4",
+      "text": "Application queries: list the enablers of a project (id, number, slug, title), read one with its Markdown, ADRs and links, and read the conversation of a project (ADR-0017)"
+    },
+    {
+      "id": "mw94i97l2h52zn",
+      "text": "REST (`bwyn-rest`): extend `ArchitecturalEnablersController` with the approval (POST), the list, the read of one enabler and the conversation (GET); document them with OpenAPI; answer a refusal with a status and a message the card can show (ADR-0014)"
+    },
+    {
+      "id": "mw94i97lqddxuo",
+      "text": "Infrastructure (`bwyn-infrastructure`): JPA entities and adapters that implement the ports, apart for each project (ADR-0011)"
+    },
+    {
+      "id": "mw94i97l44m2hw",
+      "text": "Replace the browser store with the backend: extend `EnablerGateway` and `HttpEnablerGateway` with approve, list, read and conversation; remove `EnablerStorage`, `BrowserEnablerStorage` and the title, Markdown, number and message-text rules now kept by the backend"
+    },
+    {
+      "id": "mw94i97lwa62db",
+      "text": "Wire \"Approve and create enabler\" to the approval request: on success clear the draft, the prompt box and the ADR chips and open the `architectural-enablers` folder; on failure keep the draft Ready and show the error with the button available again; keep the button disabled for non-Ready states; plan the number from the backend only"
+    },
+    {
+      "id": "mw94i97lqfg9kh",
+      "text": "Show the two messages that the backend returns, with the \"Open file\" card, and take the earlier messages of the session from the conversation the backend reads"
+    },
+    {
+      "id": "mw94i97lybmqeo",
+      "text": "Update the `architectural-enablers` folder to list the enablers the backend returns, in ascending number order with tooltips, with the italic empty-state line \"No architectural enablers yet. Write a prompt.\" when none exist and \"The architectural enablers could not be read. Try again.\" with a \"Try again\" button when they cannot be read"
+    },
+    {
+      "id": "mw94i97l8557pi",
+      "text": "Wire the \"Open file\" card and the tree file entry to read the enabler from the backend and open the enabler file panel; when it cannot be read, open nothing and say \"This file could not be read. Try again.\""
+    },
+    {
+      "id": "mw94i97l0twgzg",
+      "text": "JUnit (domain and application): title extraction from Markdown and from the prompt, Markdown trimming, the number assigned and the next free number when the planned one is taken, the exact approval messages with and without links, the refusal of a derived ADR that is missing or not Accepted (ADR-0005, ADR-0017)"
+    },
+    {
+      "id": "mw94i97lq8hoqs",
+      "text": "Testcontainers integration test: approve and read back the enabler and the conversation, two projects stay independent, a duplicate number is refused, a failure while storing keeps neither the enabler nor the messages, and the data is still there with a new application context (ADR-0012)"
+    },
+    {
+      "id": "mw94i97lc3271a",
+      "text": "REST controller tests for the approval, the list, the read and the conversation, including the refusal; an ArchUnit rule that the new command, queries and adapters stay in their hexagonal layers (ADR-0009, ADR-0014)"
+    },
+    {
+      "id": "mw94i97ldqca2b",
+      "text": "Jest unit and acceptance tests: approve succeeds, approve fails and can be pressed again, the tree lists enablers read from the backend and says when it cannot, opening an enabler reads it from the backend, and enablers and conversation are still there with the browser's storage cleared; Discard sends nothing; \"New\" with and without a draft in progress (ADR-0005, ADR-0016)"
     }
   ]
 }
