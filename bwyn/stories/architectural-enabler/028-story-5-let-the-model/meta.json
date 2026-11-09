@@ -30,6 +30,10 @@
     {
       "id": "mw821jdb6btb3h",
       "text": "Send ten draft requests to the real model with varied prompts and ADR selections; adjust the system prompt until all manual checklist items above pass consistently"
+    },
+    {
+      "id": "mw9msjfvgsl8ej",
+      "text": "Define and implement the context-block builder: assemble the ADRs the enabler derives from (and no other, joined by `---`), links, scopes, principles and practices in the fixed order, and verify the output is identical across two calls with the same project state"
     }
   ]
 }
