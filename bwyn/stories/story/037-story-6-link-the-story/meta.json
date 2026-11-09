@@ -1,0 +1,55 @@
+{
+  "title": "Link the story to other documents, and the enablers that every story gets",
+  "prompt": "# Story 6: Link the story to other documents, and the enablers that every story gets\n\n- **Story**: XXX-link-story-at-creation\n- **Created**: 2026-11-09\n- **Status**: Draft\n- **Demo**: mark an enabler as one that every story gets, press \"New\", see it already linked in the Link button, add a driver and an ADR, draft\n  the story, tick and untick the checkbox to see the default links leave and return, and approve it with its links.\n\n## Story\n\nAs a team member, I want to link the story I am writing to the drivers, ADRs, enablers and stories that shape it, and to have the enablers\nthat apply to every story linked from the start, so that the AI uses what they say and no rule that every story needs is forgotten.\n\n## Acceptance tests\n\nThe Link button\n\n- [ ] **Given** the prompt for a story (the box not ticked), **Then** the Link button under the box is the shared picker of `story-link-picker.md`,\n  with its label \"Link\", and offers Drivers, ADRs, Architectural enablers and Stories. **Given** the box ticked, **Then** it offers no ADRs\n  (`story-architectural-enablers.md`).\n- [ ] **Given** the ADRs for a story, **Then** only an Accepted ADR is offered, and an ADR the user chose stays listed. Its link is an ordinary one,\n  stored with the others.\n- [ ] **Given** a document is checked, **Then** the button shows a count, and a chip with its icon and label appears above the box with an X named\n  \"Remove link to <label>\". **When** the user removes the chip, **Then** it is unchecked.\n- [ ] **Given** the user sends, **Then** the links are cleared from the composer (except the default enablers, below), and the card of the draft\n  shows their chips, which cannot be changed there.\n\nThe enablers that every story gets\n\n- [ ] **Given** one or more enablers are marked **cross** (a rule for every story, for example hexagonal architecture), **When** the prompt is for a\n  story, **Then** they are checked in the Link button from the start, with their chips above the box.\n- [ ] **Given** the default enablers, **When** the user removes one, **Then** it is not added again by itself, and **When** a new cross enabler\n  appears, **Then** only that one is added.\n- [ ] **Given** the user ticks \"Mark as architectural enabler\", **Then** the default enablers are taken out of the links, because they are for\n  stories. **When** the user unticks it, **Then** they are back (those the user had removed stay removed only until the box is ticked and unticked).\n- [ ] **Given** the user sends, **Then** the composer goes back to the default enablers only.\n- [ ] **Given** no cross enabler, **Then** the links start empty.\n\nWhat the model gets\n\n- [ ] **Given** links, **Then** the request has \"## Linked documents (full text)\" and, for each document, \"### <label> (<relation>, <path>)\" and\n  its full text, cut at 12,000 characters, and each document once. The relation of an ADR the story links to is \"linked\" (a story has no \"derives\n  from\"). Through a linked enabler, the documents one step further (its ADRs, its enablers and stories) come with it, marked with how they were\n  reached, never through a story, a driver or an ADR.\n- [ ] **Given** no link, **Then** the section reads \"## Linked documents\" and \"- None\".\n- [ ] **Given** the system prompt, **Then** it tells the model to treat the linked documents as context and to cite one only when a rule comes from it.\n\nKeeping them\n\n- [ ] **Given** approval, **Then** the links are stored with the story, and the message says \"It is linked to N other items.\"\n- [ ] **Given** the open story, **Then** \"Linked to\" shows a chip for each link, and each chip opens that file. **Given** the file it links to,\n  **Then** it shows the story under \"Referenced by\".\n- [ ] **Given** a document that is removed later, **Then** a link to it is hidden, not an error.\n\n## Business rules and constraints\n\n- The model sees the **outgoing** links only. Documents that merely link to the story are not sent.\n- Only one step is followed, and only through enablers.\n- A reference is a stable text made from the file name: `driver:constraints`, `enabler:0001-set-up-...`, `story:001-...`, `adr:0006`.\n- **The default enablers are selected, not forced.** They are checked once each so that the user decides, and one the user took out does not return\n  by itself. Ticking the enabler box is the exception, because an enabler does not get them.\n- A story's links are chosen when it is drafted. Changing them afterwards is `story-link-picker.md`.\n\n## Out of scope\n\n- Marking an enabler as cross (the \"Cross enabler\" flag of its panel, which comes with editing an enabler), and removing it.\n- Adding or removing links of an approved story (`story-link-picker.md`).\n- A graph of the links, and warning about their effect on the sync or on what the AI reads.\n\n## Tasks\n\n- [ ] Use the shared Link picker and chips in the prompt for a story (no change to what the user sees), with the ADRs offered and, for an\n  enabler, hidden.\n- [ ] Select the cross enablers by default for a story, once each, and take them out when the box is ticked and put them back when it is unticked.\n- [ ] Reset the composer to the default enablers after sending.\n- [ ] Put the linked documents in the request: once each, cut at 12,000 characters, one step through a linked enabler.\n- [ ] Store the links with the story, and show them in its panel with \"Referenced by\" on the other side.\n- [ ] Test: the list for a story and for an enabler, the default enablers (start, removal, a new one, ticking and unticking, after sending), the\n  request with and without links, the cut, the one step, and a removed target.",
+  "createdAt": "2026-11-09",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw9swwrdom7qgb",
+      "text": "Extend the story composer ViewModel to hold a link set initialised from the current cross enablers, and expose a command to add, remove, and reset links (ADR-0007, Architecture)."
+    },
+    {
+      "id": "mw9swwrdh291pb",
+      "text": "Wire the shared link picker into the story composer, hiding the ADR section when the enabler box is ticked and showing it otherwise (ADR-0007)."
+    },
+    {
+      "id": "mw9swwrdmgggwr",
+      "text": "Implement the cross-enabler default logic: pre-check cross enablers on mount, track user removals, restore on untick, clear non-default links on submit (Architecture)."
+    },
+    {
+      "id": "mw9swwrd9fp941",
+      "text": "Write a use-case function that assembles the `## Linked documents (full text)` section: fetches each linked document's text, truncates to 12,000 characters, expands one step through linked enablers, deduplicates, and formats each entry with its relation label (ADR-0007, Architecture)."
+    },
+    {
+      "id": "mw9swwrdc6iazg",
+      "text": "Update the story-draft request handler to include the linked-documents section and the system-prompt instruction to cite documents only when a rule comes from them (Architecture)."
+    },
+    {
+      "id": "mw9swwrdmq6f5j",
+      "text": "Add a `links` field to the story persistence model and store the outgoing link references on approval; update the approval command handler (ADR-0017)."
+    },
+    {
+      "id": "mw9swwrda7o980",
+      "text": "Expose a backend query endpoint that returns the links stored with a story, used by the file panel to render \"Linked to\" chips (ADR-0017, ADR-0014)."
+    },
+    {
+      "id": "mw9swwrdng3mbv",
+      "text": "Derive \"Referenced by\" at read time in the file-panel ViewModel by querying which other documents list this story in their stored links (ADR-0007, Architecture)."
+    },
+    {
+      "id": "mw9swwrd91glq0",
+      "text": "Handle a missing linked document gracefully: hide its chip silently in the \"Linked to\" section (Principle: KISS)."
+    },
+    {
+      "id": "mw9swwrd0seqmk",
+      "text": "Write Jest unit tests covering: link list for a story vs. an enabler; default-enabler pre-selection, user removal, new cross enabler, tick/untick, post-submit reset; request assembly with and without links, truncation at 12,000 characters, one-step expansion through an enabler, deduplication, and a removed target (ADR-0005, Practice: Pair programming)."
+    },
+    {
+      "id": "mw9swwrdoz8zw4",
+      "text": "Verify the full build and test suite still passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)."
+    }
+  ]
+}
