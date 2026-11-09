@@ -50,6 +50,18 @@
     {
       "id": "mw8248sjaoqi99",
       "text": "Write a JUnit test asserting that the link-persistence command and the transitive-expansion query reside in the correct hexagonal layers and that no domain class references adapter types (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mw9dakpldd5dn0",
+      "text": "Extend the backend request builder to assemble \"## Linked documents\": the linked documents in the order chosen (or \"- None\"), each with its relation and path, truncated at 12,000 characters, each appearing once; implement `FetchLinkedDocumentsPort` with the project's drivers, enablers and ADRs in place of the placeholder adapter (ADR-0017, AE-0005)."
+    },
+    {
+      "id": "mw9dakpls4cad4",
+      "text": "Write Jest tests: dialog grouping, ADR absence, chip add/remove, the links sent with the first draft, a change and a retry, the links sent with the approval, \"Linked to\" with a removed target left out silently, and \"Referenced by\" (ADR-0005, ADR-0016). Write JUnit tests for the request with and without links, the 12,000-character truncation, one-step transitive expansion, and the adapter against the database (ADR-0005, ADR-0012)."
+    },
+    {
+      "id": "mw9dakpl7a1xx1",
+      "text": "Write a JUnit test asserting that the linked-documents port is implemented only by an outbound adapter and that no domain class references adapter types (ADR-0009, ADR-0017)."
     }
   ]
 }
