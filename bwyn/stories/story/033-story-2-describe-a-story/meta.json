@@ -1,0 +1,51 @@
+{
+  "title": "Describe a story and get the first draft",
+  "prompt": "# Story 2: Describe a story and get the first draft\n\n- **Story**: XXX-describe-story\n- **Created**: 2026-11-09\n- **Status**: Draft\n- **Demo**: with the checkbox not ticked, write \"As a returning customer, I want to sign in with my email and password, so that I can see my\n  orders.\", press Enter, and see the draft card with `stories/001-as-a-returning-customer-i/story.md` and the story appearing in it as it is written.\n\n## Story\n\nAs a team member, I want to describe in my own words what a user needs, so that the AI drafts a user story with acceptance tests and tasks\nthat I can read as it is written.\n\n## Acceptance tests\n\nSending\n\n- [ ] **Given** the checkbox is not ticked and the box has text, **When** the user presses Enter (or the send button), **Then** the box is\n  cleared, the text shows as a message on the right (as typed, with its line breaks), and a draft card appears under it.\n- [ ] **Given** no text (or only spaces), **Then** the send button is disabled.\n- [ ] **Given** the draft card, **Then** it shows the **story icon** (a document, in a blue tile), the planned path\n  `stories/001-as-a-returning-customer-i/story.md` (complete as a tooltip), the chip \"Writing...\", and the text as it is written. It shows no\n  chip of ADRs, because a story derives from none, and the chips of its links, if it has any (story 6).\n- [ ] **Given** no model is connected, **When** the user sends, **Then** the draft fails with \"No model is connected for this project. Connect\n  one in Integrations.\" (`story-architectural-enablers.md`, story 2 shows how a failure looks).\n\nThe number and the name\n\n- [ ] **Given** stories 001 and 002 exist, **Then** the planned number is `003`: the highest number of **all** the stories (inside a theme\n  or not) plus one, with **3 digits** (`001` when there is none).\n- [ ] **Given** the prompt \"As a returning customer, I want to sign in with my email and password, so that I can see my orders.\", **Then** the\n  slug is `as-a-returning-customer-i`: the first five words, lower case, without accents, only `a-z` and `0-9` joined by \"-\", at most 48\n  characters, and `untitled` when nothing is left. The folder is `001-as-a-returning-customer-i`.\n- [ ] **Given** the identifier sent to the model, **Then** it is the folder name, `001-as-a-returning-customer-i`.\n- [ ] **Given** two stories that start with the same words, **Then** their folders differ by their number.\n\nThe call\n\n- [ ] **Given** the user sends, **Then** the browser calls only the BWYN backend, as `story-architectural-enablers.md` (story 1) describes, with\n  the project, the system prompt, the context and the turns. It never calls the model's provider.\n- [ ] **Given** the request, **Then** it says \"Document type: user story\", \"Assigned identifier: 001-as-a-returning-customer-i\", today's date,\n  and the user's text under \"Description\". It has **no** \"Derives from (ADRs)\" section. Story 5 adds the project context and the lists of\n  enablers and stories, and story 6 the linked documents.\n- [ ] **Given** a new request while another is being written, **Then** the one in flight is cancelled.\n\nWhat the draft is like (checked by reading drafts from a real model; they are not automated)\n\n- [ ] **Given** a draft, **Then** it follows the template: `# Story: <short title>`, the lines Story (the identifier), Created (today's date) and\n  Status (Draft), and the sections Story (\"As a ..., I want ..., so that ...\"), Acceptance tests, Business rules and constraints, Out of\n  scope and Tasks.\n- [ ] **Given** the acceptance tests, **Then** each is a Given, When and Then example with real values from the request, written as an unchecked\n  box (`- [ ]`), never numbered and never checked.\n- [ ] **Given** the Tasks, **Then** they are small engineering steps, one per line as an unchecked box, each starting with a verb, in the order\n  they are done, covering the acceptance tests and nothing beyond them.\n- [ ] **Given** a request that is bigger than one iteration of a pair, **Then** the draft holds the first and most valuable slice and names what\n  it left out under Out of scope.\n- [ ] **Given** a draft, **Then** it chooses no technology and no code structure, makes no estimate, uses the role from the request (\"user\"\n  when there is none), and invents no facts: what is missing is the smallest reasonable assumption under Business rules and constraints.\n\n## Business rules and constraints\n\n- A story is **one Markdown file in its own folder**, `stories/<number>-<slug>/story.md`. The folder name is its identity, which never\n  changes, and it is the base of every link to it (`story:001-as-a-returning-customer-i`).\n- The number is the highest story number plus one, over all the stories. It is **3 digits** for a story and 4 for an enabler.\n- The slug comes from the user's text when it is sent, so that the path is known and shown while the draft is written.\n- The AI only drafts. Nothing is kept until the user approves (story 4).\n- The model is asked for one Markdown document, with no introduction, no closing remark and no code fence.\n- The same system prompt serves stories and enablers, with a template for each. The story rules are in the Reference.\n- The keys of the model stay on the backend (`story-llm-provider.md`).\n\n## Out of scope\n\n- The state of the draft, Stop, Retry, Discard and the token counts (story 3), approving (story 4), the project context (story 5) and the\n  links (story 6).\n- The user story template as a file the team edits, a template per project, and several stories from one prompt.\n- Where the story goes among themes: a new story starts **outside any theme** (`story-group-stories-by-theme.md`).\n\n## Tasks\n\n- [ ] Choose the next story number (three digits, over every story, in or out of a theme) and the slug, and set the planned path\n  `stories/<number>-<slug>/story.md` and the identifier.\n- [ ] Write the story part of the system prompt (the rules and the template of the Reference) and split the rules from the enabler's (see\n  `story-architectural-enablers.md`, story 5).\n- [ ] Build the request text for a story: \"Document type: user story\", the identifier, the date and the description, with no \"Derives from\".\n- [ ] Start the draft in create mode for a story, and show its card with the story icon and path.\n- [ ] Test with a fake backend: the number with and without themes, the slug, the identifier, and the request that is sent.",
+  "createdAt": "2026-11-09",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw9sptal27acjx",
+      "text": "Implement the story-number calculation: query all existing stories (in and out of themes), find the highest number, add one, and zero-pad to three digits."
+    },
+    {
+      "id": "mw9sptall9kedr",
+      "text": "Implement slug generation from the prompt: take the first five words, lower-case, strip accents, keep only `a-z0-9`, join with `-`, truncate to 48 characters, fall back to `untitled`."
+    },
+    {
+      "id": "mw9sptaltbaua6",
+      "text": "Compose the planned path `stories/<number>-<slug>/story.md` and the identifier `<number>-<slug>` as soon as the user sends."
+    },
+    {
+      "id": "mw9sptalfy9exg",
+      "text": "Write the story section of the system prompt (rules and template) and split it from the enabler section so each document type uses its own template."
+    },
+    {
+      "id": "mw9sptalz3p0v8",
+      "text": "Build the request body for a story: \"Document type: user story\", the identifier, today's date, and the user's description; omit the \"Derives from (ADRs)\" section."
+    },
+    {
+      "id": "mw9sptalx5est6",
+      "text": "Wire the send action: clear the prompt box, display the user message on the right, open the draft card with the story icon (blue tile), the planned path as a tooltip, and the \"Writing…\" chip."
+    },
+    {
+      "id": "mw9sptaldfv6x4",
+      "text": "Stream the model response into the draft card text area, cancelling any in-flight request when a new one starts."
+    },
+    {
+      "id": "mw9sptalcruki1",
+      "text": "Show the failure message \"No model is connected for this project. Connect one in Integrations.\" in the draft card when no model is configured."
+    },
+    {
+      "id": "mw9sptaltf7yy5",
+      "text": "Disable the send button when the prompt box is empty or contains only whitespace."
+    },
+    {
+      "id": "mw9sptaltac6pv",
+      "text": "Write unit tests with a fake backend covering: number calculation with and without themes, slug generation edge cases, identifier composition, and the exact request body sent to the backend."
+    }
+  ]
+}
