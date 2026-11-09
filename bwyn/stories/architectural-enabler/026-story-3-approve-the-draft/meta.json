@@ -4,7 +4,8 @@
   "createdAt": "2026-11-08",
   "links": [
     "enabler:0002-clean-architecture-folder-structure-for",
-    "enabler:0005-hexagonal-with-ddd-package-structure"
+    "enabler:0005-hexagonal-with-ddd-package-structure",
+    "enabler:0006-configure-postgres-connection-as-the"
   ],
   "tasks": [
     {
