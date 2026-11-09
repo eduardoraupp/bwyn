@@ -8,17 +8,17 @@
 As a team member, I want to tell the AI what to change in the draft, in my own words, so that I get the enabler I mean before I approve it.
 
 ## Acceptance tests
-- [ ] **Given** a draft that is Ready or Incomplete, **Then** the composer box shows the placeholder "Ask for changes to the draft…", the send button is labelled "Send changes", the ADR panel and the Link button are hidden, and a line reads "Revising the draft below"
-- [ ] **Given** the user types a change request and presses Enter or "Send changes", **Then** the message appears on the right of the conversation, the draft chip reads "Writing…", and the card begins showing the new text in place of the old one as it streams in
-- [ ] **Given** the stream ends successfully, **Then** the chip reads "Ready for review" and the card shows the complete revised document, not a diff
-- [ ] **Given** a revision request is sent, **Then** the turns delivered to the backend are: the original prompt as the first user turn, the previous draft as the assistant turn, and the change instruction as the next user turn; earlier revision turns are included in order
-- [ ] **Given** a revision that failed, **When** the user presses Retry, **Then** the same turns are sent again without alteration
-- [ ] **Given** a draft that is Writing or Failed, **Then** the change box is disabled and explains why, consistent with the behaviour established in story 025
-- [ ] **Given** a revision completes, **Then** the draft's identifier, slug, planned path, chosen ADRs, and links are unchanged
-- [ ] **Given** a draft revised twice and then approved, **Then** the stored document text is the last revision and the stored prompt is the original first prompt
-- [ ] **Given** the accumulated turns reach 40, **Then** the backend refuses the next change request and returns a clear error message, which the card displays with a Retry option
-- [ ] **Given** the user discards the draft while in revision mode, **Then** the composer returns to the new-enabler prompt state established in story 024
-- [ ] **Given** a revision request, **Then** the backend sets a prompt-cache point after the system prompt, after the project context, and after the previous assistant turn; the token chips reflect cache hits as shown in story 025
+- [X] **Given** a draft that is Ready or Incomplete, **Then** the composer box shows the placeholder "Ask for changes to the draft…", the send button is labelled "Send changes", the ADR panel and the Link button are hidden, and a line reads "Revising the draft below"
+- [X] **Given** the user types a change request and presses Enter or "Send changes", **Then** the message appears on the right of the conversation, the draft chip reads "Writing…", and the card begins showing the new text in place of the old one as it streams in
+- [X] **Given** the stream ends successfully, **Then** the chip reads "Ready for review" and the card shows the complete revised document, not a diff
+- [X] **Given** a revision request is sent, **Then** the turns delivered to the backend are: the original prompt as the first user turn, the previous draft as the assistant turn, and the change instruction as the next user turn; earlier revision turns are included in order
+- [X] **Given** a revision that failed, **When** the user presses Retry, **Then** the same turns are sent again without alteration
+- [X] **Given** a draft that is Writing or Failed, **Then** the change box is disabled and explains why, consistent with the behaviour established in story 025
+- [X] **Given** a revision completes, **Then** the draft's identifier, slug, planned path, chosen ADRs, and links are unchanged
+- [X] **Given** a draft revised twice and then approved, **Then** the stored document text is the last revision and the stored prompt is the original first prompt
+- [X] **Given** the accumulated turns reach 40, **Then** the backend refuses the next change request and returns a clear error message, which the card displays with a Retry option
+- [X] **Given** the user discards the draft while in revision mode, **Then** the composer returns to the new-enabler prompt state established in story 024
+- [X] **Given** a revision request, **Then** the backend sets a prompt-cache point after the system prompt, after the project context, and after the previous assistant turn; the token chips reflect cache hits as shown in story 025
 
 ## Business rules and constraints
 - A change instruction is an instruction on the whole draft; the AI returns the complete revised document, preserving the identifier and the creation date, and changes only what was asked (Principle: DRY and KISS)
@@ -36,15 +36,15 @@ As a team member, I want to tell the AI what to change in the draft, in my own w
 - Connecting an LLM provider and the streaming protocol internals (story 006 and story 007)
 
 ## Tasks
-- [ ] Update the composer ViewModel to expose a `revisionMode` state that activates when the draft status is Ready or Incomplete, setting the placeholder text, button label, and visibility flags for the ADR panel and Link button
-- [ ] Add a `requestRevision(changeText: string)` command to the draft use case that appends a user turn and re-invokes the generation port, preserving the draft's identifier, slug, planned path, ADRs, and links
-- [ ] Update the draft card component to replace its displayed text in place as the revised stream arrives, reusing the streaming display established in story 025
-- [ ] Implement turn accumulation in the backend application service: build the full turn list (original prompt → previous draft → change → …) and pass it to the AI provider port
-- [ ] Add a cache-point instruction to the backend AI provider adapter after the system prompt, after the project context, and after the most recent assistant turn
-- [ ] Add a guard in the backend application service that rejects a revision request when the turn count would exceed 40, returning a descriptive error
-- [ ] Map the 40-turn error to an HTTP response in the inbound REST adapter and surface it in the draft card with a Retry option
-- [ ] Write ViewModel unit tests covering: entering revision mode, a successful single revision, two successive revisions, a failed revision followed by Retry, and discard returning to new-enabler state
-- [ ] Write a backend unit test verifying the exact turns sent for a first revision, a second revision, and the 40-turn rejection
+- [X] Update the composer ViewModel to expose a `revisionMode` state that activates when the draft status is Ready or Incomplete, setting the placeholder text, button label, and visibility flags for the ADR panel and Link button
+- [X] Add a `requestRevision(changeText: string)` command to the draft use case that appends a user turn and re-invokes the generation port, preserving the draft's identifier, slug, planned path, ADRs, and links
+- [X] Update the draft card component to replace its displayed text in place as the revised stream arrives, reusing the streaming display established in story 025
+- [X] Implement turn accumulation in the backend application service: build the full turn list (original prompt → previous draft → change → …) and pass it to the AI provider port
+- [X] Add a cache-point instruction to the backend AI provider adapter after the system prompt, after the project context, and after the most recent assistant turn
+- [X] Add a guard in the backend application service that rejects a revision request when the turn count would exceed 40, returning a descriptive error
+- [X] Map the 40-turn error to an HTTP response in the inbound REST adapter and surface it in the draft card with a Retry option
+- [X] Write ViewModel unit tests covering: entering revision mode, a successful single revision, two successive revisions, a failed revision followed by Retry, and discard returning to new-enabler state
+- [X] Write a backend unit test verifying the exact turns sent for a first revision, a second revision, and the 40-turn rejection
 
 ## Files of the spike
 
