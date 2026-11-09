@@ -42,6 +42,18 @@
     {
       "id": "mw81z8l897r4zz",
       "text": "Write a backend unit test verifying the exact turns sent for a first revision, a second revision, and the 40-turn rejection"
+    },
+    {
+      "id": "mw950qbxfr3651",
+      "text": "Write a ViewModel unit test and an acceptance test that a draft revised twice is approved with one request carrying the last revision, the first prompt, the planned number, the slug and the ADRs"
+    },
+    {
+      "id": "mw950qbxtog930",
+      "text": "Write ViewModel and acceptance tests that a refused approval of a revised draft keeps it Ready with its last revision and its reason, still takes changes (which clear the reason), and approves the newest revision when pressed again"
+    },
+    {
+      "id": "mw950qbxgmiika",
+      "text": "Write a ViewModel test that the change box takes no change while the approval of a revised draft is on its way"
     }
   ]
 }
