@@ -11,13 +11,13 @@ As a team member, I want the AI to know the decisions, the principles, the pract
 
 **What the model is given (checked on the request a fake backend receives)**
 
-- [ ] **Given** a request for a draft, **Then** the first user message has a stable **project context** block, then a cache point, then the **request**.
-- [ ] **Given** the context block, **Then** it contains, in this order: `# Project context` and `Project: <name>`; `## Architecture decision records (read-only)` with the full Markdown of every ADR of the project, whatever its status, joined by `---`; `## Links between documents` (one line per enabler and story: what it derives from and what it links to, by label); `## Scope of the stories and architectural enablers` (the scope of each enabler, and the statement and the out-of-scope of each story); `## Principles of the team` (name and text of the principles that have text, or `None written yet`); and `## Practices of the team (fixed)` (the practices as text, with the non-negotiable ones marked).
-- [ ] **Given** the context block, **Then** it does **not** contain drivers (a driver reaches the model only when the user links it), and it does **not** contain the architecture of the system (that goes with stories only).
-- [ ] **Given** the request part, **Then** it contains: `Document type: architectural enabler`; `Assigned identifier: AE-0003`; `Today's date: <date>`; `## Derives from (ADRs)` (labels); the linked documents in full; `## Existing architectural enablers` (labels, or `- None`); `## Existing stories` (labels, or `- None`); and `## Description` with the user's text. Repeated blank lines are collapsed to one.
-- [ ] **Given** a linked document that is longer than 12,000 characters, **Then** it is cut at that point and ends with `[...cut: the document is longer]`.
-- [ ] **Given** the same project and the same links, **When** the user submits two requests, **Then** the context block is byte-for-byte identical, so that the second request reads it from the prompt cache. **Given** a new enabler is approved or an ADR is changed, **Then** the context block changes.
-- [ ] **Given** the system prompt, **Then** it instructs the model to output one Markdown document with no preamble, no closing remark and no code fence, and it supplies the architectural enabler template (title, Status, Created, Completed, Implements ADR(s), Goal, Scope with In scope and Out of scope, Tasks, Definition of done).
+- [X] **Given** a request for a draft, **Then** the first user message has a stable **project context** block, then a cache point, then the **request**.
+- [X] **Given** the context block, **Then** it contains, in this order: `# Project context` and `Project: <name>`; `## Architecture decision records (read-only)` with the full Markdown of every ADR of the project, whatever its status, joined by `---`; `## Links between documents` (one line per enabler and story: what it derives from and what it links to, by label); `## Scope of the stories and architectural enablers` (the scope of each enabler, and the statement and the out-of-scope of each story); `## Principles of the team` (name and text of the principles that have text, or `None written yet`); and `## Practices of the team (fixed)` (the practices as text, with the non-negotiable ones marked).
+- [X] **Given** the context block, **Then** it does **not** contain drivers (a driver reaches the model only when the user links it), and it does **not** contain the architecture of the system (that goes with stories only).
+- [X] **Given** the request part, **Then** it contains: `Document type: architectural enabler`; `Assigned identifier: AE-0003`; `Today's date: <date>`; `## Derives from (ADRs)` (labels); the linked documents in full; `## Existing architectural enablers` (labels, or `- None`); `## Existing stories` (labels, or `- None`); and `## Description` with the user's text. Repeated blank lines are collapsed to one.
+- [X] **Given** a linked document that is longer than 12,000 characters, **Then** it is cut at that point and ends with `[...cut: the document is longer]`.
+- [X] **Given** the same project and the same links, **When** the user submits two requests, **Then** the context block is byte-for-byte identical, so that the second request reads it from the prompt cache. **Given** a new enabler is approved or an ADR is changed, **Then** the context block changes.
+- [X] **Given** the system prompt, **Then** it instructs the model to output one Markdown document with no preamble, no closing remark and no code fence, and it supplies the architectural enabler template (title, Status, Created, Completed, Implements ADR(s), Goal, Scope with In scope and Out of scope, Tasks, Definition of done).
 
 **What the draft is like (checked by reading drafts from a real model; not automated)**
 
@@ -48,11 +48,11 @@ As a team member, I want the AI to know the decisions, the principles, the pract
 
 ## Tasks
 
-- [ ] Define and implement the context-block builder: assemble ADRs (all statuses, joined by `---`), links, scopes, principles and practices in the fixed order, and verify the output is identical across two calls with the same project state
-- [ ] Define and implement the request-block builder: identifier, date, ADR labels, linked documents (with the 12,000-character cut and the `[...cut: the document is longer]` suffix), enabler list, story list, and description, collapsing repeated blank lines
-- [ ] Write the system prompt for architectural enablers: output rules (one Markdown document, no preamble, no code fence), the enabler template, and the rules on Accepted ADRs, non-negotiable practices, existing scope, and assumptions
-- [ ] Wire the context block and the request block into the existing draft endpoint so the cache point separates them in the user message
-- [ ] Write unit tests covering: exact serialised output for a small project, blank-line collapsing, the 12,000-character cut, context-block stability across two calls, and context-block change after an ADR update or a new enabler is approved
+- [X] Define and implement the context-block builder: assemble ADRs (all statuses, joined by `---`), links, scopes, principles and practices in the fixed order, and verify the output is identical across two calls with the same project state
+- [X] Define and implement the request-block builder: identifier, date, ADR labels, linked documents (with the 12,000-character cut and the `[...cut: the document is longer]` suffix), enabler list, story list, and description, collapsing repeated blank lines
+- [X] Write the system prompt for architectural enablers: output rules (one Markdown document, no preamble, no code fence), the enabler template, and the rules on Accepted ADRs, non-negotiable practices, existing scope, and assumptions
+- [X] Wire the context block and the request block into the existing draft endpoint so the cache point separates them in the user message
+- [X] Write unit tests covering: exact serialised output for a small project, blank-line collapsing, the 12,000-character cut, context-block stability across two calls, and context-block change after an ADR update or a new enabler is approved
 - [ ] Send ten draft requests to the real model with varied prompts and ADR selections; adjust the system prompt until all manual checklist items above pass consistently
 
 ## Files of the spike
