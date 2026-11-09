@@ -11,41 +11,41 @@ As a team member, I want to open an architectural enabler and describe a change 
 
 **The prompt follows the opened file**
 
-- [ ] **Given** an approved enabler is open, **When** the user opens it from the tree, from a draft card, or from a "Derives from" or "Linked to" chip, **Then** the prompt column shows a chip with a pencil and the text "Editing architectural-enablers/0003-\<slug\>.md" in the enabler colour, the ADR panel and the Link button are hidden, the placeholder reads "Describe the change to make to this enabler...", and the send button reads "Draft changes to this enabler".
-- [ ] **Given** the enabler is open and no conversation exists yet, **Then** the column shows the heading "What should change?" and the description "Describe the change. Claude drafts the updated file, and it replaces the current text once you approve it.", with no examples.
-- [ ] **Given** the text box contains text, **Then** the send button is enabled without requiring an ADR to be selected.
-- [ ] **Given** the user closes the file or opens a driver or an ADR, **Then** the prompt reverts to the new-enabler state: the ADR panel and the Link button reappear and the editing chip is gone.
-- [ ] **Given** the user had typed text before opening the enabler, **Then** that text remains in the box after the prompt switches to editing mode.
-- [ ] **Given** a draft is already on screen when the user opens another file, **Then** the prompt continues to work on that draft and does not switch target.
-- [ ] **Given** the file panel of the open enabler, **Then** the read-only note reads "Read-only here. Describe the change in the prompt to update this enabler.", and no Save, Delete, Sync, "Add link", "Cross enabler" control, or text box is present.
+- [X] **Given** an approved enabler is open, **When** the user opens it from the tree, from a draft card, or from a "Derives from" or "Linked to" chip, **Then** the prompt column shows a chip with a pencil and the text "Editing architectural-enablers/0003-\<slug\>.md" in the enabler colour, the ADR panel and the Link button are hidden, the placeholder reads "Describe the change to make to this enabler...", and the send button reads "Draft changes to this enabler".
+- [X] **Given** the enabler is open and no conversation exists yet, **Then** the column shows the heading "What should change?" and the description "Describe the change. Claude drafts the updated file, and it replaces the current text once you approve it.", with no examples.
+- [X] **Given** the text box contains text, **Then** the send button is enabled without requiring an ADR to be selected.
+- [X] **Given** the user closes the file or opens a driver or an ADR, **Then** the prompt reverts to the new-enabler state: the ADR panel and the Link button reappear and the editing chip is gone.
+- [X] **Given** the user had typed text before opening the enabler, **Then** that text remains in the box after the prompt switches to editing mode.
+- [X] **Given** a draft is already on screen when the user opens another file, **Then** the prompt continues to work on that draft and does not switch target.
+- [X] **Given** the file panel of the open enabler, **Then** the read-only note reads "Read-only here. Describe the change in the prompt to update this enabler.", and no Save, Delete, Sync, "Add link", "Cross enabler" control, or text box is present.
 
 **Sending the change**
 
-- [ ] **Given** the user submits a change, **Then** the box is cleared, the text appears as a message on the right, and a draft card appears showing the enabler's own path `architectural-enablers/0003-\<slug\>.md` and the chip "Writing..."; no new number is assigned and the card shows no ADR or link chips.
-- [ ] **Given** the request is built, **Then** it carries the full project context from story 028, unchanged, so it is served from the prompt cache as it is for a new enabler.
-- [ ] **Given** the request is built, **Then** it contains "Document type: architectural enabler", "Task: edit an existing document", "File: architectural-enablers/0003-\<slug\>.md", and today's date, and it contains no "Assigned identifier" field.
-- [ ] **Given** the request is built, **Then** it contains "## Derives from (ADRs)" listing the ADRs of the opened enabler, and "## Linked documents (full text)" containing those ADRs and the documents the enabler links to in full, plus documents one step further through its linked enablers, but not the opened enabler itself even if a linked document references it back.
-- [ ] **Given** the request is built, **Then** it contains "## Existing architectural enablers" (all enablers, including the opened one) and "## Existing stories", as in story 028.
-- [ ] **Given** the request is built, **Then** it ends with "## Current document" containing the stored text of the enabler (trimmed) followed by "## Requested change" containing the user's text.
-- [ ] **Given** the enabler was updated previously, **Then** the next request's "## Current document" contains the updated text, not the original.
-- [ ] **Given** the system prompt, **Then** it instructs the model that when the task is to edit an existing document, the current document is given and the model returns the complete document with only the requested change applied, keeping the identifier, the creation date, and everything the change does not touch.
+- [X] **Given** the user submits a change, **Then** the box is cleared, the text appears as a message on the right, and a draft card appears showing the enabler's own path `architectural-enablers/0003-\<slug\>.md` and the chip "Writing..."; no new number is assigned and the card shows no ADR or link chips.
+- [X] **Given** the request is built, **Then** it carries the full project context from story 028, unchanged, so it is served from the prompt cache as it is for a new enabler.
+- [X] **Given** the request is built, **Then** it contains "Document type: architectural enabler", "Task: edit an existing document", "File: architectural-enablers/0003-\<slug\>.md", and today's date, and it contains no "Assigned identifier" field.
+- [X] **Given** the request is built, **Then** it contains "## Derives from (ADRs)" listing the ADRs of the opened enabler, and "## Linked documents" containing the documents the enabler links to in full, plus the documents one step further through its linked enablers (as story 029 builds them, or "- None"), but not the opened enabler itself even if a linked document references it back; the full text of the ADRs is in the project context of story 028 and is not repeated.
+- [X] **Given** the request is built, **Then** it contains "## Existing architectural enablers" (all enablers, including the opened one) and "## Existing stories", as in story 028.
+- [X] **Given** the request is built, **Then** it ends with "## Current document" containing the stored text of the enabler (trimmed) followed by "## Requested change" containing the user's text.
+- [X] **Given** the enabler was updated previously, **Then** the next request's "## Current document" contains the updated text, not the original.
+- [X] **Given** the system prompt, **Then** it instructs the model that when the task is to edit an existing document, the current document is given and the model returns the complete document with only the requested change applied, keeping the identifier, the creation date, and everything the change does not touch.
 
 **Following, revising and discarding the draft**
 
-- [ ] **Given** an update draft is in progress, **Then** all behaviour from story 025 applies: the chip, Stop, Retry, the incomplete note, the error state, and the token chips.
-- [ ] **Given** an update draft is Ready, **Then** it can be revised as in story 027: the box reads "Ask for changes to the draft...", and the turns sent are the first request, the draft, and the revision.
-- [ ] **Given** an update draft is Ready, **Then** the approve button reads "Apply changes" and is enabled only when the draft is in the Ready state.
-- [ ] **Given** the user presses Discard, **Then** the draft disappears and the enabler's stored text is exactly as it was before the draft was started.
+- [X] **Given** an update draft is in progress, **Then** all behaviour from story 025 applies: the chip, Stop, Retry, the incomplete note, the error state, and the token chips.
+- [X] **Given** an update draft is Ready, **Then** it can be revised as in story 027: the box reads "Ask for changes to the draft...", and the turns sent are the first request, the draft, and the revision.
+- [X] **Given** an update draft is Ready, **Then** the approve button reads "Apply changes" and is enabled only when the draft is in the Ready state.
+- [X] **Given** the user presses Discard, **Then** the draft disappears and the enabler's stored text is exactly as it was before the draft was started.
 
 **Applying**
 
-- [ ] **Given** the user presses "Apply changes", **Then** the stored text of that enabler is replaced by the draft text (trimmed, with one trailing newline); the id, number, slug, first prompt, creation date, ADRs it derives from, and its links are not changed; no new enabler is created and the folder count stays the same.
-- [ ] **Given** the enabler is open when "Apply changes" is pressed, **Then** the file panel immediately shows the new text in both the rendered view and the Markdown view without the user reopening the file.
-- [ ] **Given** "Apply changes" is pressed, **Then** two messages are added to the conversation: the user's change text, and "Applied. I updated architectural-enablers/0003-\<slug\>.md." with a card that opens the file.
-- [ ] **Given** "Apply changes" is pressed, **Then** the draft is gone, the box is empty, and the prompt remains in editing mode for the same enabler.
-- [ ] **Given** the new text contains a first `# ` heading line, **Then** the enabler's title is read from it and the tree tooltip and all labels update to reflect it; **Given** the new text has no `# ` heading, **Then** the previous title is kept.
-- [ ] **Given** the page is reloaded after applying, **Then** the updated text is still present; **Given** two projects exist, **Then** each retains its own enabler text independently.
-- [ ] **Given** an update draft is on screen and the user opens a different file, **Then** the draft card still names the enabler it will update, and pressing "Apply changes" updates that enabler, not the currently open file.
+- [X] **Given** the user presses "Apply changes", **Then** the stored text of that enabler is replaced by the draft text (trimmed, with one trailing newline); the id, number, slug, first prompt, creation date, ADRs it derives from, and its links are not changed; no new enabler is created and the folder count stays the same.
+- [X] **Given** the enabler is open when "Apply changes" is pressed, **Then** the file panel immediately shows the new text in both the rendered view and the Markdown view without the user reopening the file.
+- [X] **Given** "Apply changes" is pressed, **Then** two messages are added to the conversation: the user's change text, and "Applied. I updated architectural-enablers/0003-\<slug\>.md." with a card that opens the file.
+- [X] **Given** "Apply changes" is pressed, **Then** the draft is gone, the box is empty, and the prompt remains in editing mode for the same enabler.
+- [X] **Given** the new text contains a first `# ` heading line, **Then** the enabler's title is read from it and the tree tooltip and all labels update to reflect it; **Given** the new text has no `# ` heading, **Then** the previous title is kept.
+- [X] **Given** the page is reloaded after applying, **Then** the updated text is still present; **Given** two projects exist, **Then** each retains its own enabler text independently.
+- [X] **Given** an update draft is on screen and the user opens a different file, **Then** the draft card still names the enabler it will update, and pressing "Apply changes" updates that enabler, not the currently open file.
 
 ## Business rules and constraints
 - The target of the prompt is determined solely by the file that is open when no draft is on screen; only an approved enabler can be a target — drivers and ADRs are immutable (Architecture).
@@ -54,6 +54,9 @@ As a team member, I want to open an architectural enabler and describe a change 
 - While a draft is on screen, the prompt works on that draft regardless of which file is subsequently opened; a new target is taken only when no draft is on screen (Practice: Incremental design).
 - All draft states, revision turns (up to 40), streaming behaviour, and context assembly rules from stories 025, 027, and 028 apply unchanged to update drafts.
 - The AI only drafts; the user decides with "Apply changes", and Discard leaves everything as it was (Practice: Pair programming).
+- The enablers are kept by the backend in the project's database (story 026): the browser sends the identity of the enabler and the change, never the stored document; the backend reads the document, its ADRs and its links to build the request. The text on screen travels back only with the update, because a draft exists only in the browser.
+- The update is one backend command: the new text, the title read again and the two messages are stored together in one transaction, so that neither is kept without the other (ADR-0017). The schema needs no change.
+- An enabler stays editable when an ADR it derives from is no longer Accepted, because it was approved when that ADR was Accepted; an enabler that no longer exists is refused before the model is called.
 
 ## Out of scope
 - Editing the enabler's text by hand in the file panel (a text box with Save and Ctrl+S).
@@ -61,18 +64,20 @@ As a team member, I want to open an architectural enabler and describe a change 
 - Undoing an apply, a history of versions, and comparing old and new text.
 - Updating a story, a driver, or an ADR by prompt (drivers and ADRs are immutable in the builder; stories have their own update stories).
 - A warning when an enabler that stories already build on is changed.
+- Detecting that a teammate changed the same enabler meanwhile: the update replaces the stored text with the draft.
 
 ## Tasks
-- [ ] Split the single `editable` flag on a builder entry into two flags: one for prompt-driven editing and one for hand-editing in the file panel; mark approved enablers as prompt-editable only (ADR-0007)
-- [ ] Implement target selection: when no draft is on screen and the open file is an approved enabler, set that enabler as the prompt target; clear the target when the file is closed or a non-enabler file is opened
-- [ ] Update the composer component to render editing mode: the "Editing …" chip, hidden ADR panel and Link button, updated placeholder, updated send-button label, "What should change?" heading, and no examples; restore new-enabler mode when the target is cleared (ADR-0007, ADR-0016)
-- [ ] Build the request payload for an edit: document type, task, file path, date, no identifier, the enabler's own ADRs and linked documents in full (one step through linked enablers, excluding the enabler itself), the full project context lists, "## Current document", and "## Requested change" (ADR-0017)
-- [ ] Add the edit instruction to the system prompt so the model returns the complete document with only the requested change applied (ADR-0007)
-- [ ] Start the draft in edit mode: record the target enabler's path and id in the draft, assign no new number, and show no ADR or link chips on the draft card
-- [ ] Change the approve button label to "Apply changes" for an edit draft and gate it on the Ready state
-- [ ] Implement `applyEdit` in the store: replace the enabler's stored text, re-read the title from the first `# ` line, append the two confirmation messages, and persist in a single save (ADR-0017)
-- [ ] Update the file panel to re-render immediately on apply without requiring the file to be reopened, and update the read-only note to the editing-mode wording
-- [ ] Write unit tests: target selection rules (enabler, driver, ADR, no file, with a draft in progress), request payload shape (no identifier, no self-reference in linked documents), apply (text replaced, title updated, messages added), discard (text unchanged), title fallback, persistence across reload, and a draft that outlives the open file (ADR-0005, ADR-0016)
+- [X] Make an approved enabler the target of the prompt without making it editable by hand: the open file carries the identity of the enabler, and the panel stays read-only (ADR-0007)
+- [X] Implement target selection: when no draft is on screen and the open file is an approved enabler, set that enabler as the prompt target; clear the target when the file is closed or a non-enabler file is opened
+- [X] Update the composer component to render editing mode: the "Editing …" chip, hidden ADR panel and Link button, updated placeholder, updated send-button label, "What should change?" heading, and no examples; restore new-enabler mode when the target is cleared (ADR-0007, ADR-0016)
+- [X] Build the request for an edit in the backend, from the identity of the enabler and the change: document type, task, file path, date, no identifier, the ADRs of the enabler by label, its linked documents in full (one step through linked enablers, excluding the enabler itself), the existing enablers and stories, "## Current document", and "## Requested change", after the project context of story 028; refuse an unknown enabler before the model is called (ADR-0017)
+- [X] Add the edit instruction to the system prompt so the model returns the complete document with only the requested change applied (ADR-0007)
+- [X] Start the draft in edit mode: record the target enabler's path and id in the draft, assign no new number, and show no ADR or link chips on the draft card
+- [X] Change the approve button label to "Apply changes" for an edit draft and gate it on the Ready state
+- [X] Implement the update in the backend (command and handler, `update` on the repository and its JPA adapter, `PUT` on the enabler with OpenAPI): replace the enabler's stored text, re-read the title from the first `# ` line, append the two confirmation messages, in one transaction (ADR-0017, ADR-0011, ADR-0014)
+- [X] Update the file panel to re-render immediately on apply without requiring the file to be reopened, and update the read-only note to the editing-mode wording
+- [X] Write Jest unit and acceptance tests: target selection rules (enabler, driver, ADR, no file, with a draft in progress), the request carrying the identity of the enabler, apply (text replaced, title updated, messages added, panel and tree refreshed), refusal and failure with the button pressable again, discard (text unchanged), title fallback, persistence with the browser's storage cleared, and a draft that outlives the open file (ADR-0005, ADR-0016)
+- [X] Write JUnit tests for the domain and the application (revise, title, messages, unknown enabler, the exact edit request, no Accepted check, the cap of 40 turns), a Testcontainers test for the update and its persistence, REST controller tests (200, 400, 404 and the draft field), and an ArchUnit rule that the new command and adapters stay in their hexagonal layers (ADR-0005, ADR-0009, ADR-0012, ADR-0014)
 
 ## Files of the spike
 

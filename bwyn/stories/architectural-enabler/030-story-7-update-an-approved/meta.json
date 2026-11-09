@@ -46,6 +46,26 @@
     {
       "id": "mw9aohgmzw1jz9",
       "text": "Write unit tests: target selection rules (enabler, driver, ADR, no file, with a draft in progress), request payload shape (no identifier, no self-reference in linked documents), apply (text replaced, title updated, messages added), discard (text unchanged), title fallback, persistence across reload, and a draft that outlives the open file (ADR-0005, ADR-0016)"
+    },
+    {
+      "id": "mw9lpvi7ep0maw",
+      "text": "Make an approved enabler the target of the prompt without making it editable by hand: the open file carries the identity of the enabler, and the panel stays read-only (ADR-0007)"
+    },
+    {
+      "id": "mw9lpvi7te24bl",
+      "text": "Build the request for an edit in the backend, from the identity of the enabler and the change: document type, task, file path, date, no identifier, the ADRs of the enabler by label, its linked documents in full (one step through linked enablers, excluding the enabler itself), the existing enablers and stories, \"## Current document\", and \"## Requested change\", after the project context of story 028; refuse an unknown enabler before the model is called (ADR-0017)"
+    },
+    {
+      "id": "mw9lpvi7jts8qb",
+      "text": "Implement the update in the backend (command and handler, `update` on the repository and its JPA adapter, `PUT` on the enabler with OpenAPI): replace the enabler's stored text, re-read the title from the first `# ` line, append the two confirmation messages, in one transaction (ADR-0017, ADR-0011, ADR-0014)"
+    },
+    {
+      "id": "mw9lpvi7ztbaeg",
+      "text": "Write Jest unit and acceptance tests: target selection rules (enabler, driver, ADR, no file, with a draft in progress), the request carrying the identity of the enabler, apply (text replaced, title updated, messages added, panel and tree refreshed), refusal and failure with the button pressable again, discard (text unchanged), title fallback, persistence with the browser's storage cleared, and a draft that outlives the open file (ADR-0005, ADR-0016)"
+    },
+    {
+      "id": "mw9lpvi7l4ev8n",
+      "text": "Write JUnit tests for the domain and the application (revise, title, messages, unknown enabler, the exact edit request, no Accepted check, the cap of 40 turns), a Testcontainers test for the update and its persistence, REST controller tests (200, 400, 404 and the draft field), and an ArchUnit rule that the new command and adapters stay in their hexagonal layers (ADR-0005, ADR-0009, ADR-0012, ADR-0014)"
     }
   ]
 }
