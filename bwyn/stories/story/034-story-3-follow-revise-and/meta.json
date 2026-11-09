@@ -1,0 +1,39 @@
+{
+  "title": "Follow, revise and discard the draft of a story",
+  "prompt": "# Story 3: Follow, revise and discard the draft of a story\n\n- **Story**: XXX-follow-story-draft\n- **Created**: 2026-11-09\n- **Status**: Draft\n- **Demo**: send a story prompt, press Stop halfway and see \"Incomplete\"; write \"Add an acceptance test for a wrong password\" and see the whole\n  story written again; discard it and see the prompt come back for a story.\n\n## Story\n\nAs a team member, I want to see the state of the story's draft, to stop it, retry it, change it by asking, or discard it, so that I never wait\nwithout knowing and I get the story I mean before I approve it.\n\n## Acceptance tests\n\nWhat is the same as for an enabler\n\n- [ ] **Given** a draft of a story, **Then** every test of `story-architectural-enablers.md` story 2 (the chips \"Writing...\", \"Ready for review\",\n  \"Incomplete\" and \"Failed\", Stop, Retry, Discard, the composer's text while there is a draft, the token chips, the errors of the call, the\n  cancelling) and of story 4 (asking for changes, the whole document back, the turns, 40 turns, the cache points) holds for it.\n\nWhat is different\n\n- [ ] **Given** the card of a story draft, **Then** its tile is the story's (a document icon, blue), its path is\n  `stories/<number>-<slug>/story.md`, and the button that approves reads \"Approve and create story\".\n- [ ] **Given** a revision, **Then** the number, the slug, the planned path, the identifier and the links of the draft do not change. The\n  revision asks for the **whole** story again, tasks included.\n- [ ] **Given** a draft on screen, **Then** the checkbox \"Mark as architectural enabler\" and the Link button are not shown (story 1), and the\n  box says \"Ask for changes to the draft...\" with the button \"Send changes\".\n- [ ] **Given** the user presses Discard, **Then** the draft disappears and nothing is stored. **Given** the box after that, **Then** it is the\n  prompt for a new document with the checkbox **not** ticked (the box was reset when the draft was sent).\n- [ ] **Given** a stopped draft that is cut off in the middle of a task, **Then** it cannot be approved, and \"Send changes\" can complete it.\n\n## Business rules and constraints\n\n- A draft has one state (*streaming*, *ready*, *stopped* or *error*), and **only a ready draft can be approved**.\n- A draft lives on screen. It is lost if the page is reloaded.\n- A revision is an instruction on the whole draft. The AI returns the whole document, keeps the identifier and the date, and changes only what\n  was asked.\n- The text of the user's change is sent as typed, and the draft that is sent back is the one on screen.\n\n## Out of scope\n\n- Everything that story 2 and the enabler stories leave out: a history of drafts, keeping a draft after a reload, going back to an earlier\n  version of it, and comparing two versions.\n- Changing the links of a draft (discard it and start again).\n\n## Tasks\n\n- [ ] Show the story icon, the path and the approve label of a story on the draft card, from the kind of the draft.\n- [ ] Check that the states, Stop, Retry, Discard, the revision and the tokens, which the enabler stories build, work for a story draft with no\n  change of their own.\n- [ ] Hide the checkbox and the Link button while a draft is on screen, and show them again when it is gone.\n- [ ] Test with a fake backend: a story draft that streams, ends, is stopped, fails and is retried, is revised twice and discarded, and that\n  the number, the slug, the path and the links do not change in the revisions.",
+  "createdAt": "2026-11-09",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw9srbsdisadop",
+      "text": "Extend the draft-card component to read the document kind and render the story icon (blue), the path `stories/<number>-<slug>/story.md`, and the label \"Approve and create story\" when the kind is `story` (ADR-0007, `ui` layer)."
+    },
+    {
+      "id": "mw9srbsdxfyo98",
+      "text": "Add a ViewModel property that exposes the document kind so the draft card and the prompt box can derive their presentation from it without containing logic (ADR-0007, `interface-adapters` layer)."
+    },
+    {
+      "id": "mw9srbsdkx79yr",
+      "text": "Update the prompt-box component to hide the \"Mark as architectural enabler\" checkbox and the Link button while any draft is present, and restore them on discard or approval (ADR-0007, `ui` layer)."
+    },
+    {
+      "id": "mw9srbsdki3a8z",
+      "text": "Update the prompt-box placeholder and send-button label to \"Ask for changes to the draft…\" / \"Send changes\" while a story draft is present, reusing the same mechanism already built for enabler drafts (Practice: DRY and KISS)."
+    },
+    {
+      "id": "mw9srbsdx4oq9u",
+      "text": "Verify in a unit test that the ViewModel enforces the rule that only a *ready* draft may transition to *approved*, and that *stopped* and *error* states block approval (ADR-0007, `use-cases` layer)."
+    },
+    {
+      "id": "mw9srbsde4ig7p",
+      "text": "Write a Jest integration test with a fake backend covering: a story draft that streams, finishes, is stopped, fails, is retried, is revised twice, and is discarded; assert that number, slug, path, identifier and links are unchanged across revisions (Practice: Continuous integration)."
+    },
+    {
+      "id": "mw9srbsdwx0bq3",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
