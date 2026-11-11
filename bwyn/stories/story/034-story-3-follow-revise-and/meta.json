@@ -38,6 +38,42 @@
     {
       "id": "mwc5d4sugt0ja3",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build). (Open: the suite passes, but a full run takes about 25 minutes on this machine, beyond the ten-minute budget.)"
+    },
+    {
+      "id": "mwcj5g2r4axvtz",
+      "text": "Add `addStory` to the project store: persist the story record, its links, its tasks, and the two approval messages together in `localStorage` (Architecture: infrastructure layer)."
+    },
+    {
+      "id": "mwcj5g2r3saxbr",
+      "text": "Implement title extraction from the first `# ` line of the Markdown, stripping \"Story:\", \"Feature specification:\", and \"AE-`<digits>`.\" prefixes, with the prompt-sentence fallback (Architecture: use-case layer)."
+    },
+    {
+      "id": "mwcj5g2rqjxxhr",
+      "text": "Implement task extraction from `## Tasks`: parse non-indented list items, skip empty checkboxes and indented items, stop at a horizontal rule or the next heading, and deduplicate by normalised text (Architecture: use-case layer)."
+    },
+    {
+      "id": "mwcj5g2r6yk44i",
+      "text": "Build the approval confirmation message and the \"Open file\" card, including the link-count suffix (Architecture: interface-adapter layer)."
+    },
+    {
+      "id": "mwcj5g2r97azzw",
+      "text": "Enable \"Approve and create story\" only when the draft state is Ready; keep it disabled for all other states (Architecture: UI layer)."
+    },
+    {
+      "id": "mwcj5g2rp1b5ti",
+      "text": "Update the `stories` folder in the tree: list story folders in number order, show `story.md` inside each, update the folder count, open `stories` and the new folder after approval, and replace the placeholder text with \"No stories yet. Write a prompt.\" when empty (Architecture: UI layer)."
+    },
+    {
+      "id": "mwcj5g2rzl606l",
+      "text": "Implement the read-only story file panel: story icon, path, Close, rendered and Markdown views, tree rail, prompt column, lock indicator with read-only message, and no editing controls (Architecture: UI layer)."
+    },
+    {
+      "id": "mwcj5g2rlnqy9w",
+      "text": "Wire the \"Open file\" card in the conversation and the `story.md` node in the tree to open the read-only panel (Architecture: UI layer)."
+    },
+    {
+      "id": "mwcj5g2rs9tpft",
+      "text": "Write Jest tests covering: approval happy path, title extraction rules, task extraction rules (list styles, empty checkboxes, indented items, horizontal-rule termination, duplicates, no-Tasks section), second story numbering, tree state after approval, page-reload persistence, two-project isolation, and discard behaviour (Practice: Ten-Minute Build)."
     }
   ]
 }
