@@ -34,6 +34,10 @@
     {
       "id": "mw9srbsdwx0bq3",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mwc5d4sugt0ja3",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build). (Open: the suite passes, but a full run takes about 25 minutes on this machine, beyond the ten-minute budget.)"
     }
   ]
 }
