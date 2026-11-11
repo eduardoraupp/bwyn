@@ -1,0 +1,39 @@
+{
+  "title": "Let the model know the project, for a story",
+  "prompt": "# Story 5: Let the model know the project, for a story\n\n- **Story**: XXX-story-project-context\n- **Created**: 2026-11-09\n- **Status**: Draft\n- **Demo**: write the architecture on the Architecture page, then draft a story in a project that has ADRs, principles, enablers and stories, and\n  read in the draft that it puts each rule in the right layer and does not repeat what another story or enabler covers.\n\n## Story\n\nAs a team member, I want the AI to know the decisions, the principles, the practices, the architecture and the work already described in my\nproject, so that the story it drafts fits them and does not contradict or repeat them.\n\n## Acceptance tests\n\nWhat the model is given (checked on the request a fake backend receives)\n\n- [ ] **Given** a request for a story, **Then** the first user message has the stable project context of `story-architectural-enablers.md`\n  (story 5): the ADRs, the links, the scope of every story and enabler, the principles and the practices, then a cache point, then the request.\n- [ ] **Given** the architecture of the project has text (saved on the Architecture page), **Then** the context ends with \"## Architecture of the\n  system (the layers a story must respect)\" and that text, without the spaces around it. **Given** it is empty, **Then** that section is left out.\n- [ ] **Given** an **enabler** request, **Then** the context has no architecture section (that is for stories only).\n- [ ] **Given** the user has unsaved text on the Architecture page, **Then** the context has the **saved** text.\n- [ ] **Given** the request, **Then** it has \"Document type: user story\", \"Assigned identifier: 001-<slug>\", \"Today's date: <date>\", the linked documents\n  (story 6), \"## Existing architectural enablers\", \"## Existing stories\" and \"## Description\", and **no** \"Derives from (ADRs)\".\n- [ ] **Given** the same project and the same links, **When** the user asks twice, **Then** the context block is identical, so that the second\n  request reads it from the prompt cache. **Given** a changed architecture, ADR, link, scope, principle or practice, **Then** the block changes.\n- [ ] **Given** the system prompt, **Then** it gives the template of a user story and the story rules (the Reference), and asks for one Markdown document\n  with no introduction, no closing remark and no code fence.\n\nWhat the draft is like (checked by reading drafts from a real model; they are not automated)\n\n- [ ] **Given** an architecture with layers, **Then** the story puts each rule in the right layer, breaks no dependency rule between layers, names the\n  layer when it helps, cites it as \"(Architecture)\", and leaves a part that does not fit the layers out, naming it under Out of scope.\n- [ ] **Given** a request that conflicts with an Accepted ADR, **Then** the story leaves that part out and names it under Out of scope.\n- [ ] **Given** a story or an enabler that already covers part of the request, **Then** the draft does not repeat it or take it over, and respects what\n  it leaves out of scope.\n- [ ] **Given** a non-negotiable practice or a principle, **Then** the draft does not contradict it, and cites it in brackets when a rule comes from\n  it, for example (Practice: Stories) or (Principle: <name>).\n- [ ] **Given** a linked driver or ADR that shapes a rule, **Then** the draft cites it, for example (Driver: Constraints) or (ADR 0002).\n- [ ] **Given** drivers, **Then** they reach the model only through a link (story 6), never in the project context.\n\n## Business rules and constraints\n\n- **Stable first, dynamic after.** The context changes only when an ADR, a link, a scope, a principle, a practice or the architecture changes.\n  What changes with each request (the identifier, the date, the links, the user's text) comes after the cache point.\n- The architecture goes with **stories only**: a story is checked against its layers, an enabler is the work that builds them.\n- The context is the same for the draft, the revision and (later) the update of a story. The assistants of drivers, ADRs, principles and the\n  architecture have their own, smaller context.\n- Drivers are linked by the user, never sent on their own.\n\n## Out of scope\n\n- Checking that a draft is right. The user reviews it (\"Pair programming\").\n- Choosing or tuning the model, and the cost of tokens (Settings).\n- The enabler's own context (`story-architectural-enablers.md`, story 5).\n\n## Tasks\n\n- [ ] Add the architecture to the context for a story (saved text, in its section, left out when empty) and leave it out for an enabler.\n- [ ] Write the story rules of the system prompt and the story template (the Reference), apart from the enabler's, and keep the checks of layers and\n  ADRs.\n- [ ] Test the builders: the exact text for a small project with and without architecture, that an enabler has none, that the context is the same\n  twice and different after a change to the architecture, and that the saved text is used.\n- [ ] Read ten drafts from the real model for different prompts, layers, ADRs and existing stories, and fix the system prompt until they follow\n  the checklist above.",
+  "createdAt": "2026-11-09",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mw9supqcdn58kq",
+      "text": "Extend the story-draft backend endpoint to read the saved architecture text from the database and include it in the stable context block when non-empty, omitting it when empty (ADR-0008, ADR-0017: application layer reads the port, outbound adapter fetches the value)"
+    },
+    {
+      "id": "mw9supqckjmy1o",
+      "text": "Write the system prompt for story drafting: user-story template plus story-writing rules (one Markdown document, no preamble, no closing remark, no code fence), kept in a named constant separate from the enabler system prompt (Principle: SRP)"
+    },
+    {
+      "id": "mw9supqciz6laj",
+      "text": "Assemble the stable context block (ADRs, links, scopes, principles, practices, optional architecture section) in a dedicated application-layer service, with a cache key derived from a hash of its inputs so the block is rebuilt only when its inputs change"
+    },
+    {
+      "id": "mw9supqch3w6vt",
+      "text": "Write unit tests asserting the exact stable context text for a small fixed project fixture: with architecture text, without architecture text, and confirming the architecture section is absent for an enabler request"
+    },
+    {
+      "id": "mw9supqc95oqqm",
+      "text": "Write a unit test asserting that submitting two requests with identical project state produces an identical stable context block, and that changing the saved architecture text produces a different block"
+    },
+    {
+      "id": "mw9supqc7j49o1",
+      "text": "Write a unit test asserting that the per-request block contains `Document type: user story`, `Assigned identifier`, `Today's date`, linked documents, `## Existing architectural enablers`, `## Existing stories`, `## Description`, and no `Derives from (ADRs)` field"
+    },
+    {
+      "id": "mw9supqcc5npis",
+      "text": "Run ten story drafts against the real model with varied prompts, layer configurations, ADR conflicts, and existing stories; adjust the system prompt until all manual checklist items above pass consistently"
+    }
+  ]
+}
