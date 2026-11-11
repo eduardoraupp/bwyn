@@ -50,6 +50,10 @@
     {
       "id": "mw9swwrdoz8zw4",
       "text": "Verify the full build and test suite still passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)."
+    },
+    {
+      "id": "mwcj4i2iv1lymi",
+      "text": "Verify the full build and test suite still passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration). (Open: the suites that touch this story pass, but a full frontend run takes about 25 minutes on this machine, beyond the ten-minute budget.)"
     }
   ]
 }
