@@ -10,28 +10,28 @@ As a team member, I want to describe in my own words what a user needs, so that 
 ## Acceptance tests
 
 **Sending**
-- [ ] **Given** the checkbox is not ticked and the prompt box has text, **When** the user presses Enter or the send button, **Then** the box is cleared, the text appears as a message on the right (as typed, with its line breaks), and a draft card appears beneath it.
-- [ ] **Given** the prompt box is empty or contains only spaces, **Then** the send button is disabled.
-- [ ] **Given** a draft card is shown, **Then** it displays the story icon (a document in a blue tile), the planned path `stories/001-as-a-returning-customer-i/story.md` (complete as a tooltip), the chip "Writing…", and the draft text as it arrives; it shows no ADR chips (a story derives from none), and shows link chips if the story has links.
-- [ ] **Given** no model is connected to the project, **When** the user sends, **Then** the draft card shows a failure message: "No model is connected for this project. Connect one in Integrations."
+- [X] **Given** the checkbox is not ticked and the prompt box has text, **When** the user presses Enter or the send button, **Then** the box is cleared, the text appears as a message on the right (as typed, with its line breaks), and a draft card appears beneath it.
+- [X] **Given** the prompt box is empty or contains only spaces, **Then** the send button is disabled.
+- [X] **Given** a draft card is shown, **Then** it displays the story icon (a document in a blue tile), the planned path `stories/001-as-a-returning-customer-i/story.md` (complete as a tooltip), the chip "Writing…", and the draft text as it arrives; it shows no ADR chips (a story derives from none), and shows link chips if the story has links.
+- [X] **Given** no model is connected to the project, **When** the user sends, **Then** the draft card shows a failure message: "No model is connected for this project. Connect one in Integrations."
 
 **The number and the slug**
-- [ ] **Given** stories 001 and 002 already exist, **Then** the planned number for the next story is `003`: the highest story number across all stories (inside a theme or not) plus one, zero-padded to three digits, and `001` when no story exists yet.
-- [ ] **Given** the prompt "As a returning customer, I want to sign in with my email and password, so that I can see my orders.", **Then** the slug is `as-a-returning-customer-i`: the first five words of the prompt, lower-cased, accents removed, only characters `a-z` and `0-9` joined by `-`, at most 48 characters total, and `untitled` when nothing remains after normalisation; the folder is `001-as-a-returning-customer-i`.
-- [ ] **Given** two stories whose prompts start with the same five words, **Then** their folders differ because their numbers differ.
-- [ ] **Given** the identifier sent to the model, **Then** it equals the folder name, e.g. `001-as-a-returning-customer-i`.
+- [X] **Given** stories 001 and 002 already exist, **Then** the planned number for the next story is `003`: the highest story number across all stories (inside a theme or not) plus one, zero-padded to three digits, and `001` when no story exists yet.
+- [X] **Given** the prompt "As a returning customer, I want to sign in with my email and password, so that I can see my orders.", **Then** the slug is `as-a-returning-customer-i`: the first five words of the prompt, lower-cased, accents removed, only characters `a-z` and `0-9` joined by `-`, at most 48 characters total, and `untitled` when nothing remains after normalisation; the folder is `001-as-a-returning-customer-i`.
+- [X] **Given** two stories whose prompts start with the same five words, **Then** their folders differ because their numbers differ.
+- [X] **Given** the identifier sent to the model, **Then** it equals the folder name, e.g. `001-as-a-returning-customer-i`.
 
 **The request**
-- [ ] **Given** the user sends a story prompt, **Then** the browser calls only the BWYN backend; it never calls the model provider directly (ADR-0008).
-- [ ] **Given** the request body sent to the backend, **Then** it contains "Document type: user story", "Assigned identifier: 001-as-a-returning-customer-i", today's date, and the user's text under "Description"; it contains no "Derives from (ADRs)" section.
-- [ ] **Given** a new prompt is sent while a draft is still being written, **Then** the in-flight request is cancelled before the new one starts.
+- [X] **Given** the user sends a story prompt, **Then** the browser calls only the BWYN backend; it never calls the model provider directly (ADR-0008).
+- [X] **Given** the request body sent to the backend, **Then** it contains "Document type: user story", "Assigned identifier: 001-as-a-returning-customer-i", today's date, and the user's text under "Description"; it contains no "Derives from (ADRs)" section.
+- [X] **Given** a new prompt is sent while a draft is still being written, **Then** the in-flight request is cancelled before the new one starts.
 
 **Shape of the draft (verified by reading output from a real model; not automated)**
-- [ ] **Given** a draft, **Then** it follows the story template: `# Story: <short title>`, the metadata lines Story, Created, and Status (Draft), and the sections Story, Acceptance tests, Business rules and constraints, Out of scope, and Tasks.
-- [ ] **Given** the acceptance tests in the draft, **Then** each is a concrete Given/When/Then example with real values from the request, written as an unchecked box (`- [ ]`), never numbered and never pre-checked.
-- [ ] **Given** the Tasks section, **Then** each task is a small engineering step written as an unchecked box starting with a verb, listed in the order it is done, covering the acceptance tests and nothing beyond them.
-- [ ] **Given** a request that is larger than one iteration, **Then** the draft covers only the first and most valuable slice and names what was left out under Out of scope.
-- [ ] **Given** a draft, **Then** it names no technology and no code structure, makes no estimate, uses the role from the request (defaulting to "user" when none is given), and invents no facts; missing information appears as the smallest reasonable assumption under Business rules and constraints.
+- [ ] **Given** a draft, **Then** it follows the story template: `# Story: <short title>`, the metadata lines Story, Created, and Status (Draft), and the sections Story, Acceptance tests, Business rules and constraints, Out of scope, and Tasks. (Open: the system prompt carries this rule and is tested, but the draft has not yet been read from a real model.)
+- [ ] **Given** the acceptance tests in the draft, **Then** each is a concrete Given/When/Then example with real values from the request, written as an unchecked box (`- [ ]`), never numbered and never pre-checked. (Open: the system prompt carries this rule and is tested, but the draft has not yet been read from a real model.)
+- [ ] **Given** the Tasks section, **Then** each task is a small engineering step written as an unchecked box starting with a verb, listed in the order it is done, covering the acceptance tests and nothing beyond them. (Open: the system prompt carries this rule and is tested, but the draft has not yet been read from a real model.)
+- [ ] **Given** a request that is larger than one iteration, **Then** the draft covers only the first and most valuable slice and names what was left out under Out of scope. (Open: the system prompt carries this rule and is tested, but the draft has not yet been read from a real model.)
+- [ ] **Given** a draft, **Then** it names no technology and no code structure, makes no estimate, uses the role from the request (defaulting to "user" when none is given), and invents no facts; missing information appears as the smallest reasonable assumption under Business rules and constraints. (Open: the system prompt carries this rule and is tested, but the draft has not yet been read from a real model.)
 
 ## Business rules and constraints
 - A story lives at `stories/<number>-<slug>/story.md`; the folder name is its permanent identity and the base of every link to it.
@@ -52,16 +52,16 @@ As a team member, I want to describe in my own words what a user needs, so that 
 - Theme assignment: a new story starts outside any theme.
 
 ## Tasks
-- [ ] Implement the story-number calculation: query all existing stories (in and out of themes), find the highest number, add one, and zero-pad to three digits.
-- [ ] Implement slug generation from the prompt: take the first five words, lower-case, strip accents, keep only `a-z0-9`, join with `-`, truncate to 48 characters, fall back to `untitled`.
-- [ ] Compose the planned path `stories/<number>-<slug>/story.md` and the identifier `<number>-<slug>` as soon as the user sends.
-- [ ] Write the story section of the system prompt (rules and template) and split it from the enabler section so each document type uses its own template.
-- [ ] Build the request body for a story: "Document type: user story", the identifier, today's date, and the user's description; omit the "Derives from (ADRs)" section.
-- [ ] Wire the send action: clear the prompt box, display the user message on the right, open the draft card with the story icon (blue tile), the planned path as a tooltip, and the "Writing…" chip.
-- [ ] Stream the model response into the draft card text area, cancelling any in-flight request when a new one starts.
-- [ ] Show the failure message "No model is connected for this project. Connect one in Integrations." in the draft card when no model is configured.
-- [ ] Disable the send button when the prompt box is empty or contains only whitespace.
-- [ ] Write unit tests with a fake backend covering: number calculation with and without themes, slug generation edge cases, identifier composition, and the exact request body sent to the backend.
+- [X] Implement the story-number calculation: query all existing stories (in and out of themes), find the highest number, add one, and zero-pad to three digits.
+- [X] Implement slug generation from the prompt: take the first five words, lower-case, strip accents, keep only `a-z0-9`, join with `-`, truncate to 48 characters, fall back to `untitled`.
+- [X] Compose the planned path `stories/<number>-<slug>/story.md` and the identifier `<number>-<slug>` as soon as the user sends.
+- [X] Write the story section of the system prompt (rules and template) and split it from the enabler section so each document type uses its own template.
+- [X] Build the request body for a story: "Document type: user story", the identifier, today's date, and the user's description; omit the "Derives from (ADRs)" section.
+- [X] Wire the send action: clear the prompt box, display the user message on the right, open the draft card with the story icon (blue tile), the planned path as a tooltip, and the "Writing…" chip.
+- [X] Stream the model response into the draft card text area, cancelling any in-flight request when a new one starts.
+- [X] Show the failure message "No model is connected for this project. Connect one in Integrations." in the draft card when no model is configured.
+- [X] Disable the send button when the prompt box is empty or contains only whitespace.
+- [X] Write unit tests with a fake backend covering: number calculation with and without themes, slug generation edge cases, identifier composition, and the exact request body sent to the backend.
 
 # Reference
 
