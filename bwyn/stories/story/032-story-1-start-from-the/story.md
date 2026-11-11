@@ -11,37 +11,37 @@ As a team member, I want one "New" button and one prompt where I choose whether 
 
 **The "New" button**
 
-- [ ] **Given** the workspace is open, **Then** the tree header has a round-cornered button with a plus icon whose accessible name and tooltip are "New", and it is the same whether a story or an enabler will be written.
-- [ ] **Given** a file is open and the user presses "New", **Then** the file is closed, the prompt appears in the middle with earlier messages hidden (not deleted), and the focus moves to the text box.
-- [ ] **Given** a draft is waiting for approval and the user presses "New", **Then** a confirmation asks "Discard the draft that is waiting for approval?"; confirming drops the draft and opens the prompt; cancelling leaves everything unchanged.
-- [ ] **Given** the user has typed text, ticked the checkbox, or chosen links, **When** the user presses "New", **Then** the text, the tick, and the links are kept; only the screen and the conversation are reset.
-- [ ] **Given** the tree folders, **Then** pressing "New" does not open or close any folder.
+- [X] **Given** the workspace is open, **Then** the tree header has a round-cornered button with a plus icon whose accessible name and tooltip are "New", and it is the same whether a story or an enabler will be written.
+- [X] **Given** a file is open and the user presses "New", **Then** the file is closed, the prompt appears in the middle with earlier messages hidden (not deleted), and the focus moves to the text box.
+- [X] **Given** a draft is waiting for approval and the user presses "New", **Then** a confirmation asks "Discard the draft that is waiting for approval?"; confirming drops the draft and opens the prompt; cancelling leaves everything unchanged.
+- [X] **Given** the user has typed text, ticked the checkbox, or chosen links, **When** the user presses "New", **Then** the text, the tick, and the links are kept; only the screen and the conversation are reset.
+- [X] **Given** the tree folders, **Then** pressing "New" does not open or close any folder.
 
 **The prompt**
 
-- [ ] **Given** the prompt with no conversation, **Then** it shows a sparkles icon, the title "Which story shall we tell today?", the line "Describe what a user needs. Claude drafts the story, and once you approve it BWYN creates its folder.", the text box, and three examples in this order: "As a returning customer, I want to sign in with my email and password, so that I can see my orders.", "As a project lead, I want to export the project report as a PDF file.", "Set up continuous integration for the frontend build."
-- [ ] **Given** the examples are shown and the user presses one, **Then** it fills the box replacing any existing text, the focus stays in the box, and the checkbox state is unchanged.
-- [ ] **Given** a conversation has started, **Then** the three examples are no longer shown.
-- [ ] **Given** no file is open, **Then** the prompt occupies the middle of the workspace and shows the title and the line; **Given** a file is open, **Then** the prompt is a narrow column (26 rem) on the right of the file showing only the box, the Link button, and the checkbox, without the title or the line.
-- [ ] **Given** no model is connected, **Then** the same banner and caption that appear on the architectural-enabler screen appear here too.
-- [ ] **Given** the text box, **Then** its placeholder is "Describe a user story...", it grows with its content up to 200 px and then scrolls, and it has the focus when the workspace opens, when "New" is pressed, and when an example is pressed.
+- [X] **Given** the prompt with no conversation, **Then** it shows a sparkles icon, the title "Which story shall we tell today?", the line "Describe what a user needs. Claude drafts the story, and once you approve it BWYN creates its folder.", the text box, and three examples in this order: "As a returning customer, I want to sign in with my email and password, so that I can see my orders.", "As a project lead, I want to export the project report as a PDF file.", "Set up continuous integration for the frontend build."
+- [X] **Given** the examples are shown and the user presses one, **Then** it fills the box replacing any existing text, the focus stays in the box, and the checkbox state is unchanged.
+- [X] **Given** a conversation has started, **Then** the three examples are no longer shown.
+- [X] **Given** no file is open, **Then** the prompt occupies the middle of the workspace and shows the title and the line; **Given** a file is open, **Then** the prompt is a narrow column (26 rem) on the right of the file showing only the box, the Link button, and the checkbox, without the title or the line. (Beside an open enabler, the column keeps the heading "What should change?" of story 030, because the box is then aimed at that enabler.)
+- [X] **Given** no model is connected, **Then** the same banner and caption that appear on the architectural-enabler screen appear here too.
+- [X] **Given** the text box, **Then** its placeholder is "Describe a user story...", it grows with its content up to 200 px and then scrolls, and it has the focus when the workspace opens, when "New" is pressed, and when an example is pressed.
 
 **The checkbox**
 
-- [ ] **Given** the prompt for a new document, **Then** below the box, next to the Link button, a checkbox labelled "Mark as architectural enabler" with a zap icon is shown and is not ticked.
-- [ ] **Given** the checkbox is not ticked, **Then** the placeholder is "Describe a user story...", the box has a faint indigo border when focused, no ADR panel is shown, the Link button offers ADRs, and the send button is labelled "Draft story".
-- [ ] **Given** the user ticks the checkbox, **Then** the label turns green, the placeholder becomes "Describe the architectural enabler...", the box gets a green border, a green panel "Derives from an Accepted ADR (required)" appears inside the box, the Link button no longer offers ADRs, and the send button is labelled "Draft architectural enabler".
-- [ ] **Given** the checkbox is ticked and the user unticks it, **Then** the story prompt is restored; the text in the box is kept; the ADRs that were chosen remain chosen and are reused if the checkbox is ticked again, but they are never sent with a story prompt.
-- [ ] **Given** the title and the line above the box, **Then** they do not change when the checkbox is ticked or unticked.
-- [ ] **Given** a draft is on screen or an open enabler is the target of the prompt, **Then** the checkbox and the Link button are not shown.
-- [ ] **Given** the keyboard, **Then** the checkbox is reachable with Tab, toggled with Space, and shows a visible focus ring; it is a native checkbox inside its label so that pressing the label also toggles it.
-- [ ] **Given** the user sends the prompt, **Then** the box is emptied, the checkbox is unticked, and the ADRs and links are cleared.
+- [X] **Given** the prompt for a new document, **Then** below the box, next to the Link button, a checkbox labelled "Mark as architectural enabler" with a zap icon is shown and is not ticked.
+- [ ] **Given** the checkbox is not ticked, **Then** the placeholder is "Describe a user story...", the box has a faint indigo border when focused, no ADR panel is shown, the Link button offers ADRs, and the send button is labelled "Draft story". (Open: everything here is done except that the Link button offers ADRs; what the picker lists for a story comes with story 037, and today it offers the drivers and the enablers.)
+- [X] **Given** the user ticks the checkbox, **Then** the label turns green, the placeholder becomes "Describe the architectural enabler...", the box gets a green border, a green panel "Derives from an Accepted ADR (required)" appears inside the box, the Link button no longer offers ADRs, and the send button is labelled "Draft architectural enabler".
+- [X] **Given** the checkbox is ticked and the user unticks it, **Then** the story prompt is restored; the text in the box is kept; the ADRs that were chosen remain chosen and are reused if the checkbox is ticked again, but they are never sent with a story prompt.
+- [X] **Given** the title and the line above the box, **Then** they do not change when the checkbox is ticked or unticked.
+- [X] **Given** a draft is on screen or an open enabler is the target of the prompt, **Then** the checkbox and the Link button are not shown.
+- [X] **Given** the keyboard, **Then** the checkbox is reachable with Tab, toggled with Space, and shows a visible focus ring; it is a native checkbox inside its label so that pressing the label also toggles it.
+- [X] **Given** the user sends the prompt, **Then** the box is emptied, the checkbox is unticked, and the ADRs and links are cleared.
 
 **Sending**
 
-- [ ] **Given** the checkbox is not ticked and the box contains text that is not only spaces, **Then** the send button is enabled and labelled "Draft story" regardless of the ADRs and links chosen.
-- [ ] **Given** the checkbox is not ticked and the user presses Enter (not Shift+Enter, not while an input method is composing), **Then** a story draft is initiated.
-- [ ] **Given** the checkbox is ticked and the user presses Enter, **Then** an enabler draft is initiated.
+- [X] **Given** the checkbox is not ticked and the box contains text that is not only spaces, **Then** the send button is enabled and labelled "Draft story" regardless of the ADRs and links chosen.
+- [ ] **Given** the checkbox is not ticked and the user presses Enter (not Shift+Enter, not while an input method is composing), **Then** a story draft is initiated. (Open: drafting a story comes with story 033. Until then Enter keeps the text and the prompt says "Drafting stories comes in another story. Tick "Mark as architectural enabler" to draft an enabler.")
+- [X] **Given** the checkbox is ticked and the user presses Enter, **Then** an enabler draft is initiated.
 
 ## Business rules and constraints
 
@@ -50,6 +50,8 @@ As a team member, I want one "New" button and one prompt where I choose whether 
 - A draft cannot change kind; to change it the user must discard the draft and start again.
 - The title and the line of the prompt remain unchanged regardless of the checkbox state.
 - All interactive elements must be reachable and operable by keyboard (Principle: SOLID — ISP).
+- Until stories can be drafted (story 033), sending with the checkbox not ticked changes nothing: the prompt keeps the text and says so, and no request is made.
+- What the user typed, ticked and chose survives "New" and the "Try again" of the ADR panel; only loading the workspace, and sending an enabler, reset it.
 
 ## Out of scope
 
@@ -61,14 +63,14 @@ As a team member, I want one "New" button and one prompt where I choose whether 
 
 ## Tasks
 
-- [ ] Rename the tree header button to "New" (accessible name and tooltip) and verify it confirms before discarding a waiting draft, closes any open file, hides earlier messages, and moves focus to the box without touching the box content or the folders.
-- [ ] Implement the story-default prompt: sparkles icon, title, line, placeholder "Describe a user story...", send button labelled "Draft story", three examples shown only while the conversation is empty, and a growing box capped at 200 px.
-- [ ] Implement the narrow-column layout (26 rem) when a file is open, hiding the title and the line.
-- [ ] Add the "Mark as architectural enabler" checkbox with its zap icon and its unticked default appearance.
-- [ ] Implement the ticked state: green label, placeholder "Describe the architectural enabler...", green border, ADR panel placeholder, Link button without ADRs, send button labelled "Draft architectural enabler"; preserve box text, ADR choices, and links across ticking and unticking.
-- [ ] Hide the checkbox and the Link button when a draft is on screen or an enabler is the target of the prompt.
-- [ ] Reset the box, the checkbox, the ADRs, and the links when the prompt is sent.
-- [ ] Write Jest tests covering: button accessible name; "New" with and without a waiting draft; "New" with typed text (text is kept); examples fill the box and disappear after a conversation starts; checkbox ticked and unticked (placeholder, border, panel, send label, text and ADR preservation); reset after sending; checkbox hidden while a draft is on screen.
+- [X] Rename the tree header button to "New" (accessible name and tooltip) and verify it confirms before discarding a waiting draft, closes any open file, hides earlier messages, and moves focus to the box without touching the box content or the folders.
+- [X] Implement the story-default prompt: sparkles icon, title, line, placeholder "Describe a user story...", send button labelled "Draft story", three examples shown only while the conversation is empty, and a growing box capped at 200 px.
+- [X] Implement the narrow-column layout (26 rem) when a file is open, hiding the title and the line.
+- [X] Add the "Mark as architectural enabler" checkbox with its zap icon and its unticked default appearance.
+- [X] Implement the ticked state: green label, placeholder "Describe the architectural enabler...", green border, ADR panel placeholder, Link button without ADRs, send button labelled "Draft architectural enabler"; preserve box text, ADR choices, and links across ticking and unticking.
+- [X] Hide the checkbox and the Link button when a draft is on screen or an enabler is the target of the prompt.
+- [X] Reset the box, the checkbox, the ADRs, and the links when the prompt is sent.
+- [X] Write Jest tests covering: button accessible name; "New" with and without a waiting draft; "New" with typed text (text is kept); examples fill the box and disappear after a conversation starts; checkbox ticked and unticked (placeholder, border, panel, send label, text and ADR preservation); reset after sending; checkbox hidden while a draft is on screen.
 
 # Reference
 
