@@ -1,0 +1,51 @@
+{
+  "title": "Link a story to other documents",
+  "prompt": "# Story 2: Link a story to other documents\n\n- **Story**: XXX-link-story\n- **Created**: 2026-11-12\n- **Status**: Draft\n- **Demo**: open a story, press \"Add link\", check a driver, an ADR and an enabler, see the chips appear at once, remove one with its X, then\n  open the driver and find the story under \"Referenced by\".\n\n## Story\n\nAs a team member, I want to link a story to the drivers, ADRs, enablers and other stories that shape it, from the story's own panel, so that\nthe connection is kept with the story and the AI and the sync use it.\n\n## Acceptance tests\n\nThe rules of the builder (the view model, checked without rendering; the worked example in the Reference gives the data)\n\n- [ ] **Given** the documents of a project and a story as the target, **Then** the groups are, in this order, \"Drivers\", \"ADRs\", \"Architectural\n  enablers\" and \"Stories\", each with the options of its kind, and a group with no option is left out.\n- [ ] **Given** the target, **Then** it is not in its own list, so a story can never link to itself.\n- [ ] **Given** the drivers, **Then** every driver is offered, written or not. **Given** the stories, **Then** every other story is offered,\n  inside a theme or not, by its label (`001. Sign in`), in order of number.\n- [ ] **Given** the ADRs, **Then** only an Accepted ADR is offered. **Given** an ADR that is already linked and is **no longer** Accepted,\n  **Then** it is still offered, checked, so that it can be unlinked.\n- [ ] **Given** a story, **Then** it has no locked option, and an ADR is an ordinary link: `applyLinkSelection` puts every reference in\n  `links` and returns no `derivesFrom`.\n- [ ] **Given** a consumer that hides a kind, **Then** that kind is not in the groups and not in the count.\n\nThe panel of a story\n\n- [ ] **Given** an open story, **Then** its panel has the heading \"Linked to\" with the button \"Add link\" on its right (the label \"Add link\"), the\n  chips of its links under it, and, while it has none, the line \"Not linked to any driver, ADR, enabler or story yet.\" It has no \"Derives from\".\n- [ ] **Given** the button, **Then** it is the shared `LinkPicker` of story 1 with the groups of the view model, and shows the count of the story's\n  links.\n- [ ] **Given** the user checks an option, **Then** the link is kept **at once**: there is no Save, the text of the story, its title and its\n  tasks are not touched, and the chip, the count on the button and the checkbox all change in the same moment.\n- [ ] **Given** the user checks an ADR, **Then** its chip appears under \"Linked to\" with the others, in the order they were linked.\n- [ ] **Given** the chips, **Then** each has the icon and tone of its kind (driver indigo, ADR amber, enabler green, story blue) and an X.\n  **When** the user presses the X, **Then** that link is removed and its checkbox is unchecked. **When** the user presses the label, **Then**\n  that document opens in the panel.\n- [ ] **Given** a link to a document that does not exist any more, **Then** no chip shows for it and nothing fails.\n- [ ] **Given** a story that is in a theme, or is moved into one (`story-group-stories-by-theme.md`), **Then** its links and the links to it are\n  unchanged, because a link names the folder and not the theme.\n- [ ] **Given** the note of the panel, **Then** it still says \"Read-only here. Changing a story comes in another story.\", and the panel has no\n  text box and no Save. Only the links change.\n\n\"Referenced by\", in every panel\n\n- [ ] **Given** any document that something links to (a driver, an ADR, an enabler or a story), **Then** its panel shows \"Referenced by\" with a\n  chip for each document that links to it or derives from it, and each chip opens that document.\n- [ ] **Given** a link was just added from another document, **Then** the open panel shows it at once.\n- [ ] **Given** a driver or an ADR is open (they are immutable), **Then** its panel has no \"Add link\" and no \"Linked to\", only \"Referenced by\".\n\nWhat the links do\n\n- [ ] **Given** a story is linked to an ADR, **Then** a request about it reads that ADR as \"linked\", in full, with the others\n  (`story-create-story.md`, story 6), and **Given** it is linked to an enabler, **Then** the documents that enabler links to, and its ADRs, come\n  with it, one step further.\n- [ ] **Given** a link, **Then** the documents it connects are in the same sync (`story-git-integration.md`): the sync of the story covers the\n  documents it links to, and those that link to it.\n- [ ] **Given** the link is stored in the repository, **Then** the story's `meta.json` has `links`, sorted, and a pull brings it back.\n\nKeeping them\n\n- [ ] **Given** the page is reloaded, **Then** the links of each story are still there. **Given** two projects, **Then** each keeps its own.\n\n## Business rules and constraints\n\n- A link is a **stable reference** made from the name of the file (`driver:constraints`, `adr:0006`, `enabler:0001-set-up-...`,\n  `story:001-...`), never from a random id, so that it means the same on every machine and when a story moves into a theme.\n- A story **cannot link to itself**. Links may go both ways between two documents, and a chain may loop: the picker does not check.\n- **Only an Accepted ADR can be newly linked** (`story-adrs.md`).\n- A story's links are all in `links`. Adding or removing a link changes **only** the links. It does not change the text, the title or the dates.\n- Drivers and ADRs are immutable in the builder: they have no links of their own.\n\n## Out of scope\n\n- Editing the text of the story by hand, its tasks, diagrams and UI example, deleting it, and synchronising it.\n- Linking from the prompt (story 4), and the ADRs an enabler derives from (story 3).\n- A search box, grouping by theme in the list, a rule about which kinds may link to which, a graph of links, and a warning about the effect of\n  a link on the sync or on what the AI reads.\n- Deleting a story or an enabler (the spike removes the links to it from the others; that belongs to deleting).\n\n## Tasks\n\n- [ ] **Write the view model's tests first**: `linkChoices` for a story (the groups and their order, not itself, every driver, the stories of\n  themes, only Accepted ADRs and the linked one that is not, hidden kinds) and `applyLinkSelection` (everything in `links`).\n- [ ] Build `linkChoices` and `applyLinkSelection` for a story, with the kind order and headings, with no React.\n- [ ] Build the story panel's section \"Linked to\": the shared picker labelled \"Add link\", the chips (`LinkChip` with open and remove), the empty\n  line, and the write through the store's `patch`, without touching the text.\n- [ ] Show \"Referenced by\" in the panel of every document that something links to (drivers and ADRs too), updating at once.\n- [ ] Take the \"Add link\" of drivers and ADRs away (they are immutable) and keep \"Referenced by\".\n- [ ] Test: add, remove, an ADR as a link, a missing target, a story in a theme, reload, two projects, and that the text is unchanged.\n- [ ] Test the effect: the linked documents in the request and the `links` in `meta.json`.",
+  "createdAt": "2026-11-12",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwda62yv1k4o9z",
+      "text": "Write failing unit tests for `storyLinkChoices`: correct group order, target absent from its own list, every driver offered, every other story offered by label and number, only Accepted ADRs plus any already-linked non-Accepted one, hidden kinds excluded from groups and count."
+    },
+    {
+      "id": "mwda62yvft7z7f",
+      "text": "Implement `storyLinkChoices` in the interface-adapters layer until all tests pass (ADR-0007)."
+    },
+    {
+      "id": "mwda62yvi0m047",
+      "text": "Write failing unit tests for `applyStoryLinkSelection`: all selections land in `links`, `derivesFrom` is absent."
+    },
+    {
+      "id": "mwda62yv9gxb6g",
+      "text": "Implement `applyStoryLinkSelection` until all tests pass."
+    },
+    {
+      "id": "mwda62yvm2hfzc",
+      "text": "Add the \"Linked to\" section to the story panel: \"Add link\" button wired to the shared `LinkPicker` (story 038), `LinkChip` list with open-document and remove actions, empty-state line; write through the store's `patch` without touching the story text."
+    },
+    {
+      "id": "mwda62yvf2r12a",
+      "text": "Add the \"Referenced by\" section to every document panel (driver, ADR, enabler, story); update it reactively when any link changes."
+    },
+    {
+      "id": "mwda62yvno52x9",
+      "text": "Remove the \"Add link\" control from driver and ADR panels; confirm \"Referenced by\" remains."
+    },
+    {
+      "id": "mwda62yvmo9tzg",
+      "text": "Write integration tests: add a link, remove a link, link to an ADR, missing target shows no chip, story in a theme, page reload, two projects, story text unchanged after link operations."
+    },
+    {
+      "id": "mwda62yvlginx7",
+      "text": "Write tests confirming that linked documents are included in the generation request and that `meta.json` contains a sorted `links` array."
+    },
+    {
+      "id": "mwda62yv5g0int",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
