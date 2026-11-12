@@ -10,38 +10,38 @@ As a developer, I want a `LinkPicker` and a `LinkChip` that are plain React comp
 ## Acceptance tests
 
 **The button**
-- [ ] **Given** a `LinkPicker` with a label, **Then** it renders one button with a link icon and that label (default: "Link"), styled as a pill with a thin border, with `aria-haspopup="dialog"` and `aria-expanded="false"`.
-- [ ] **Given** options are selected, **Then** the button shows a small round count of the selected options that belong to its groups, and shows nothing when the count is zero; a selected value that belongs to no group is not counted.
-- [ ] **Given** the button, **When** the user presses it, **Then** a list opens with `role="dialog"` and accessible name "Choose what to link", and `aria-expanded` becomes `"true"`; **When** the user presses it again, **Then** the list closes.
+- [X] **Given** a `LinkPicker` with a label, **Then** it renders one button with a link icon and that label (default: "Link"), styled as a pill with a thin border, with `aria-haspopup="dialog"` and `aria-expanded="false"`.
+- [X] **Given** options are selected, **Then** the button shows a small round count of the selected options that belong to its groups, and shows nothing when the count is zero; a selected value that belongs to no group is not counted.
+- [X] **Given** the button, **When** the user presses it, **Then** a list opens with `role="dialog"` and accessible name "Choose what to link", and `aria-expanded` becomes `"true"`; **When** the user presses it again, **Then** the list closes.
 
 **The list**
-- [ ] **Given** the list, **Then** it renders the groups in the order they were given, each as a `fieldset` with its title as a small upper-case `legend`; each option is a checkbox with its label truncated with "…" when long and the full label as a tooltip; a group with no options is not rendered.
-- [ ] **Given** no groups, or groups with no options, **Then** the list renders the text "Nothing to link yet."
-- [ ] **Given** an option, **When** the user checks it, **Then** `onChange` is called once with the current selection plus that option appended; **When** the user unchecks it, **Then** `onChange` is called with the selection without it, preserving order.
-- [ ] **Given** the component is controlled, **Then** it holds no selection state of its own: checkboxes reflect `selected`, and a parent that ignores `onChange` leaves them unchanged.
-- [ ] **Given** an option that is locked with a reason, **Then** its checkbox is checked, disabled, and carries the reason as its tooltip; it cannot be unchecked by mouse or keyboard; it is counted as selected.
-- [ ] **Given** custom `label`, `dialogLabel`, or `emptyText` props, **Then** the component renders them in place of the defaults.
-- [ ] **Given** two `LinkPicker` instances on one page with different selections, **Then** each shows its own selection, and toggling in one does not affect the other.
+- [X] **Given** the list, **Then** it renders the groups in the order they were given, each as a `fieldset` with its title as a small upper-case `legend`; each option is a checkbox with its label truncated with "…" when long and the full label as a tooltip; a group with no options is not rendered.
+- [X] **Given** no groups, or groups with no options, **Then** the list renders the text "Nothing to link yet."
+- [X] **Given** an option, **When** the user checks it, **Then** `onChange` is called once with the current selection plus that option appended; **When** the user unchecks it, **Then** `onChange` is called with the selection without it, preserving order.
+- [X] **Given** the component is controlled, **Then** it holds no selection state of its own: checkboxes reflect `selected`, and a parent that ignores `onChange` leaves them unchanged.
+- [X] **Given** an option that is locked with a reason, **Then** its checkbox is checked, disabled, and carries the reason as its tooltip; it cannot be unchecked by mouse or keyboard; it is counted as selected.
+- [X] **Given** custom `label`, `dialogLabel`, or `emptyText` props, **Then** the component renders them in place of the defaults.
+- [X] **Given** two `LinkPicker` instances on one page with different selections, **Then** each shows its own selection, and toggling in one does not affect the other.
 
 **Closing and the keyboard**
-- [ ] **Given** the list is open, **When** the user presses Escape, clicks anywhere outside the button and the list, or presses the button again, **Then** the list closes and the selection is unchanged; a pointer event that starts inside the list and ends outside keeps it open.
-- [ ] **Given** the list opens via keyboard (Enter or Space on the button), **Then** focus moves to the first checkbox; Tab and Shift+Tab cycle through checkboxes; Space toggles the focused checkbox; **When** Escape closes the list, **Then** focus returns to the button.
-- [ ] **Given** the list opens via mouse, **Then** focus is not moved programmatically.
+- [X] **Given** the list is open, **When** the user presses Escape, clicks anywhere outside the button and the list, or presses the button again, **Then** the list closes and the selection is unchanged; a pointer event that starts inside the list and ends outside keeps it open.
+- [X] **Given** the list opens via keyboard (Enter or Space on the button), **Then** focus moves to the first checkbox; Tab and Shift+Tab cycle through checkboxes; Space toggles the focused checkbox; **When** Escape closes the list, **Then** focus returns to the button.
+- [X] **Given** the list opens via mouse, **Then** focus is not moved programmatically.
 
 **Where the list appears**
-- [ ] **Given** the list is open, **Then** it is rendered in a portal attached to the page root, positioned with `position: fixed`, so that no scrolling or clipping ancestor hides it, and it appears above dialogs.
-- [ ] **Given** the list is open, **Then** it is 320 px wide, or the window width minus 16 px when that is smaller; it is left-aligned with the button and never closer than 8 px to any window edge.
-- [ ] **Given** `placement="down"` (the default), **Then** the list opens below the button; it opens above only when fewer than 200 px remain below and more room exists above. **Given** `placement="up"`, **Then** it opens above when at least 160 px are available above or more room exists above than below.
-- [ ] **Given** the list is open, **Then** it is at most 320 px tall (less when less room is available) and scrolls internally.
-- [ ] **Given** the list is open, **When** the window is resized or any ancestor scrolls, **Then** the list position is recalculated relative to the button.
+- [X] **Given** the list is open, **Then** it is rendered in a portal attached to the page root, positioned with `position: fixed`, so that no scrolling or clipping ancestor hides it, and it appears above dialogs.
+- [X] **Given** the list is open, **Then** it is 320 px wide, or the window width minus 16 px when that is smaller; it is left-aligned with the button and never closer than 8 px to any window edge.
+- [X] **Given** `placement="down"` (the default), **Then** the list opens below the button; it opens above only when fewer than 200 px remain below and more room exists above. **Given** `placement="up"`, **Then** it opens above when at least 160 px are available above or more room exists above than below.
+- [X] **Given** the list is open, **Then** it is at most 320 px tall (less when less room is available) and scrolls internally.
+- [X] **Given** the list is open, **When** the window is resized or any ancestor scrolls, **Then** the list position is recalculated relative to the button.
 
 **The chip**
-- [ ] **Given** a `LinkChip` with a label, an icon, and a tone, **Then** it renders a pill with the icon and the label (truncated with "…" when long and the full label as a tooltip), coloured by the tone.
-- [ ] **Given** `onOpen` is provided, **Then** the label is a button, underlined on hover and on focus. **Given** `onRemove` is provided, **Then** a small × button labelled "Remove link to \<label\>" is shown. **Given** neither is provided, **Then** the label is plain text.
+- [X] **Given** a `LinkChip` with a label, an icon, and a tone, **Then** it renders a pill with the icon and the label (truncated with "…" when long and the full label as a tooltip), coloured by the tone.
+- [X] **Given** `onOpen` is provided, **Then** the label is a button, underlined on hover and on focus. **Given** `onRemove` is provided, **Then** a small × button labelled "Remove link to \<label\>" is shown. **Given** neither is provided, **Then** the label is plain text.
 
 **Free of the builder**
-- [ ] **Given** a test screen that supplies its own groups ("Colours", "Sizes"), its own selection, and its own chips, **Then** every acceptance test above passes and nothing related to drivers, ADRs, enablers, or stories appears.
-- [ ] **Given** the source files of `LinkPicker` and `LinkChip`, **Then** they contain no import from the builder (the catalogue, the entries, the ADR rule); a lint rule or import-assertion test fails the build if any such import is introduced (ADR-0016).
+- [X] **Given** a test screen that supplies its own groups ("Colours", "Sizes"), its own selection, and its own chips, **Then** every acceptance test above passes and nothing related to drivers, ADRs, enablers, or stories appears.
+- [X] **Given** the source files of `LinkPicker` and `LinkChip`, **Then** they contain no import from the builder (the catalogue, the entries, the ADR rule); a lint rule or import-assertion test fails the build if any such import is introduced (ADR-0016).
 
 ## Business rules and constraints
 - `LinkPicker` and `LinkChip` are view components in the framework/UI layer (ADR-0007). They render and forward events; they contain no business logic.
@@ -58,15 +58,15 @@ As a developer, I want a `LinkPicker` and a `LinkChip` that are plain React comp
 - Backend changes of any kind.
 
 ## Tasks
-- [ ] Write Jest + React Testing Library tests for the button (label, count, `aria-*` attributes) before writing any implementation.
-- [ ] Write tests for the list (group order, `fieldset`/`legend` structure, truncation, empty state, `onChange` calls, controlled behaviour, locked options, custom labels, two independent instances).
-- [ ] Write tests for closing and keyboard behaviour (Escape, outside click, button re-press, Tab/Shift+Tab cycle, Space toggle, focus return, mouse-open focus rule), mocking `getBoundingClientRect`, window dimensions, and scroll events for placement tests.
-- [ ] Implement `LinkPicker` in `src/ui/components/link-picker/LinkPicker.tsx` with the portal, fixed-position placement logic, resize/scroll listener, and all closing rules.
-- [ ] Implement `LinkChip` in `src/ui/components/link-picker/LinkChip.tsx` with icon, label, tone, optional `onOpen` button, and optional `onRemove` button.
-- [ ] Add the import-isolation test (or lint rule) that fails if `LinkPicker` or `LinkChip` import anything from the builder.
-- [ ] Add the test screen with its own "Colours" and "Sizes" groups, used only in tests, confirming end-to-end wiring with no builder knowledge.
-- [ ] Verify manually in a browser: keyboard-only navigation, dark and light themes, positioning near the bottom and right edges of the window.
-- [ ] Confirm the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build).
+- [X] Write Jest + React Testing Library tests for the button (label, count, `aria-*` attributes) before writing any implementation.
+- [X] Write tests for the list (group order, `fieldset`/`legend` structure, truncation, empty state, `onChange` calls, controlled behaviour, locked options, custom labels, two independent instances).
+- [X] Write tests for closing and keyboard behaviour (Escape, outside click, button re-press, Tab/Shift+Tab cycle, Space toggle, focus return, mouse-open focus rule), mocking `getBoundingClientRect`, window dimensions, and scroll events for placement tests.
+- [X] Implement `LinkPicker` in `src/ui/components/link-picker/LinkPicker.tsx` with the portal, fixed-position placement logic, resize/scroll listener, and all closing rules.
+- [X] Implement `LinkChip` in `src/ui/components/link-picker/LinkChip.tsx` with icon, label, tone, optional `onOpen` button, and optional `onRemove` button.
+- [X] Add the import-isolation test (or lint rule) that fails if `LinkPicker` or `LinkChip` import anything from the builder.
+- [X] Add the test screen with its own "Colours" and "Sizes" groups, used only in tests, confirming end-to-end wiring with no builder knowledge.
+- [ ] Verify manually in a browser: keyboard-only navigation, dark and light themes, positioning near the bottom and right edges of the window. (Open: needs a person in a browser; the keyboard, theme and edge-of-window behaviour is covered by tests that mock the layout, and the chip tones have light-theme colours, but none of it has been seen on screen.)
+- [ ] Confirm the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build). (Open: the suites that touch this story pass, but a full frontend run takes about 25 minutes on this machine, beyond the ten-minute budget.)
 
 ## Files of the spike
 

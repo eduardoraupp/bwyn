@@ -42,6 +42,14 @@
     {
       "id": "mwda3vhih08u3r",
       "text": "Confirm the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mwdcosnxw8z6xi",
+      "text": "Verify manually in a browser: keyboard-only navigation, dark and light themes, positioning near the bottom and right edges of the window. (Open: needs a person in a browser; the keyboard, theme and edge-of-window behaviour is covered by tests that mock the layout, and the chip tones have light-theme colours, but none of it has been seen on screen.)"
+    },
+    {
+      "id": "mwdcosnxcj496h",
+      "text": "Confirm the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build). (Open: the suites that touch this story pass, but a full frontend run takes about 25 minutes on this machine, beyond the ten-minute budget.)"
     }
   ]
 }
