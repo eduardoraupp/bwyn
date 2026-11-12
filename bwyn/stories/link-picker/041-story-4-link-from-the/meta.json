@@ -1,0 +1,47 @@
+{
+  "title": "Link from the prompt, for a story and for an enabler",
+  "prompt": "# Story 4: Link from the prompt, for a story and for an enabler\n\n- **Story**: XXX-link-from-prompt\n- **Created**: 2026-11-12\n- **Status**: Draft\n- **Demo**: press \"New\", see the default enablers already checked in \"Link\", add a driver, tick \"Mark as architectural enabler\" and see the ADRs\n  leave the list and the default enablers go, untick it and see them come back, and send.\n\n## Story\n\nAs a team member, I want to link a new story or enabler to other documents while I write its prompt, with the same picker as in the file panel,\nso that the AI reads them when it drafts, and what I link is kept with the document I approve.\n\n## Acceptance tests\n\nThe button\n\n- [ ] **Given** the prompt that creates something new, **Then** its Link button is the shared `LinkPicker` of story 1, labelled \"Link\", placed next\n  to the checkbox \"Mark as architectural enabler\" (`story-create-story.md`), and its list opens below or above as the prompt says. It is\n  not shown while a draft is on screen, or while an enabler is the target of the prompt (`story-architectural-enablers.md`, story 7).\n- [ ] **Given** the checkbox is **not** ticked (a story), **Then** the list offers Drivers, ADRs, Architectural enablers and Stories, with the rules\n  of story 2.\n- [ ] **Given** the checkbox is **ticked** (an enabler), **Then** the ADRs are hidden, because the enabler chooses them as green chips, and\n  they are not in the count.\n- [ ] **Given** the user checked an ADR as a link for a story and then ticks the box, **Then** the ADR is no longer listed or counted, and\n  **When** the user unticks it, **Then** it is listed and checked again. **Given** the user sends while it is ticked, **Then** that ADR is not\n  stored as a link of the enabler.\n- [ ] **Given** a document is checked, **Then** the button shows a count, and a chip with its icon and tone appears above the box with an X named\n  \"Remove link to <label>\" (a `LinkChip`). **When** the user removes the chip, **Then** it is unchecked.\n- [ ] **Given** nothing to link, **Then** the list says \"Nothing to link yet.\"\n\nThe enablers that every story gets\n\n- [ ] **Given** one or more enablers are marked **cross** (a rule for every story, for example hexagonal architecture), **When** the prompt is for\n  a story, **Then** they are checked in the list from the start, with their chips.\n- [ ] **Given** a default enabler, **When** the user removes it, **Then** it is not added again by itself, and **When** a new cross enabler\n  appears, **Then** only that one is added.\n- [ ] **Given** the user ticks \"Mark as architectural enabler\", **Then** the default enablers leave the links, because an enabler does not get\n  them, and **When** the user unticks it, **Then** all of them come back.\n- [ ] **Given** the user sends, **Then** the links go back to the default enablers only, for the next story.\n- [ ] **Given** no cross enabler, **Then** the links start empty. (The flag that makes an enabler cross is `story-cross-enabler.md`; until it is\n  built, no enabler is a default.)\n\nWhat the model and the document get\n\n- [ ] **Given** the user sends, **Then** the links go into the request as \"## Linked documents (full text)\", each document once, in full, cut at\n  12,000 characters, and the card of the draft shows their chips, which cannot be changed there.\n- [ ] **Given** a story, **Then** an ADR it links to is read as \"linked\". **Given** an enabler, **Then** its ADRs (the chips) are read as \"derives\n  from\" and the links as \"linked\".\n- [ ] **Given** the draft is approved, **Then** the links are stored with the story or the enabler (an enabler's ADRs in `derivesFrom`), and the\n  message says \"It is linked to N other items.\" Their panel shows them (stories 2 and 3).\n- [ ] **Given** the user asks for changes to the draft (a revision), **Then** the Link button is not shown and the links do not change.\n\n## Business rules and constraints\n\n- The prompt and the panel use **the same component and the same view model**, so a rule is written once.\n- The prompt does not lock an ADR: it hides them for an enabler, and the green chips enforce \"at least one\".\n- The default enablers are **selected, not forced**: they are checked once each so that the user decides, and one the user took out does not\n  return by itself. Ticking the enabler box is the exception, because an enabler does not get them.\n- A prompt's links are chosen when the document is drafted. Changing them afterwards is stories 2 and 3.\n\n## Out of scope\n\n- The ADR panel, the checkbox and the prompt itself (`story-create-story.md`, `story-architectural-enablers.md`).\n- Marking an enabler as cross (`story-cross-enabler.md`), and changing the default enablers.\n- Remembering the links of the box after a reload.\n\n## Tasks\n\n- [ ] **Write the tests first** for the prompt's wiring: the groups with the box unticked and ticked, the count without hidden kinds, an ADR link kept\n  while ticked, the default enablers (start, removal, a new one, ticking and unticking, after sending), and the stored `links` and `derivesFrom`.\n- [ ] Use the view model with `hideKinds` ADR for an enabler, in the prompt's Link button.\n- [ ] Replace the prompt's button and its chips with `LinkPicker` and `LinkChip`, without changing what the user sees, and run the tests of\n  `story-architectural-enablers.md` story 6 and `story-create-story.md` story 6.\n- [ ] Keep the default enablers in the prompt (once each, taken out on ticking, back on unticking, reset after sending).\n- [ ] Delete the builder-coupled `LinkPicker.tsx` once the panel and the prompt both use the shared component.\n- [ ] Check by hand, with the keyboard only, in the dark and the light theme, with the prompt as a narrow column and in the middle.",
+  "createdAt": "2026-11-12",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwdaf9adep4zsp",
+      "text": "Write Jest tests for the prompt link ViewModel: groups shown when checkbox is unticked and ticked, count excluding hidden kinds, an ADR link preserved across tick/untick, default enablers present on open, removal without re-addition, restoration on untick, clearance on tick, and reset after send"
+    },
+    {
+      "id": "mwdaf9ad5nx7hx",
+      "text": "Extend the link ViewModel to accept a `hideKinds` list and to manage default-enabler state (pre-check, removal, tick/untick, post-send reset), placing it in the `interface-adapters` layer (ADR-0007)"
+    },
+    {
+      "id": "mwdaf9adhhczvf",
+      "text": "Wire the prompt's Link button to the shared `LinkPicker` and `LinkChip` components from story 038, passing `hideKinds: ['ADR']` when the checkbox is ticked"
+    },
+    {
+      "id": "mwdaf9ad68otfq",
+      "text": "Implement default-enabler pre-selection: on prompt open, query cross enablers and pre-check each one; on send, reset to defaults"
+    },
+    {
+      "id": "mwdaf9ada3z6gt",
+      "text": "Update the prompt's send handler to include linked documents in the request under `## Linked documents (full text)`, each truncated at 12,000 characters, with \"linked\" or \"derives from\" labels as appropriate"
+    },
+    {
+      "id": "mwdaf9ad5m5lud",
+      "text": "Update the draft card to display link chips (read-only) and pass `derivesFrom` and `links` to the approval handler"
+    },
+    {
+      "id": "mwdaf9adj26oq4",
+      "text": "Update the approval handler to persist `links` and `derivesFrom` on the stored story or enabler and return the count for the confirmation message"
+    },
+    {
+      "id": "mwdaf9adko2d6u",
+      "text": "Remove the builder-coupled `LinkPicker.tsx` once both the file panel and the prompt use the shared component, and confirm stories 039 and 040 acceptance tests still pass"
+    },
+    {
+      "id": "mwdaf9adpmtyr0",
+      "text": "Verify keyboard-only navigation, dark and light themes, and narrow-column layout by hand"
+    }
+  ]
+}
