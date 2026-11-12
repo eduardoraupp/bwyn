@@ -1,0 +1,47 @@
+{
+  "title": "A reusable link picker",
+  "prompt": "# Story 1: A reusable link picker\n\n- **Story**: XXX-link-picker-component\n- **Created**: 2026-11-12\n- **Status**: Draft\n- **Demo**: open a test screen that has nothing to do with the builder, give the picker the groups \"Colours\" and \"Sizes\", check some options,\n  see the count and the chips, press Escape, tab through the list with the keyboard, and open it near the bottom of the window.\n\n## Story\n\nAs a developer, I want a link picker and a link chip that are plain React components, with no knowledge of the builder, so that the file\npanel, the prompt and any other component can offer a list of things to link, with their own groups and rules.\n\n## Acceptance tests\n\nThe button\n\n- [ ] **Given** a `LinkPicker` with a label, **Then** it shows one button with a link icon and that label (the default is \"Link\"), a pill with\n  a thin border, with `aria-haspopup=\"dialog\"` and `aria-expanded=\"false\"`.\n- [ ] **Given** options selected, **Then** the button shows a small round count of the selected options that are in its groups, and none when\n  the count is 0. A selected value that is in no group is not counted.\n- [ ] **Given** the button, **When** the user presses it, **Then** a list opens (`role=\"dialog\"`, named \"Choose what to link\"),\n  `aria-expanded=\"true\"`, and **When** the user presses it again, **Then** it closes.\n\nThe list\n\n- [ ] **Given** the list, **Then** it shows the groups in the order they were given, each a `fieldset` with its title as a small upper-case\n  legend, and, for each option, a checkbox and its label cut with \"...\" when long (the full label as a tooltip). A group with no option is\n  not shown.\n- [ ] **Given** no group, or groups with no option, **Then** the list says \"Nothing to link yet.\"\n- [ ] **Given** an option, **When** the user checks it, **Then** the component calls `onChange` once with the selection plus that option at\n  the end. **When** the user unchecks it, **Then** it calls `onChange` with the selection without it, in the same order.\n- [ ] **Given** the component is **controlled**, **Then** it keeps no selection of its own: the checkboxes show what `selected` says, and a\n  parent that ignores `onChange` leaves them as they were.\n- [ ] **Given** an option that is **locked** with a reason, **Then** its checkbox is checked, disabled, and has the reason as its tooltip, it\n  cannot be unchecked with the mouse or the keyboard, and it counts as selected.\n- [ ] **Given** a custom `label`, `dialogLabel` or `emptyText`, **Then** the component shows them in place of the defaults.\n- [ ] **Given** two pickers on one page with different selections, **Then** each shows its own, and toggling in one changes nothing in the\n  other.\n\nClosing and the keyboard\n\n- [ ] **Given** the list is open, **When** the user presses Escape, presses the mouse anywhere outside the button and the list, or presses\n  the button again, **Then** it closes and the selection stays. A press that starts inside the list and ends outside keeps it open.\n- [ ] **Given** the list opens from the keyboard (Enter or Space on the button), **Then** the focus moves to the first checkbox, Tab and\n  Shift+Tab move through the checkboxes, Space toggles one, and **When** Escape closes it, **Then** the focus goes back to the button.\n- [ ] **Given** the list opens with the mouse, **Then** the focus is not moved.\n\nWhere the list appears\n\n- [ ] **Given** the list is open, **Then** it is drawn in a portal on the page, with a fixed position, so that no panel that scrolls or\n  clips (the file panel, the prompt) hides it, and it is above dialogs.\n- [ ] **Given** the button, **Then** the list is 320 px wide (or the window's width less 16 px when that is smaller), starts at the left of the\n  button, and never goes closer than 8 px to an edge of the window.\n- [ ] **Given** `placement` \"down\" (the default), **Then** the list opens below the button, and opens above only when there is less than\n  200 px below and more room above. **Given** `placement` \"up\", **Then** it opens above when there are at least 160 px above or more room\n  above than below.\n- [ ] **Given** the list, **Then** it is at most 320 px high (less when there is less room), and it scrolls inside.\n- [ ] **Given** the list is open, **When** the window is resized or anything on the page scrolls, **Then** the list is placed again by the\n  button.\n\nThe chip\n\n- [ ] **Given** a `LinkChip` with a label, an icon and a tone, **Then** it shows a pill with the icon and the label, cut with \"...\" when long,\n  coloured by the tone.\n- [ ] **Given** it has an `onOpen`, **Then** the label is a button, underlined on hover and on focus. **Given** it has an `onRemove`, **Then** a\n  small X button named \"Remove link to <label>\" shows. **Given** it has neither, **Then** it is plain text.\n\nFree of the builder\n\n- [ ] **Given** a test screen that gives the picker its own groups (\"Colours\", \"Sizes\"), its own selection and its own chips, **Then** every\n  test above passes, and nothing of drivers, ADRs, enablers or stories shows.\n- [ ] **Given** the component's files, **Then** they import nothing from the builder (the catalog, the entries, the ADR rule). A lint rule or a\n  test of imports fails the build if they do.\n\n## Business rules and constraints\n\n- **The component is generic.** `LinkPicker` and `LinkChip` receive groups, options, a selection, locked options, labels and handlers. They\n  have no rule about kinds. They are views (ADR 0003): they render and forward events.\n- **Controlled.** The parent owns the selection. The component calls `onChange` with the whole new selection and shows what it is given.\n- A value is a **stable text** chosen by the caller. The component never reads or builds one.\n- The look is the spike's (the Reference lists the classes), so that the final screens look the same.\n\n## Out of scope\n\n- The builder's kinds, headings and rules (stories 2 and 3), where the picker is used (stories 2 to 4), and a search box or folding groups.\n- A picker that picks one option, or one that adds new options.\n\n## Tasks\n\n- [ ] **Write the tests first** (Jest and React Testing Library), with made-up groups: the button and its count, open and close (button, Escape,\n  outside), the checkboxes and `onChange`, controlled, locked, empty, the keyboard and the focus, two pickers, and the placement (with\n  `getBoundingClientRect`, the window size and the scroll mocked).\n- [ ] Build `LinkPicker` as a view in the presentation layer: the props of the Reference, the portal, the fixed position and its recompute on\n  resize and scroll, the closing rules, the focus, and the classes of the spike.\n- [ ] Build `LinkChip` (icon, label, tone, optional open, optional remove with its label).\n- [ ] Add the test screen with its own groups, kept in the tests only.\n- [ ] Add the check that the component's files import nothing from the builder.\n- [ ] Check by hand, in a browser, with the keyboard only, in the dark and the light theme, near the bottom and the right edge of the window.",
+  "createdAt": "2026-11-12",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwda3vhivgu6vj",
+      "text": "Write Jest + React Testing Library tests for the button (label, count, `aria-*` attributes) before writing any implementation."
+    },
+    {
+      "id": "mwda3vhiyrvvbl",
+      "text": "Write tests for the list (group order, `fieldset`/`legend` structure, truncation, empty state, `onChange` calls, controlled behaviour, locked options, custom labels, two independent instances)."
+    },
+    {
+      "id": "mwda3vhi85ik1v",
+      "text": "Write tests for closing and keyboard behaviour (Escape, outside click, button re-press, Tab/Shift+Tab cycle, Space toggle, focus return, mouse-open focus rule), mocking `getBoundingClientRect`, window dimensions, and scroll events for placement tests."
+    },
+    {
+      "id": "mwda3vhi616g18",
+      "text": "Implement `LinkPicker` in `src/ui/components/link-picker/LinkPicker.tsx` with the portal, fixed-position placement logic, resize/scroll listener, and all closing rules."
+    },
+    {
+      "id": "mwda3vhi02x38z",
+      "text": "Implement `LinkChip` in `src/ui/components/link-picker/LinkChip.tsx` with icon, label, tone, optional `onOpen` button, and optional `onRemove` button."
+    },
+    {
+      "id": "mwda3vhiy8349m",
+      "text": "Add the import-isolation test (or lint rule) that fails if `LinkPicker` or `LinkChip` import anything from the builder."
+    },
+    {
+      "id": "mwda3vhi4110cz",
+      "text": "Add the test screen with its own \"Colours\" and \"Sizes\" groups, used only in tests, confirming end-to-end wiring with no builder knowledge."
+    },
+    {
+      "id": "mwda3vhioepiyi",
+      "text": "Verify manually in a browser: keyboard-only navigation, dark and light themes, positioning near the bottom and right edges of the window."
+    },
+    {
+      "id": "mwda3vhih08u3r",
+      "text": "Confirm the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
