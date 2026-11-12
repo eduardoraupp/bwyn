@@ -1,0 +1,59 @@
+{
+  "title": "Link an architectural enabler to other documents",
+  "prompt": "# Story 3: Link an architectural enabler to other documents\n\n- **Story**: XXX-link-enabler\n- **Created**: 2026-11-12\n- **Status**: Draft\n- **Demo**: open an enabler, press \"Add link\", check a story and a driver (chips under \"Linked to\"), check an ADR (chip under \"Derives from\"),\n  try to uncheck the only ADR and see that it cannot be, then open the story and find the enabler under \"Referenced by\".\n\n## Story\n\nAs a team member, I want to link an architectural enabler to the documents that shape it and to the ADRs it implements, from its own panel,\nso that the connection is kept with the enabler, the enabler always implements at least one ADR, and the AI and the sync use it.\n\n## Acceptance tests\n\nThe rules of the builder (the view model, checked without rendering)\n\n- [ ] **Given** an enabler as the target, **Then** the groups and their rules are those of story 2 (the order, not itself, every driver, every\n  other enabler and story, only Accepted ADRs and the linked one that is not).\n- [ ] **Given** the enabler's ADRs and links, **Then** the checked options are the ADRs it derives from **and** its links.\n- [ ] **Given** an enabler that derives from exactly one ADR, **Then** that ADR is offered **locked**, with the reason \"An enabler implements at\n  least one ADR.\" **Given** it derives from two or more, **Then** none is locked. **Given** the only ADR is no longer Accepted, **Then** it is\n  still offered, checked and locked.\n- [ ] **Given** an enabler that derives from **no** ADR (one that came from a repository with none), **Then** nothing is locked and no ADR is\n  checked. **When** the user checks one, **Then** it becomes the one that is locked.\n- [ ] **Given** a selection, **Then** `applyLinkSelection` returns `derivesFrom` with the references that start with `adr:` and `links` with the\n  others, each in the order they were given.\n- [ ] **Given** a selection with no `adr:` reference, **Then** it returns an empty `derivesFrom`, so the panel can show the problem, and never\n  reaches it from the picker, because the last ADR is locked.\n\nThe panel of an enabler\n\n- [ ] **Given** an open enabler, **Then** its panel has \"Derives from\" (a chip for each ADR, opening it, with no X), \"Linked to\" with the button\n  \"Add link\" and its chips, and the empty line while it has no link. \"Derives from\" is not shown while the enabler has no ADR.\n- [ ] **Given** the user checks an ADR, **Then** it is added to the enabler's `derivesFrom` and its chip appears under **\"Derives from\"**.\n  **Given** the user checks anything else, **Then** it is added to its `links` and its chip appears under \"Linked to\".\n- [ ] **Given** the user unchecks an ADR of two, **Then** it leaves \"Derives from\". **Given** the enabler has one ADR, **Then** the checkbox cannot\n  be unchecked, with the mouse or the keyboard.\n- [ ] **Given** the X of a chip in \"Linked to\", **When** the user presses it, **Then** only that link is removed, and the ADRs it derives from are\n  left alone.\n- [ ] **Given** a link was added or removed, **Then** it is kept at once, with no Save, and the text, the title and the first prompt of the\n  enabler are not touched.\n- [ ] **Given** the note of the panel, **Then** it is the one of `story-architectural-enablers.md` story 7: \"Read-only here. Describe the change in\n  the prompt to update this enabler.\" The panel has no text box and no Save.\n\nWhat the links do\n\n- [ ] **Given** an enabler's ADRs, **Then** a request about it reads them as \"derives from\", first, and the links as \"linked\", in full\n  (`story-architectural-enablers.md`, stories 6 and 7), each document once.\n- [ ] **Given** the user changes the enabler's ADRs or links in the panel, **When** the user then sends a change in the prompt (story 7 of the\n  enabler stories), **Then** the request has the new ADRs and links, because it reads them from the enabler, not from the first request.\n- [ ] **Given** the enabler is stored in the repository, **Then** its `.meta.json` has `derivesFrom` and `links`, sorted, and a pull brings them\n  back.\n\nKeeping them\n\n- [ ] **Given** the page is reloaded, **Then** the ADRs and the links of each enabler are still there. **Given** two projects, **Then** each keeps its\n  own.\n\n## Business rules and constraints\n\n- **An enabler always implements at least one ADR.** Its last ADR cannot be unchecked in the picker.\n- For an enabler, ADRs are stored in `derivesFrom` and everything else in `links`. The picker sees one list; the split is the view model's.\n- An enabler **cannot link to itself**. It may link to a story, a driver, or another enabler, and loops are allowed.\n- Only an Accepted ADR is newly offered. One that is derived from and is no longer Accepted stays and keeps its lock, if it is the last.\n- The rest is as in story 2.\n\n## Out of scope\n\n- Editing the text by hand, the *Cross enabler* flag, marking it Done, deleting it, and synchronising it.\n- Changing the ADRs or the links by prompt (the prompt only updates the text), and a warning when an enabler that stories already use changes\n  its ADRs.\n- Choosing the ADRs when the enabler is created (`story-architectural-enablers.md`, story 1; story 4 here).\n\n## Tasks\n\n- [ ] **Write the tests first** for `linkChoices` and `applyLinkSelection` for an enabler: the checked options (ADRs and links together), the lock\n  with one, two and no ADR, a non-Accepted last ADR, and the split.\n- [ ] Extend the view model: the checked options, the locked last ADR, and the split into `derivesFrom` and `links`.\n- [ ] Build the enabler panel's sections \"Derives from\" (chips, no X) and \"Linked to\" with \"Add link\", with the writes through `patch` for both\n  fields.\n- [ ] Make the X of a \"Linked to\" chip remove only that link.\n- [ ] Test: add and remove a link and an ADR, the lock, no ADR, the effect on the next request, a missing target, reload, and that the text is\n  unchanged.\n- [ ] Test the effect: `derivesFrom` and `links` in `meta.json`, and a pull that brings them back.\n\n\nadd also as task that the linkage between the architectural enablers and documents are stored in the database",
+  "createdAt": "2026-11-12",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwdacxydxx5k6t",
+      "text": "Write failing unit tests for `linkChoices` and `applyLinkSelection` for an enabler: checked options (ADRs and links together), the lock with one, two, and no ADR, a non-Accepted last ADR, and the split into `derivesFrom` and `links` (ADR-0007, Architecture: interface-adapter layer)."
+    },
+    {
+      "id": "mwdacxydlkwr4g",
+      "text": "Extend the `EnablerLinkViewModel` with `linkChoices`, `applyLinkSelection`, and the locked-last-ADR rule, making the unit tests pass."
+    },
+    {
+      "id": "mwdacxydosjf9h",
+      "text": "Add a `PATCH /projects/{projectId}/enablers/{enablerId}/links` endpoint in the inbound adapter (`bwyn-rest`) that accepts `{ derivesFrom, links }` and delegates to an application service (ADR-0017, Architecture)."
+    },
+    {
+      "id": "mwdacxydjydo5r",
+      "text": "Add the `UpdateEnablerLinksCommand` and its handler in `bwyn-application`; the handler updates `derivesFrom` and `links` on the enabler aggregate in `bwyn-core` and persists via the outbound port (ADR-0017)."
+    },
+    {
+      "id": "mwdacxydxbspcx",
+      "text": "Add or extend the Flyway migration in `bwyn-infrastructure` to store `derives_from` and `links` for an enabler (ADR-0010, ADR-0011)."
+    },
+    {
+      "id": "mwdacxydseq3m0",
+      "text": "Implement the outbound adapter in `bwyn-infrastructure` that persists and retrieves `derivesFrom` and `links` using Spring Data JPA (ADR-0011)."
+    },
+    {
+      "id": "mwdacxydrofs0j",
+      "text": "Build the enabler panel's \"Derives from\" section (chips, no X) and \"Linked to\" section (\"Add link\" button and chips) in the `ui` layer, wired to the view model and calling `PATCH` on every change (ADR-0007, Architecture: ui layer)."
+    },
+    {
+      "id": "mwdacxydayjo2s",
+      "text": "Make the X on a \"Linked to\" chip remove only that link and call `PATCH`; verify ADRs in \"Derives from\" are unaffected."
+    },
+    {
+      "id": "mwdacxydxjevet",
+      "text": "Write integration tests (extending `PostgresIntegrationTest`) that verify `derivesFrom` and `links` are persisted, survive a reload, and are isolated per project (ADR-0012)."
+    },
+    {
+      "id": "mwdacxydujq9om",
+      "text": "Verify that ArchUnit rules still pass: the application service does not depend on adapter classes, and the domain aggregate has no Spring or JPA dependency (ADR-0009, ADR-0017)."
+    },
+    {
+      "id": "mwdacxydfj4cs7",
+      "text": "Verify that ArchUnitTS rules still pass: the view model resides in the interface-adapter layer and the panel component in the ui layer (ADR-0016, ADR-0007)."
+    },
+    {
+      "id": "mwdacxydh51q17",
+      "text": "Run the full build and confirm it completes within ten minutes (Practice: Ten-Minute Build)."
+    }
+  ]
+}
