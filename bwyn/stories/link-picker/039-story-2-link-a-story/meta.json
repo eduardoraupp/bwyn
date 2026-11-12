@@ -46,6 +46,34 @@
     {
       "id": "mwda62yv5g0int",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mwdaaqsklrx0zd",
+      "text": "Write a Flyway migration that adds a `story_links` table (or a `links` column on the story table) to store the sorted array of reference strings per story per project (ADR-0010)."
+    },
+    {
+      "id": "mwdaaqskta1riv",
+      "text": "Define the `StoryLinkRepository` port interface in `bwyn-core` with `save(projectId, storyRef, links)` and `findByStory(projectId, storyRef)` operations (ADR-0017)."
+    },
+    {
+      "id": "mwdaaqsksizq7d",
+      "text": "Implement the port in `bwyn-infrastructure` using Spring Data JPA; write a `@DataJpaTest` with Testcontainers confirming save and load round-trip (ADR-0011, ADR-0012)."
+    },
+    {
+      "id": "mwdaaqskxrqvlz",
+      "text": "Add a `PATCH /projects/{projectId}/stories/{storyRef}/links` application-service command handler in `bwyn-application` that validates the request and calls the port; write unit tests with a test-double repository (ADR-0017)."
+    },
+    {
+      "id": "mwdaaqskwy2fqf",
+      "text": "Add the Spring MVC controller endpoint in `bwyn-rest` that maps the HTTP request to the command; annotate it with OpenAPI annotations (ADR-0014); write a `@SpringBootTest` slice test confirming the HTTP contract (ADR-0008)."
+    },
+    {
+      "id": "mwdaaqskbfxhyy",
+      "text": "Add the \"Linked to\" section to the story panel: \"Add link\" button wired to the shared `LinkPicker` (story 038), `LinkChip` list with open-document and remove actions, empty-state line; each change calls the backend endpoint and writes through the store only on success."
+    },
+    {
+      "id": "mwdaaqskj2ru9g",
+      "text": "Write integration tests: add a link, remove a link, link to an ADR, missing target shows no chip, story in a theme, page reload loads from backend, two projects, story text unchanged after link operations."
     }
   ]
 }

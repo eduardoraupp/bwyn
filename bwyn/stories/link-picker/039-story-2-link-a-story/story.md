@@ -43,7 +43,8 @@ As a team member, I want to link a story to the drivers, ADRs, enablers and othe
 
 **Persistence**
 
-- [ ] **Given** the page is reloaded, **Then** the links of each story are still present. **Given** two projects exist, **Then** each project keeps its own links independently.
+- [ ] **Given** the user adds or removes a link, **Then** the backend stores the updated `links` array for that story in the database and returns the saved state; the frontend reflects what the backend confirms.
+- [ ] **Given** the page is reloaded, **Then** the links of each story are still present because they are loaded from the backend. **Given** two projects exist, **Then** each project keeps its own links independently.
 
 ## Business rules and constraints
 
@@ -53,6 +54,8 @@ As a team member, I want to link a story to the drivers, ADRs, enablers and othe
 - Adding or removing a link changes only the `links` field. It does not change the story's text, title, tasks, or dates.
 - Drivers and ADRs are immutable in the builder: they carry no `links` of their own and show no "Add link" control (ADR-0007).
 - The `LinkPicker` component used here is the one delivered by story 038; this story adds only the story-specific view-model logic and the panel wiring on top of it (Practice: DRY and KISS).
+- Links are stored in the database as a sorted array of stable reference strings on the story record. The backend is the single source of truth; the frontend does not persist links in `localStorage` (ADR-0017, Architecture).
+- The backend endpoint that saves links is an outbound port implemented in the infrastructure layer; the application layer calls it through that port and has no direct dependency on the persistence mechanism (ADR-0017, Architecture).
 
 ## Out of scope
 
@@ -68,9 +71,14 @@ As a team member, I want to link a story to the drivers, ADRs, enablers and othe
 - [ ] Implement `storyLinkChoices` in the interface-adapters layer until all tests pass (ADR-0007).
 - [ ] Write failing unit tests for `applyStoryLinkSelection`: all selections land in `links`, `derivesFrom` is absent.
 - [ ] Implement `applyStoryLinkSelection` until all tests pass.
-- [ ] Add the "Linked to" section to the story panel: "Add link" button wired to the shared `LinkPicker` (story 038), `LinkChip` list with open-document and remove actions, empty-state line; write through the store's `patch` without touching the story text.
+- [ ] Write a Flyway migration that adds a `story_links` table (or a `links` column on the story table) to store the sorted array of reference strings per story per project (ADR-0010).
+- [ ] Define the `StoryLinkRepository` port interface in `bwyn-core` with `save(projectId, storyRef, links)` and `findByStory(projectId, storyRef)` operations (ADR-0017).
+- [ ] Implement the port in `bwyn-infrastructure` using Spring Data JPA; write a `@DataJpaTest` with Testcontainers confirming save and load round-trip (ADR-0011, ADR-0012).
+- [ ] Add a `PATCH /projects/{projectId}/stories/{storyRef}/links` application-service command handler in `bwyn-application` that validates the request and calls the port; write unit tests with a test-double repository (ADR-0017).
+- [ ] Add the Spring MVC controller endpoint in `bwyn-rest` that maps the HTTP request to the command; annotate it with OpenAPI annotations (ADR-0014); write a `@SpringBootTest` slice test confirming the HTTP contract (ADR-0008).
+- [ ] Add the "Linked to" section to the story panel: "Add link" button wired to the shared `LinkPicker` (story 038), `LinkChip` list with open-document and remove actions, empty-state line; each change calls the backend endpoint and writes through the store only on success.
 - [ ] Add the "Referenced by" section to every document panel (driver, ADR, enabler, story); update it reactively when any link changes.
 - [ ] Remove the "Add link" control from driver and ADR panels; confirm "Referenced by" remains.
-- [ ] Write integration tests: add a link, remove a link, link to an ADR, missing target shows no chip, story in a theme, page reload, two projects, story text unchanged after link operations.
+- [ ] Write integration tests: add a link, remove a link, link to an ADR, missing target shows no chip, story in a theme, page reload loads from backend, two projects, story text unchanged after link operations.
 - [ ] Write tests confirming that linked documents are included in the generation request and that `meta.json` contains a sorted `links` array.
 - [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build).
