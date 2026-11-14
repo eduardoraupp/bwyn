@@ -25,6 +25,7 @@ As a developer, I want a `LinkPicker` and a `LinkChip` that are plain React comp
 
 **Closing and the keyboard**
 - [X] **Given** the list is open, **When** the user presses Escape, clicks anywhere outside the button and the list, or presses the button again, **Then** the list closes and the selection is unchanged; a pointer event that starts inside the list and ends outside keeps it open.
+  _Escape, a click outside and a click inside are tested in story 029 (link-the-enabler.acceptance.test.tsx), which keeps them; the duplicate component tests were removed. The button re-press and the pointer that ends outside are still tested here._
 - [X] **Given** the list opens via keyboard (Enter or Space on the button), **Then** focus moves to the first checkbox; Tab and Shift+Tab cycle through checkboxes; Space toggles the focused checkbox; **When** Escape closes the list, **Then** focus returns to the button.
 - [X] **Given** the list opens via mouse, **Then** focus is not moved programmatically.
 
