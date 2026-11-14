@@ -12,6 +12,7 @@ As a team member, I want to link an architectural enabler to the documents that 
 **The rules of the builder (the view model, checked without rendering)**
 
 - [X] **Given** an enabler as the target, **Then** the groups and their rules are those of story 029: the order, not itself, every driver, every other enabler and story, only Accepted ADRs and the linked one that is not.
+  _Tested in story 040 (link-from-enabler-panel.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the enabler's ADRs and links, **Then** the checked options are the ADRs it derives from **and** its links.
 - [X] **Given** an enabler that derives from exactly one ADR, **Then** that ADR is offered locked, with the reason "An enabler implements at least one ADR." **Given** it derives from two or more, **Then** none is locked. **Given** the only ADR is no longer Accepted, **Then** it is still offered, checked and locked.
 - [X] **Given** an enabler that derives from no ADR (one that came from a repository with none), **Then** nothing is locked and no ADR is checked. **When** the user checks one, **Then** it becomes the one that is locked.
