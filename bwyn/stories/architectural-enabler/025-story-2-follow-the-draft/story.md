@@ -18,6 +18,7 @@ As a team member, I want to see the state of the draft and to stop it, retry it 
 
 **Stop, Retry, Discard**
 - [X] **Given** the draft is being written, **Then** the round send button is replaced by a white Stop button ("Stop writing"), and the card has a Stop button. **When** the user presses either, **Then** the request is cancelled, the text received so far stays, and the chip reads "Incomplete".
+  _Tested in story 034 (follow-story-draft.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** a Stop before any text arrived, **Then** the chip reads "Failed" with "No text was received from the model."
 - [X] **Given** the draft failed, **Then** the card has "Retry" and "Discard". **When** the user presses Retry, **Then** the same turns are sent again, without adding a message.
 - [X] **Given** a draft that is not being written, **Then** Discard shows. **When** the user presses it, **Then** the draft disappears and nothing is stored.
@@ -26,7 +27,7 @@ As a team member, I want to see the state of the draft and to stop it, retry it 
 **The composer while there is a draft**
 - [X] **Given** the draft is being written, **Then** the box says "Waiting for the draft..." and sending is blocked.
 - [X] **Given** the draft failed, **Then** the box says "Retry or discard the draft first." and sending is blocked.
-- [ ] **Given** a draft that is Ready or Incomplete, **Then** the box asks for changes (story 4).
+- [X] **Given** a draft that is Ready or Incomplete, **Then** the box asks for changes (story 4).
 
 **Tokens**
 - [X] **Given** the draft ended (or was stopped after the model reported them), **Then** the card lists "Input 5230", "Output 812", "Cache read 4102" and "Cache write 0". **Given** the cache read is more than 0, **Then** that chip is green; the tooltips say "Input tokens read from the prompt cache" and "Input tokens written to the prompt cache".
@@ -34,6 +35,7 @@ As a team member, I want to see the state of the draft and to stop it, retry it 
 
 **The call**
 - [X] **Given** the backend answers before the stream starts with a 400, 503 or 502, **Then** the error shows in the card as a normal message (for 503: the project has no connection to the model).
+  _Tested in story 033 (describe-story.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the stream fails after it started, **Then** the chip reads "Failed" and the card shows the error. The text received so far is not kept, and Retry writes the draft again from the start.
 - [X] **Given** the user closes the workspace, leaves the page or sends something new, **Then** the call in flight is cancelled and the backend stops asking the model.
 
@@ -97,15 +99,15 @@ these stories ask for. The column says which part is the base.
 
 ## What changes from the spike
 
-- **The box writes enablers only.** The spike's box has a tick "Mark as architectural enabler" that switches between a story and an enabler.
-  Here there is no tick and `asEnabler` is always true: the title, the line, the placeholder and the examples are the enabler's. The tick
-  returns with the stories.
+- **The checkbox "Mark as architectural enabler" chooses what the box writes.** The spike's box has that tick. It comes with story 032, which
+  makes the story the default: the enabler is written when it is ticked (`asEnabler`), and the placeholder, the box, the ADR panel and the
+  button of the enabler below are those of the ticked state.
 - **Story-only parts are left out:** the story examples ("As a returning customer, ..."), the three suggestions (one is kept), the
   automatic link of cross enablers, the architecture in the context, the tasks that a story copies into its task list, and the edit mode
   with its "Editing ..." chip.
 - **The folder `architectural-enablers` lists the enablers, and the panel is read-only.** In the spike an open enabler can be edited,
   linked, marked Cross, synced and deleted. Here none of that is shown, and the note says so.
-- **The button of the tree header is "New"**, named "New architectural enabler". The spike's is "New story" and also resets the folders to
+- **The button of the tree header is "New"**, named "New" (story 032). The spike's is "New story" and also resets the folders to
   `stories` and `enablers` open. Here it only resets the conversation.
 - **The workspace's middle** is the prompt again (in `story-builder-folders.md` it was an empty state), and with a file open the prompt is a
   narrow column on the right of the file.
