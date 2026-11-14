@@ -25,6 +25,7 @@ As a team member, I want to open an ADR and correct or complete its text and sta
 - [X] **Given** only the status changed, **When** Save, **Then** only the Status line of the stored Markdown changes (or is added under the title when there was none); the rest of the text and the date stay byte for byte as they were. (Verified in the backend by `AdrDocumentTest`, `UpdateAdrCommandHandlerTest` and `AdrPersistenceIT`, including line endings.)
 - [X] **Given** both the text and the status changed, **When** Save, **Then** the Markdown is rebuilt with the new status and the stored date.
 - [X] **Given** the title (first line) was changed, **Then** the row shows the new title, and the number and the file name do not change.
+  _Tested in story 016 (edit-adr.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the first line was emptied, **When** Save, **Then** a validation message appears and nothing is stored.
 - [X] **Given** nothing changed, **Then** Save is disabled.
 - [X] **Given** the dialog is open, **Then** Escape, Close (X), Cancel, and a click outside close it without saving anything. (A click outside closes it only when nothing changed, as in the add dialog.)
