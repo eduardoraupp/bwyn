@@ -51,12 +51,14 @@ As a team member, I want a persistent left bar with a project selector and a pag
   | Settings     | Settings                 | The settings of this project. |
 
 - [X] **Given** the application starts and at least one project exists, **Then** the Builder page is shown first.
+  _Tested in story 019 (open-builder.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 ### E. Collapsed rail for the workspace
 
 - [X] **Given** the Builder page, **When** the user activates "Open the builder", **Then** the left bar shrinks to a narrow icon rail: the active project's avatar at the top (tooltip "&lt;project name&gt; (expand menu)"), the eight menu items as icons with their label as tooltip and accessible name, and an "Expand menu" button at the bottom; the header appends "/ Prompt" after "Builder"; the workspace fills the remaining width.
 - [X] **Given** the Settings page is shown, **Then** the same icon rail appears and the page opens with its own secondary menu beside the main area.
 - [X] **Given** the icon rail is shown, **When** the user activates the project avatar or "Expand menu", **Then** the full left bar returns and a "Collapse menu" button appears beside the logo.
+  _Tested in story 019 (open-builder.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the builder workspace is open, **When** the user activates any page other than Builder, **Then** the workspace closes and that page opens at full width; **When** the user then activates Builder, **Then** the Builder page opens without the workspace.
 - [X] **Given** the builder workspace is open, **When** the user switches to another project, **Then** the workspace shows the new project's files with nothing open.
 
