@@ -34,6 +34,7 @@ As a team member, I want one "New" button and one prompt where I choose whether 
 - [X] **Given** the checkbox is ticked and the user unticks it, **Then** the story prompt is restored; the text in the box is kept; the ADRs that were chosen remain chosen and are reused if the checkbox is ticked again, but they are never sent with a story prompt.
 - [X] **Given** the title and the line above the box, **Then** they do not change when the checkbox is ticked or unticked.
 - [X] **Given** a draft is on screen or an open enabler is the target of the prompt, **Then** the checkbox and the Link button are not shown.
+  _Tested in story 034 (follow-story-draft.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the keyboard, **Then** the checkbox is reachable with Tab, toggled with Space, and shows a visible focus ring; it is a native checkbox inside its label so that pressing the label also toggles it.
 - [X] **Given** the user sends the prompt, **Then** the box is emptied, the checkbox is unticked, and the ADRs and links are cleared.
 
@@ -41,6 +42,7 @@ As a team member, I want one "New" button and one prompt where I choose whether 
 
 - [X] **Given** the checkbox is not ticked and the box contains text that is not only spaces, **Then** the send button is enabled and labelled "Draft story" regardless of the ADRs and links chosen.
 - [ ] **Given** the checkbox is not ticked and the user presses Enter (not Shift+Enter, not while an input method is composing), **Then** a story draft is initiated. (Open: drafting a story comes with story 033. Until then Enter keeps the text and the prompt says "Drafting stories comes in another story. Tick "Mark as architectural enabler" to draft an enabler.")
+  _Tested in story 033 (describe-story.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the checkbox is ticked and the user presses Enter, **Then** an enabler draft is initiated.
 
 ## Business rules and constraints
