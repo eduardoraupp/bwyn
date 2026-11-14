@@ -17,6 +17,7 @@ As a subject matter expert, I want to open the Principles & Practices screen fro
 - [X] **Given** there are no principles yet, **Then** the empty state is shown together with the "Add a principle" card, so the first principle can still be added.
 - [X] **Given** the principles are loading or could not be loaded, **Then** no "Add a principle" card is shown.
 - [X] **Given** I am on the Practices tab, **When** the tab is active, **Then** the tab content is visible but no add or edit controls are present, confirming the tab is read-only.
+  _Tested in story 023 (read-practices.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 ## Business rules and constraints
 - The left-hand expandable menu and the P&P navigation item live in the `ui` layer; no business logic resides in the component (ADR-0007, Architecture).
