@@ -24,6 +24,7 @@ As a team member, I want to open "ADR" in the menu and see all the architecture 
 - [X] **Given** an ADR whose status is not one of the four recognised values (for example an ADR imported from the repository with no Status line), **Then** its chip is neutral and shows "Unknown".
 - [X] **Given** a row, **Then** it is a single button with the accessible name "Edit ADR 0004, &lt;title&gt;"; **When** the user activates it with a click, Enter, or Space, **Then** the edit dialog opens (story 3, out of scope here).
 - [X] **Given** the list, **Then** no row, dialog, or menu offers a way to remove an ADR: no trash button and no "Remove" option.
+  _Tested in story 016 (edit-adr.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 **Persistence and isolation**
 - [X] **Given** ADRs saved to a project, **When** the page is reloaded, **Then** the same ADRs appear in the same order.
