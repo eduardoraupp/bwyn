@@ -37,8 +37,10 @@ As a team member, I want to link the story I am writing to the drivers, ADRs, en
 
 - [X] **Given** the user approves the draft, **Then** the links are persisted with the story, and the confirmation message reads "It is linked to N other items." (where N ≥ 1) or omits the sentence when N = 0.
 - [X] **Given** the user opens an approved story, **Then** a "Linked to" section shows a chip for each outgoing link; activating a chip opens that document's file panel.
+  _Tested in story 039 (link-from-story-panel.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** a document that links to the story, **Then** that document's file panel shows the story under "Referenced by".
 - [X] **Given** a linked document is later removed from the project, **Then** its chip is hidden silently; no error is shown.
+  _Tested in story 039 (link-from-story-panel.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 ## Business rules and constraints
 
