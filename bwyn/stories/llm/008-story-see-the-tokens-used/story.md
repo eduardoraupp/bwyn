@@ -53,6 +53,7 @@ As a team member, I want Settings > Costs to show the tokens my project used for
 **Where the count lives**
 
 - [X] **Given** the user opens Costs, **Then** the browser reads the figures from the bwyn backend over its REST API as one response containing a list of providers each with its token counts, and never directly from a provider.
+  _Tested in story 008 (costs.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the backend, **Then** the endpoint that returns usage by provider is described in the OpenAPI document (ADR-0014).
 - [X] **Given** the response, **Then** it contains no API key and no text from any prompt or reply.
 
