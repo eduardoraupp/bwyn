@@ -9,12 +9,20 @@ As a team member, I want to describe in the prompt the technical work that stori
 
 ## Acceptance tests
 
+> **Amended by story 032.** The prompt starts as the prompt of a story ("Which story shall we tell today?", "Describe a user story...",
+> three examples) and becomes the prompt of an enabler, as described below, when the checkbox "Mark as architectural enabler" is ticked:
+> the placeholder, the green box, the ADR panel and the button "Draft architectural enabler" below are those of the ticked state. The
+> title and the line do not change with the tick, the tick is reset when the prompt is sent, and "New" keeps what was typed.
+
 **The prompt**
 - [X] **Given** the workspace with no file open, **Then** the middle shows the prompt: a sparkles icon, the title "Which architectural enabler shall we build?", the line "Describe the technical work that stories need first. Claude drafts the enabler, and once you approve it BWYN creates its file.", a textarea with the placeholder "Describe the architectural enabler..." and the focus in it, and a round send button.
 - [X] **Given** the prompt, **Then** below the textarea there is one example chip the user can press, "Set up continuous integration for the frontend build.", which puts that text in the textarea and keeps the focus there.
+  _Tested in story 032 (start-from-new.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the textarea, **When** the user types more than one line, **Then** it grows with the text up to 200 px and then scrolls.
+  _Tested in story 032 (start-from-new.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** a file is open in the tree, **Then** the prompt is a narrower column on the right of the file (about 26 rem) with the same textarea; **Given** no file is open, **Then** it is in the middle.
 - [X] **Given** the workspace opens, or the user presses "New", **Then** the focus goes to the textarea.
+  _Tested in story 032 (start-from-new.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the textarea is not focused, **Then** it has a green border; **Given** it has the focus, **Then** the border is indigo.
 
 **The ADRs**
@@ -27,7 +35,9 @@ As a team member, I want to describe in the prompt the technical work that stori
 **Sending**
 - [X] **Given** text (not only spaces) and at least one selected ADR chip, **Then** the send button is enabled and labelled "Draft architectural enabler"; **Given** either condition is not met, **Then** the button is disabled.
 - [X] **Given** the textarea has the focus, **When** the user presses Enter, **Then** the prompt is sent; **When** the user presses Shift+Enter, **Then** a new line is added; **Given** an input method is composing text, **Then** Enter does not send.
+  _Tested in story 032 (start-from-new.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** no model is connected for the project, **Then** a banner above the textarea says "No model is connected for this project. Connect one in Integrations, then the prompt works. No restart is needed."; **When** the user sends, **Then** the draft fails with the message "No model is connected for this project. Connect one in Integrations."
+  _Tested in story 032 (start-from-new.acceptance.test.tsx) and story 033 (describe-story.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the prompt, **Then** a caption beneath it names the model and its provider, for example "Claude Sonnet 4.6 on Amazon Bedrock (us-east-1) · prompt cache 5m", or "Claude on Amazon Bedrock" while the status is not yet known.
 - [X] **Given** the user sends, **Then** the textarea, the selected ADR chips, and the example link are cleared; the prompt appears as a message on the right (text as typed, line breaks kept); and a draft card appears beneath it.
 - [X] **Given** the draft card, **Then** it shows the enabler icon, the planned path `architectural-enablers/0003-<slug>.md` (complete path as a tooltip), the chip "Writing...", the chips of the ADRs it derives from, and the text as it streams in.
@@ -43,6 +53,7 @@ As a team member, I want to describe in the prompt the technical work that stori
 - [ ] **Given** a selected ADR that links to other documents (other ADRs, enablers, or drivers), **Then** the backend fetches the full text of each linked document and includes it in the request body under a "Linked documents" section, so the model receives the goal, scope, and decisions of every document reachable through the selected ADRs.
 - [ ] **Given** a linked document that is itself linked to further documents, **Then** the backend follows links one level deep only; it does not recurse beyond the directly linked documents.
 - [X] **Given** a new send while a previous draft is still streaming, **Then** the in-flight request is cancelled before the new one is started.
+  _Tested in story 033 (describe-story.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 ## Business rules and constraints
 - An enabler must derive from at least one Accepted ADR; only ADRs with status Accepted are offered (ADR-0007, ADR-0017).
@@ -64,7 +75,7 @@ As a team member, I want to describe in the prompt the technical work that stori
 - Asking for changes to a draft (story 4 of the builder).
 - Sending the project context, the list of existing enablers, and the list of existing stories with the request (story 5 of the builder).
 - Linking an enabler to stories or other documents (story 6 of the builder).
-- Writing stories from the same prompt box; the "Mark as architectural enabler" toggle is not shown here.
+- Writing stories from the same prompt box; the checkbox "Mark as architectural enabler" that chooses between them comes with story 032.
 - Sending the architecture of the system description with the request (that applies to stories only).
 - Following links more than one level deep from the selected ADRs.
 
@@ -117,15 +128,15 @@ these stories ask for. The column says which part is the base.
 
 ## What changes from the spike
 
-- **The box writes enablers only.** The spike's box has a tick "Mark as architectural enabler" that switches between a story and an enabler.
-  Here there is no tick and `asEnabler` is always true: the title, the line, the placeholder and the examples are the enabler's. The tick
-  returns with the stories.
+- **The checkbox "Mark as architectural enabler" chooses what the box writes.** The spike's box has that tick. It comes with story 032, which
+  makes the story the default: the enabler is written when it is ticked (`asEnabler`), and the placeholder, the box, the ADR panel and the
+  button of the enabler below are those of the ticked state.
 - **Story-only parts are left out:** the story examples ("As a returning customer, ..."), the three suggestions (one is kept), the
   automatic link of cross enablers, the architecture in the context, the tasks that a story copies into its task list, and the edit mode
   with its "Editing ..." chip.
 - **The folder `architectural-enablers` lists the enablers, and the panel is read-only.** In the spike an open enabler can be edited,
   linked, marked Cross, synced and deleted. Here none of that is shown, and the note says so.
-- **The button of the tree header is "New"**, named "New architectural enabler". The spike's is "New story" and also resets the folders to
+- **The button of the tree header is "New"**, named "New" (story 032). The spike's is "New story" and also resets the folders to
   `stories` and `enablers` open. Here it only resets the conversation.
 - **The workspace's middle** is the prompt again (in `story-builder-folders.md` it was an empty state), and with a file open the prompt is a
   narrow column on the right of the file.
