@@ -29,6 +29,7 @@ As a team member, I want one screen with the five fixed drivers and the drivers 
 **Opening**
 - [X] **Given** a driver card, **When** the user presses it (or uses Enter or Space on it), **Then** the driver opens for editing; the card's accessible name is "Edit \<name\>". (Verified up to the view model, which records which card was pressed; the edit dialog itself is out of scope and belongs to story 011.)
 - [X] **Given** the "Add a driver" card, **When** the user presses it, **Then** the dialog to add a driver opens. (Verified up to the view model, which records that the add card was pressed; the add dialog itself is out of scope and belongs to story 010.)
+  _Tested in story 010 (add-driver.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 **Keeping drivers**
 - [X] **Given** drivers with text, **When** the page is reloaded, **Then** the same drivers show with the same text.
