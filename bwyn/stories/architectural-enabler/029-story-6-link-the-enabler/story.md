@@ -13,6 +13,7 @@ As a team member, I want to link the enabler to the drivers and other enablers t
 
 - [X] **Given** the enabler composer is open, **Then** a "Link" button with a link icon sits below the prompt box; **When** the user presses it, **Then** a dialog (`role="dialog"`, title "Choose what to link") opens, groups documents by kind under the headings "Drivers", "Architectural enablers", and "Stories", and shows a checkbox and label for each document.
 - [X] **Given** the link dialog is open for an enabler prompt, **Then** ADRs are absent from the list, because they are chosen as chips in the ADR panel (story 024).
+  _Tested in story 037/041 (link-the-story.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** a driver exists with no text yet, **Then** it still appears in the list; **Given** no linkable documents exist at all, **Then** the dialog shows "Nothing to link yet."
 - [X] **Given** the user checks a document, **Then** the Link button shows a count badge, and a chip with the document's icon and label appears above the prompt box with a "Remove link to \<label\>" button; **When** the user activates that button, **Then** the chip disappears and the checkbox is cleared.
 - [X] **Given** the link dialog is open, **When** the user presses Escape or clicks outside the dialog, **Then** the dialog closes and the current selection is preserved.
@@ -30,6 +31,7 @@ As a team member, I want to link the enabler to the drivers and other enablers t
 
 - [X] **Given** the user approves the draft, **Then** the stored enabler records the chosen links (excluding the ADRs it derives from, which are stored separately), and the confirmation message reads "It is linked to N other items."
 - [X] **Given** the approved enabler is opened in the read-only file panel, **Then** a "Linked to" section shows a chip for each linked document, and activating a chip opens that document's file panel; **Given** a document the enabler links to is opened, **Then** it shows the enabler under "Referenced by".
+  _Tested in story 040 (link-from-enabler-panel.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** an ADR the enabler derives from is opened, **Then** its panel shows the enabler under "Referenced by", by number, and activating the chip opens the enabler; an ADR that no enabler derives from (and no story links to) shows no "Referenced by".
 - [X] **Given** a document that was linked to an enabler is later removed from the project, **Then** the "Linked to" section omits that chip silently rather than showing an error.
 
