@@ -18,6 +18,7 @@ As a team member, I want to open an architectural enabler and describe a change 
 - [X] **Given** the user had typed text before opening the enabler, **Then** that text remains in the box after the prompt switches to editing mode.
 - [X] **Given** a draft is already on screen when the user opens another file, **Then** the prompt continues to work on that draft and does not switch target.
 - [X] **Given** the file panel of the open enabler, **Then** the read-only note reads "Read-only here. Describe the change in the prompt to update this enabler.", and no Save, Delete, Sync, "Add link", "Cross enabler" control, or text box is present.
+  _Tested in story 040 (link-from-enabler-panel.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 **Sending the change**
 
