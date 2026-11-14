@@ -16,11 +16,13 @@ As a team member, I want to tell the AI what to change in the draft, in my own w
 - [X] **Given** a draft that is Writing or Failed, **Then** the change box is disabled and explains why, consistent with the behaviour established in story 025
 - [X] **Given** a revision completes, **Then** the draft's identifier, slug, planned path, chosen ADRs, and links are unchanged
 - [X] **Given** a draft revised twice and then approved, **Then** the browser sends one approval request (story 026) with the text on screen, which is the last revision, and the original first prompt; the backend stores that document (trimmed, with one final newline) and that prompt, and the enabler derives from the same ADRs as the draft
+  _Tested in story 027 (ask-for-changes.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 - [X] **Given** the accumulated turns reach 40, **Then** the backend refuses the next change request and returns a clear error message, which the card displays with a Retry option
 - [X] **Given** the user discards the draft while in revision mode, **Then** the composer returns to the new-enabler prompt state established in story 024, and nothing is sent to the backend
 - [X] **Given** the backend refuses the approval of a revised draft (for example because an ADR it derives from is no longer Accepted), **Then** nothing is stored, the draft stays Ready with its last revision, the card shows the reason, "Approve and create enabler" is available again, and the change box still takes changes; **When** the user sends a change, **Then** the reason disappears and a later approval carries the newest revision
 - [X] **Given** the approval of a revised draft is on its way to the backend, **Then** the change box is disabled and no change is sent until the backend answers
 - [X] **Given** a revision request, **Then** the backend sets a prompt-cache point after the system prompt, after the project context, and after the previous assistant turn; the token chips reflect cache hits as shown in story 025
+  _Tested in story 034 (follow-story-draft.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 ## Business rules and constraints
 - A change instruction is an instruction on the whole draft; the AI returns the complete revised document, preserving the identifier and the creation date, and changes only what was asked (Principle: DRY and KISS)
@@ -80,15 +82,15 @@ these stories ask for. The column says which part is the base.
 
 ## What changes from the spike
 
-- **The box writes enablers only.** The spike's box has a tick "Mark as architectural enabler" that switches between a story and an enabler.
-  Here there is no tick and `asEnabler` is always true: the title, the line, the placeholder and the examples are the enabler's. The tick
-  returns with the stories.
+- **The checkbox "Mark as architectural enabler" chooses what the box writes.** The spike's box has that tick. It comes with story 032, which
+  makes the story the default: the enabler is written when it is ticked (`asEnabler`), and the placeholder, the box, the ADR panel and the
+  button of the enabler below are those of the ticked state.
 - **Story-only parts are left out:** the story examples ("As a returning customer, ..."), the three suggestions (one is kept), the
   automatic link of cross enablers, the architecture in the context, the tasks that a story copies into its task list, and the edit mode
   with its "Editing ..." chip.
 - **The folder `architectural-enablers` lists the enablers, and the panel is read-only.** In the spike an open enabler can be edited,
   linked, marked Cross, synced and deleted. Here none of that is shown, and the note says so.
-- **The button of the tree header is "New"**, named "New architectural enabler". The spike's is "New story" and also resets the folders to
+- **The button of the tree header is "New"**, named "New" (story 032). The spike's is "New story" and also resets the folders to
   `stories` and `enablers` open. Here it only resets the conversation.
 - **The workspace's middle** is the prompt again (in `story-builder-folders.md` it was an empty state), and with a file open the prompt is a
   narrow column on the right of the file.
