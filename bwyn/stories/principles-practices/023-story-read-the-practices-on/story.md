@@ -30,6 +30,7 @@ As a team member, I want to open the Practices tab of the Principles & Practices
 - [X] **Given** the "Try again" button is pressed, **Then** `GET /api/practices` is called again.
 - [X] **Given** two different projects, **Then** both show the same fourteen practices in the same order.
 - [X] **Given** the response, **Then** the two groups appear in display order and the practices within each group appear in display order, with no practice repeated or missing.
+  _Tested in story 023 (read-practices.acceptance.test.tsx), which owns this behaviour; the duplicate test here was removed._
 
 **The backend endpoint**
 - [X] **Given** `GET /api/practices`, **Then** the response body matches the shape `{ "groups": [ { "id", "headline", "badge", "rule", "practices": [ { "id", "name", "text", "inBwyn", "nonNegotiable", "note" } ] } ] }` with both groups and all fourteen practices.
