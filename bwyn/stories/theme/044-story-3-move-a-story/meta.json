@@ -1,0 +1,51 @@
+{
+  "title": "Move a story into a theme by drag and drop",
+  "prompt": "# Story 3: Move a story folder by drag and drop\n\n- **Story**: XXX-move-story-to-theme\n- **Created**: 2026-11-15\n- **Status**: Draft\n- **Demo**: drag `003-checkout-form` onto `payments`, then onto `reporting`, then back onto `stories`; drag it over its own theme and see no\n  highlight; press Escape during a drag; open a link to a story that is in a closed theme.\n\n## Story\n\nAs a team member, I want to drag a story folder into the theme I think it belongs to, out of it, or to another theme, so that I decide\nmyself which stories sit together.\n\n## Acceptance tests\n\nDragging and dropping\n\n- [ ] **Given** the story folder `003-checkout-form` outside any theme and the theme `checkout-flow`, **When** the user drags the story\n  folder onto the theme and drops it, **Then** the story folder is inside the theme and no longer outside, the count of the theme goes up\n  by one, the count of `stories` does not change, and the theme opens.\n- [ ] **Given** a story folder is being dragged, **Then** a theme it can be dropped on, or the `stories` row, is highlighted while the\n  pointer is over it, the theme's row and the rows inside it alike.\n- [ ] **Given** a story folder in a theme, **When** the user drops it on the `stories` row, **Then** it goes back outside any theme, in the\n  order of its number.\n- [ ] **Given** a story folder in theme A, **When** the user drops it on theme B, **Then** it is in B and no longer in A.\n- [ ] **Given** a story folder dragged over the theme it is already in, or, outside any theme, over `stories`, **Then** nothing is\n  highlighted, and dropping it there changes nothing.\n- [ ] **Given** a drag, **When** the story folder is dropped anywhere else, or the user presses Escape, **Then** nothing moves and no\n  highlight is left.\n\nWhat can be dragged\n\n- [ ] **Given** the tree, **Then** only story folders can be dragged: not a theme, not a file, and nothing in `drivers`, `adrs` or\n  `architectural-enablers`. A theme cannot be dropped into a theme, so themes never nest.\n\nWhat a move keeps\n\n- [ ] **Given** a story that is moved, **Then** its identity, text, status, links (both ways), tasks, diagrams and UI example are not\n  changed, and if it was open, it stays open with its new path.\n- [ ] **Given** a story in a theme, **Then** inside the theme the story folders are in the order of their numbers.\n- [ ] **Given** a link that opens a story inside a closed theme, **Then** `stories`, the theme and the story folder open, and the story\n  shows selected.\n- [ ] **Given** a story in a theme, **Then** the path shown in the builder, and the \"File:\" line of every prompt about it (edit, diagram, UI\n  example), is `stories/<theme>/<identity>/story.md`.\n- [ ] **Given** moved stories, **When** the page is reloaded, **Then** each story is in the theme it was moved to.\n\n## Business rules and constraints\n\n- **A story belongs to one theme at most.** Moving it into a theme takes it out of the one it was in.\n- **A move is not an edit.** It does not change the text or the status of the story.\n- **Dropping where the story already is is not a drop target**, so the tree never offers a move that does nothing.\n\n## Out of scope\n\n- Moving a story with the keyboard or on a touch screen. This story is drag and drop with a mouse or a pen. Whoever builds it should raise\n  the keyboard way as its own story (see \"Something to decide\").\n- Moving several stories at once, and reordering stories by hand.\n\n## Tasks\n\n- [ ] Add the theme of a story to the stored story and to its entry, so that its folder path is `stories/<theme>/<identity>`.\n- [ ] Make story folder rows draggable, and the theme blocks and the `stories` row drop targets, with the highlight and the cases that do\n  nothing.\n- [ ] Move the story in the data, and open the theme it lands in.\n- [ ] Open the theme of a story when the story is opened from a link.\n- [ ] Test a move into a theme, between two themes, back to `stories`, and a drop where the story already is.",
+  "createdAt": "2026-11-15",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwi6q2accpnwgl",
+      "text": "Extend the story data model and its store to record the theme a story belongs to, and derive its folder path as `stories/<theme>/<identity>` or `stories/<identity>` accordingly (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mwi6q2acuf0gds",
+      "text": "Add a drag handle to story folder rows and make them draggable; leave theme rows, files, and all non-story items non-draggable"
+    },
+    {
+      "id": "mwi6q2acwhvyke",
+      "text": "Make theme rows and the `stories` row into drop targets; highlight a valid target while the pointer is over it; suppress the highlight when the story is already there"
+    },
+    {
+      "id": "mwi6q2acy7cy8g",
+      "text": "Handle the drop: move the story in the store, remove it from its previous theme if any, open the destination theme, and order stories by number"
+    },
+    {
+      "id": "mwi6q2ac3ba3ni",
+      "text": "Handle Escape and drops on invalid targets: restore the tree to its pre-drag state with no highlight"
+    },
+    {
+      "id": "mwi6q2acs42t2m",
+      "text": "Update the path shown in the builder and the \"File:\" line in prompts to reflect the story's current theme"
+    },
+    {
+      "id": "mwi6q2ac7aoooq",
+      "text": "Open the theme of a story when the story is navigated to via a link, selecting the story"
+    },
+    {
+      "id": "mwi6q2acukx9dp",
+      "text": "Persist theme membership so that it survives a page reload"
+    },
+    {
+      "id": "mwi6q2ac7goze3",
+      "text": "Write Jest tests covering: move into a theme, move between two themes, move back to `stories`, drop where the story already is, Escape during drag, and link navigation to a story inside a closed theme (Practice: Pair programming, ADR-0005)"
+    },
+    {
+      "id": "mwi6q2ac92pose",
+      "text": "Verify the full build and test suite still completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
