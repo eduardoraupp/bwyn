@@ -1,0 +1,51 @@
+{
+  "title": "Keep the themes in the repository",
+  "prompt": "# Story 4: Keep the themes in the repository\n\n- **Story**: XXX-sync-themes\n- **Created**: 2026-11-15\n- **Status**: Draft\n- **Demo**: with a repository connected, sync a story that was synchronised outside any theme and then moved into `payments`; read the sync\n  window and the pull request; change the old file on GitHub and sync again to see a conflict; connect another browser and see the themes.\n\n## Story\n\nAs a team member, I want the themes and the place of each story to be in the repository, so that the team and the other tools see the same\nfolders I see, and a story is never in the repository twice.\n\n## Acceptance tests\n\nWhere the files go\n\n- [ ] **Given** a story in the theme `payments`, **When** it is synchronised, **Then** its files go to\n  `stories/payments/003-checkout-form/` (`story.md`, `meta.json`, `ui.html` and the diagrams), and `meta.json` does not hold the theme.\n- [ ] **Given** a story outside any theme, **Then** its files go to `stories/003-checkout-form/`, as before.\n\nA story that moved\n\n- [ ] **Given** a story synchronised at `stories/003-checkout-form/` and moved into `payments` since, **When** the user opens Sync on it,\n  **Then** the window lists the files to upload in the theme folder and a section \"Delete 4 files from the old folder\" with the old paths,\n  and the hint \"The story was moved to another folder here. The same pull request adds it there and deletes it here, so the repository never\n  holds it twice.\"\n- [ ] **Given** that window, **When** the user sends it, **Then** one pull request adds the files in the theme folder and deletes the old\n  ones. Its title is \"BWYN: update 4 files and delete 4 files of <project>\", and its description lists the deleted files under\n  \"Deleted, because the story was moved to another folder (its files are added there above):\".\n- [ ] **Given** that pull request is still open, **When** the user syncs the story again, **Then** the old files are shown as waiting for\n  that pull request, and no second pull request deletes them.\n- [ ] **Given** an old file of the moved story was changed in the repository since the last sync, **When** the user syncs, **Then** that\n  file is a conflict, nothing is deleted, and it is solved on GitHub.\n- [ ] **Given** a theme renamed `payments` with the stories 003 and 007 synchronised earlier under `checkout-flow`, **When** only 003 is\n  synchronised, **Then** only 003 moves in the pull request; 007 stays under `checkout-flow` in the repository until it is synchronised,\n  and neither is lost or shown twice here.\n- [ ] **Given** a story that did not move, **When** it is synchronised, **Then** nothing of it is deleted, and nothing of another story is\n  touched.\n\nReading the repository\n\n- [ ] **Given** a repository with stories in theme folders, **When** the project connects to it, or pulls, **Then** the themes show, with\n  their stories in them.\n- [ ] **Given** the project connects, **When** a story is here already, in whatever theme folder it is in the repository, **Then** it is\n  left as it is here.\n- [ ] **Given** the repository holds the same story in two places, **When** it is pulled, **Then** the story shows once, in the place it has\n  here (outside any theme if it is new here), and a warning reads \"The story 003-checkout-form is in the repository in more than one place\n  (stories/003-checkout-form and stories/payments/003-checkout-form). It is shown once, where it is here.\". Nothing is deleted.\n- [ ] **Given** a `meta.json` inside a theme folder, **Then** its links are read as those of the story of that folder.\n\nRemoving a story, and empty themes\n\n- [ ] **Given** a story in a theme, **When** the user removes it, **Then** its folder is deleted from inside the theme in the repository.\n- [ ] **Given** a theme with no story, **Then** it is kept here only. It reaches the repository with the first story that is moved into it\n  and synchronised.\n\n## Business rules and constraints\n\n- **The folder is the only place that says where a story is.** `stories/<theme>/<NNN-slug>/` or `stories/<NNN-slug>/`. A theme starts with\n  a letter and a story folder with a digit, so the two are never mixed up.\n- **A sync deletes only the old files of a story that moved**, and only those that were synchronised before and not changed in the\n  repository since. Nothing else is ever deleted by a sync.\n- **A move is a deletion of the old files and an upload of the new ones, in the same pull request.**\n- **Each story moves when it is synchronised.** A rename or a move does not reach the repository by itself.\n\n## Out of scope\n\n- Synchronising a whole theme as one unit.\n- Moving the files in the repository with a Git rename (a deletion and an addition are what the pull request holds).\n- Solving a conflict of a moved story in BWYN.\n\n## Tasks\n\n- [ ] Put the patterns of a story path in one place (`storyPaths.ts`): a story folder with or without a theme, its files, its `meta.json`.\n- [ ] Build the files of a story in its theme folder, and read the theme back from the folder when pulling, with the warning for a story in\n  two places.\n- [ ] Make the scope of a story match its files wherever they are, and read the story of a `meta.json` inside a theme.\n- [ ] Add the `delete` action to the sync plan: the old files of a moved story, with the conflict and waiting cases, and record them as sent.\n- [ ] Send the deletions in the same pull request, with its title and description, and show them in the sync window.\n- [ ] Make the removal of a story delete its folder from inside its theme.\n- [ ] Leave alone, when connecting, a story that is here already in any theme folder.\n- [ ] Test with a fake repository: a story moved into a theme, a conflict on an old file, an open pull request, a story that did not move,\n  and a pull with themes and with a story in two places.",
+  "createdAt": "2026-11-15",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwi6rplztfvyla",
+      "text": "Create `storyPaths.ts` in the interface-adapters layer that encodes all story path patterns: story folder with and without a theme, its files, and its `meta.json` (ADR-0007, Architecture)"
+    },
+    {
+      "id": "mwi6rplzqlwmtn",
+      "text": "Update the sync path builder to place a story's files under its theme folder, and update the pull reader to derive the theme from the folder path when pulling"
+    },
+    {
+      "id": "mwi6rplzsejmlw",
+      "text": "Add duplicate-location detection on pull: when the same story slug appears in two paths, emit the warning and keep the local placement"
+    },
+    {
+      "id": "mwi6rplzfc14bw",
+      "text": "Add the `delete` action to the sync plan: identify old files of a moved story, check each for conflicts and for an open pull request, and record them as pending deletion"
+    },
+    {
+      "id": "mwi6rplz9ckbdh",
+      "text": "Extend the sync window component (UI layer) to display the \"Delete N files from the old folder\" section and the moved-story hint"
+    },
+    {
+      "id": "mwi6rplz9j7d38",
+      "text": "Extend pull-request creation in the outbound adapter to include the deletions in the same request, with the prescribed title and description format"
+    },
+    {
+      "id": "mwi6rplz21743d",
+      "text": "Update story removal to delete the story folder from inside its theme folder in the repository"
+    },
+    {
+      "id": "mwi6rplztqlw56",
+      "text": "Update the connect/pull flow to leave a story's local theme placement unchanged when the same story already exists locally"
+    },
+    {
+      "id": "mwi6rplz9dqy5q",
+      "text": "Write Jest tests against a fake repository covering: a story moved into a theme, a conflict on an old file, an open pull request blocking re-deletion, a story that did not move, a pull with themes, and a story present in two repository locations (Practice: Pair programming, ADR-0005)"
+    },
+    {
+      "id": "mwi6rplzehv7r6",
+      "text": "Run the full build and confirm the ten-minute budget is met (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    }
+  ]
+}
