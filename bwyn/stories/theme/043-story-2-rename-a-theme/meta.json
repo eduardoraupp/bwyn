@@ -1,0 +1,55 @@
+{
+  "title": "Rename a theme",
+  "prompt": "# Story 2: Rename a theme\n\n- **Story**: XXX-rename-theme\n- **Created**: 2026-11-15\n- **Status**: Draft\n- **Demo**: double-click `checkout-flow`, type \"  Cobrança Online  \" and Enter to get `cobranca-online`; press F2 and try \"2024-goals\", an\n  empty name and the name of another theme; rename a theme that holds the open story and see its path change.\n\n## Story\n\nAs a team member, I want to rename a theme when I find a better name for it, so that the name says what its stories have in common, without\nmoving every story by hand.\n\n## Acceptance tests\n\nStarting and ending a rename\n\n- [ ] **Given** a theme, **When** the user double-clicks it, **Then** its name becomes an edit field with the whole text selected, and the\n  folder is open or closed as it was before the double-click.\n- [ ] **Given** a theme has the focus, **When** the user presses F2, **Then** its name becomes an edit field, as with a double-click.\n- [ ] **Given** a theme row, **When** the pointer rests on it, **Then** the tooltip reads \"Click twice (or press F2) to rename\".\n- [ ] **Given** the edit field, **When** the user presses Enter, or leaves the field, **Then** the new name is saved. **When** the user\n  presses Escape, **Then** nothing changes.\n- [ ] **Given** the edit field, **When** the user keeps the same name and presses Enter, **Then** nothing changes and the field closes.\n- [ ] **Given** a story folder, the `stories` folder, another folder or a file, **When** the user double-clicks it or presses F2, **Then**\n  nothing is renamed.\n\nThe name\n\n- [ ] **Given** the user types \"  Cobrança Online  \", **Then** the theme is named `cobranca-online`: the spaces around are removed, the words\n  are lower case and joined by \"-\", and the accents are removed. Any other sign also becomes a \"-\".\n- [ ] **Given** the user clears the name, or types only spaces or signs, **When** Enter, **Then** \"Give the theme a name.\" shows under the\n  field, the field stays open, and nothing is saved.\n- [ ] **Given** the user types \"2024-goals\", **When** Enter, **Then** \"A theme name starts with a letter.\" shows and nothing is saved.\n- [ ] **Given** a theme `checkout-flow` exists, **When** another is renamed \"Checkout Flow\", **Then** \"A theme with this name already\n  exists.\" shows and nothing is saved.\n- [ ] **Given** a message under the field, **When** the user types again, **Then** the message goes away.\n- [ ] **Given** a name that is not good, **When** the user leaves the field, **Then** the theme goes back to its old name, and no message\n  stays.\n- [ ] **Given** the user types a name longer than 40 characters, **Then** it is cut to 40 characters, with no \"-\" at the end.\n\nWhat moves with it\n\n- [ ] **Given** a theme `checkout-flow` with the stories `003-checkout-form` and `007-pay-by-card`, **When** it is renamed `payments`,\n  **Then** both story folders are inside `payments`, and their identities, texts, statuses, links, tasks, diagrams and UI examples are as\n  they were.\n- [ ] **Given** the open story is in the theme, **When** the theme is renamed, **Then** the story stays open, with the path\n  `stories/payments/003-checkout-form/story.md`.\n- [ ] **Given** the theme was open, **When** it is renamed, **Then** it is still open under its new name, in its new place in the\n  alphabetical order.\n- [ ] **Given** the theme has a saved runway (story 5), **When** it is renamed, **Then** the runway belongs to the theme under its new name.\n\n## Business rules and constraints\n\n- **Keeping its own name is allowed.** The check that a name is taken leaves out the theme being renamed.\n- **A rename is not an edit of a story.** It does not change the text or the status of any story.\n- **In the repository, each story moves when it is synchronised** (story 4). A rename does not open a pull request on its own.\n\n## Out of scope\n\n- Undoing a rename.\n- Renaming story folders, the `stories` folder or files from the tree.\n- Synchronising every story of a renamed theme in one pull request.\n\n## Tasks\n\n- [ ] Add the rename to the theme row: double-click and F2 open the name field of story 1 with the current name.\n- [ ] Rename in the data: the theme in the list, the theme of each of its stories, and its saved runway.\n- [ ] Keep the theme open under its new name.\n- [ ] Test the rename of a theme with two stories, one of them open, and the messages.",
+  "createdAt": "2026-11-15",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwi6lygtb671gc",
+      "text": "Add double-click and F2 handlers to the theme row component that open an inline name field pre-filled with the current name and fully selected (Architecture: UI layer)"
+    },
+    {
+      "id": "mwi6lygtm5tbcg",
+      "text": "Add a tooltip `\"Click twice (or press F2) to rename\"` to the theme row (Architecture: UI layer)"
+    },
+    {
+      "id": "mwi6lygtkn9j0y",
+      "text": "Implement the slug-transformation function (trim, lower-case, strip diacritics, non-alphanumeric → `-`, collapse, truncate to 40) in the entities layer and unit-test it (Architecture: entities layer)"
+    },
+    {
+      "id": "mwi6lygt5kq78i",
+      "text": "Implement validation rules (non-empty after transformation, must start with a letter, must be unique excluding self) in the use-case layer and unit-test each rule (Architecture: use-cases layer)"
+    },
+    {
+      "id": "mwi6lygtghsmlr",
+      "text": "Implement a `RenameThemeViewModel` that holds edit state, exposes the validation message, and calls the rename use case; unit-test it with a test double for the use case (Architecture: interface-adapters layer, ADR-0007)"
+    },
+    {
+      "id": "mwi6lygt6s9h4u",
+      "text": "Wire the rename use case: update the theme name in the project state, reassign the theme field of every story in that theme, and update the runway association (Architecture: use-cases layer)"
+    },
+    {
+      "id": "mwi6lygto10xjz",
+      "text": "Update the tree to keep the renamed theme open and re-sort it alphabetically after the rename (Architecture: UI layer)"
+    },
+    {
+      "id": "mwi6lygty84voa",
+      "text": "Update the open-story path display when the story's theme is renamed (Architecture: UI layer)"
+    },
+    {
+      "id": "mwi6lygte6c8ig",
+      "text": "Write a Jest integration test covering: rename `checkout-flow` to `payments` with two stories (one open), verify story contents are unchanged, the open story path updates, the theme is open in its new alphabetical position, and the runway is reassigned (Practice: Pair programming, ADR-0005)"
+    },
+    {
+      "id": "mwi6lygt2v4awd",
+      "text": "Write Jest tests for each validation message and for the blur-reverts-to-old-name behaviour (Practice: Pair programming)"
+    },
+    {
+      "id": "mwi6lygth5qgif",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
