@@ -46,6 +46,34 @@
     {
       "id": "mwi6q2ac92pose",
       "text": "Verify the full build and test suite still completes within the ten-minute budget (Practice: Ten-Minute Build)"
+    },
+    {
+      "id": "mwi71nyq3y1ic9",
+      "text": "Add a `PATCH /projects/{projectId}/themes/{themeId}/stories` endpoint (or equivalent) in the inbound adapter that accepts a story identifier and records the move; add a corresponding `PATCH` to remove a story from all themes when it is moved to the `stories` root (ADR-0017, Architecture)"
+    },
+    {
+      "id": "mwi71nyqnayqpe",
+      "text": "Implement the application-layer command handler that updates the theme aggregate: adds the story identifier to the destination theme's list and removes it from the source theme's list (ADR-0017)"
+    },
+    {
+      "id": "mwi71nyq3zshy8",
+      "text": "Add or extend the outbound adapter and Flyway migration so that the theme record stores the ordered list of story identifiers that belong to it (ADR-0010, ADR-0011)"
+    },
+    {
+      "id": "mwi71nyqsa4mp6",
+      "text": "Handle the drop: optimistically move the story in the store, call the backend, revert and show an error on failure; on success open the destination theme and order stories by number"
+    },
+    {
+      "id": "mwi71nyqjaod3h",
+      "text": "On builder load, read theme membership from the backend and populate the store"
+    },
+    {
+      "id": "mwi71nyqn4mbi8",
+      "text": "Write Jest tests covering: move into a theme, move between two themes, move back to `stories`, drop where the story already is, Escape during drag, link navigation to a story inside a closed theme, and backend failure reverting the tree (Practice: Pair programming, ADR-0005)"
+    },
+    {
+      "id": "mwi71nyqravuh4",
+      "text": "Write backend unit and integration tests covering the command handler and the persistence of story-identifier lists in themes (ADR-0009, ADR-0012)"
     }
   ]
 }

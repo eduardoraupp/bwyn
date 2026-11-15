@@ -34,14 +34,22 @@ As a team member, I want to drag a story folder into a theme, out of it, or into
 - [ ] **Given** `003-checkout-form` is inside `checkout-flow`, **Then** the path shown in the builder and the "File:" line of every prompt about it is `stories/checkout-flow/003-checkout-form/story.md`.
 - [ ] **Given** stories have been moved, **When** the page is reloaded, **Then** each story is in the theme it was moved to.
 
+**Persistence**
+
+- [ ] **Given** `003-checkout-form` is dropped onto `checkout-flow`, **When** the drop completes, **Then** the backend records `003-checkout-form` in the list of story identifiers that belong to `checkout-flow`, and the previous theme (if any) no longer lists `003-checkout-form`.
+- [ ] **Given** `003-checkout-form` is dropped onto the `stories` row, **When** the drop completes, **Then** the backend records `003-checkout-form` as belonging to no theme.
+- [ ] **Given** the backend call to persist the move fails, **When** the drop completes, **Then** the tree reverts to its pre-drop state and an error message is shown; no partial state is persisted.
+- [ ] **Given** the page is reloaded after a move, **When** the builder tree loads, **Then** the frontend reads the theme membership from the backend and each story appears in the theme the backend recorded.
+
 ## Business rules and constraints
 
 - A story belongs to at most one theme. Moving it into a theme removes it from the theme it was in (ADR-0007, Architecture).
 - A move does not alter the story's text, status, identifier, or links; it changes only the folder path (Architecture).
 - Dropping a story where it already lives is not a valid drop target; the tree never offers a move that does nothing.
 - Story folders inside a theme are ordered by their number in ascending order (consistent with story 042).
-- The theme membership of a story is persisted so that it survives a page reload (Architecture).
+- Theme membership is persisted in the backend so that it survives a page reload; the theme record holds the ordered list of story identifiers that belong to it (Architecture).
 - The path `stories/<theme>/<identity>/story.md` is the canonical path for a story that belongs to a theme; `stories/<identity>/story.md` is the canonical path for an unthemed story (Architecture).
+- The frontend optimistically updates the tree on drop and reverts if the backend call fails (Architecture).
 
 ## Out of scope
 
@@ -52,17 +60,20 @@ As a team member, I want to drag a story folder into a theme, out of it, or into
 - Renaming a theme (covered by story 043).
 - Removing a theme and deciding what happens to its stories.
 - Synchronising the new path with the Git repository (a separate sync story).
-- Backend persistence changes: theme membership is stored in the frontend state established by story 042; no new API endpoints are introduced here.
 
 ## Tasks
 
+- [ ] Add a `PATCH /projects/{projectId}/themes/{themeId}/stories` endpoint (or equivalent) in the inbound adapter that accepts a story identifier and records the move; add a corresponding `PATCH` to remove a story from all themes when it is moved to the `stories` root (ADR-0017, Architecture)
+- [ ] Implement the application-layer command handler that updates the theme aggregate: adds the story identifier to the destination theme's list and removes it from the source theme's list (ADR-0017)
+- [ ] Add or extend the outbound adapter and Flyway migration so that the theme record stores the ordered list of story identifiers that belong to it (ADR-0010, ADR-0011)
 - [ ] Extend the story data model and its store to record the theme a story belongs to, and derive its folder path as `stories/<theme>/<identity>` or `stories/<identity>` accordingly (ADR-0007, Architecture)
 - [ ] Add a drag handle to story folder rows and make them draggable; leave theme rows, files, and all non-story items non-draggable
 - [ ] Make theme rows and the `stories` row into drop targets; highlight a valid target while the pointer is over it; suppress the highlight when the story is already there
-- [ ] Handle the drop: move the story in the store, remove it from its previous theme if any, open the destination theme, and order stories by number
+- [ ] Handle the drop: optimistically move the story in the store, call the backend, revert and show an error on failure; on success open the destination theme and order stories by number
 - [ ] Handle Escape and drops on invalid targets: restore the tree to its pre-drag state with no highlight
 - [ ] Update the path shown in the builder and the "File:" line in prompts to reflect the story's current theme
 - [ ] Open the theme of a story when the story is navigated to via a link, selecting the story
-- [ ] Persist theme membership so that it survives a page reload
-- [ ] Write Jest tests covering: move into a theme, move between two themes, move back to `stories`, drop where the story already is, Escape during drag, and link navigation to a story inside a closed theme (Practice: Pair programming, ADR-0005)
+- [ ] On builder load, read theme membership from the backend and populate the store
+- [ ] Write Jest tests covering: move into a theme, move between two themes, move back to `stories`, drop where the story already is, Escape during drag, link navigation to a story inside a closed theme, and backend failure reverting the tree (Practice: Pair programming, ADR-0005)
+- [ ] Write backend unit and integration tests covering the command handler and the persistence of story-identifier lists in themes (ADR-0009, ADR-0012)
 - [ ] Verify the full build and test suite still completes within the ten-minute budget (Practice: Ten-Minute Build)
