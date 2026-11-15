@@ -1,0 +1,47 @@
+{
+  "title": "The architecture runway of a theme",
+  "prompt": "# Story 5: The architecture runway of a theme\n\n- **Story**: XXX-theme-runway\n- **Created**: 2026-11-15\n- **Status**: Draft\n- **Demo**: press the runway button on `payments`, generate the runway and see only its stories and the enablers linked to them, save it, add\n  a link and see that it is out of date, regenerate and save, sync it, and see `stories/payments/runway.mmd` in the pull request.\n\n## Story\n\nAs a team member, I want to see the architecture runway of one theme, so that I know which enablers its stories need and in which order the\nwork of that theme can be built, without the rest of the project in the way.\n\n## Acceptance tests\n\nOpening it\n\n- [ ] **Given** a theme with stories, **Then** its row has a runway button, \"Architecture runway of <theme>\". **When** the user presses it,\n  **Then** a full screen opens with the title \"Architecture runway of <theme>\" and the count of its enablers and stories.\n- [ ] **Given** a theme with no story, **Then** its runway button is disabled, with the tooltip \"Add a story to this theme to draw its\n  runway\".\n- [ ] **Given** the runway of a theme was never saved, **When** it opens, **Then** it says \"Generate it from the stories in the folder\n  \"<theme>\" and the architectural enablers linked to them ...\" and has a button \"Generate runway\".\n\nWhat it draws\n\n- [ ] **Given** a theme, **Then** the runway draws the stories in its folder and the architectural enablers linked to them, whichever of the\n  two holds the link. It does not draw the stories of other themes or outside themes, or the enablers that only those (or other enablers)\n  link to.\n- [ ] **Given** an enabler linked to a story of the theme, **Then** the enabler comes before the story, on the left. Two linked stories go\n  in the order of their numbers.\n- [ ] **Given** the drawing, **Then** it says \"Only the stories in the folder \"<theme>\" and the architectural enablers linked to them are\n  drawn.\" above the explanation of how to read it.\n- [ ] **Given** no story of the theme is linked to an enabler or to another story of the theme, **When** it is generated, **Then** it says\n  \"No story of this theme is linked to an architectural enabler or to another story of the theme, so there is no order to draw. Use \"Add\n  link\" on a story.\"\n\nSaving it\n\n- [ ] **Given** a generated runway, **When** the user presses Save, **Then** it is saved for the theme, with the time.\n- [ ] **Given** a saved runway, **When** a link or a story of the theme changes, **Then** it says that the links or the items changed since\n  it was saved, and Regenerate draws it again.\n- [ ] **Given** a generated runway that is not saved, **When** the user closes the screen, **Then** they are asked to confirm, and the draft\n  is dropped.\n- [ ] **Given** the runway of the theme, **Then** the runway of the whole project is not changed, and the other way round.\n\nKeeping it in the repository\n\n- [ ] **Given** a saved runway of a theme, **Then** the footer says it is kept in the repository as `stories/<theme>/runway.mmd`, and Sync\n  covers that one file only, with the note \"The saved architecture runway of the theme <theme>, which is one file,\n  stories/<theme>/runway.mmd (Mermaid source). Other documents are left out.\"\n- [ ] **Given** the runway is not saved, or the open file has changes, **Then** Sync is disabled with the reason.\n- [ ] **Given** the repository has `stories/<theme>/runway.mmd`, **When** the project connects or pulls, **Then** the runway comes down as\n  it is, the theme exists here, and the import summary counts it as a theme runway. When connecting, a runway saved here already is left as\n  it is.\n- [ ] **Given** a theme runway, **When** a story is synchronised, **Then** the runway is not part of that sync.\n\n## Business rules and constraints\n\n- **The runway of a theme is worked out from the links**, with no request to a model, as the runway of the project is.\n- **One file per theme**, `stories/<theme>/runway.mmd`, next to its story folders. A file named `runway.mmd` cannot be mistaken for a story\n  folder.\n- **What comes down is stored exactly as it came**, so that it compares equal to the repository and is not shown as changed.\n\n## Out of scope\n\n- One runway that shows every theme side by side, or the themes as groups in the runway of the project.\n- Editing the Mermaid source by hand.\n\n## Tasks\n\n- [ ] Add `themeRunwayEntries` (the stories of the theme and the enablers linked to them) and test it.\n- [ ] Give the runway screen an optional theme: its title, texts, empty message and repository path.\n- [ ] Keep the saved runway of each theme in the project (`themeRunways`), and move it with a rename.\n- [ ] Add the runway button to the theme row, disabled when the theme is empty.\n- [ ] Sync the runway of a theme as one file (`themerunway:<theme>`), with its note in the sync window.\n- [ ] Build, pull and import `stories/<theme>/runway.mmd`, and count it in the import summary.",
+  "createdAt": "2026-11-15",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwi73657wv1byx",
+      "text": "Write and test a `themeRunwayEntries` use-case function that, given a theme, returns the stories in its folder and the enablers linked to them, sorted by story number (use-case layer, ADR-0007)"
+    },
+    {
+      "id": "mwi736579oqj5m",
+      "text": "Extend the runway screen component to accept an optional theme parameter and render the theme-specific title, description texts, empty-state message, and repository path (ui layer, ADR-0007)"
+    },
+    {
+      "id": "mwi73657vilf5m",
+      "text": "Add saved-theme-runway state to the project entity (`themeRunways` map keyed by theme name) and update it on rename so the saved runway moves with the theme (entity layer, ADR-0007)"
+    },
+    {
+      "id": "mwi73657mjky2a",
+      "text": "Add the runway button to the theme row in the builder tree, disabled with tooltip when the theme has no stories (ui layer, ADR-0007)"
+    },
+    {
+      "id": "mwi73657kmmkh2",
+      "text": "Add a backend endpoint and outbound adapter to persist and retrieve the saved runway for a theme as `stories/<theme>/runway.mmd` (adapter layer, ADR-0017)"
+    },
+    {
+      "id": "mwi736577ab8qq",
+      "text": "Implement Sync for the theme runway as a single-file operation (`themerunway:<theme>`) with the scoped note in the sync window, and disable Sync when the runway is unsaved or has changes"
+    },
+    {
+      "id": "mwi73657q2kvoo",
+      "text": "Implement pull and import of `stories/<theme>/runway.mmd`: store the content exactly as received, count it in the import summary, and leave any existing local runway unchanged on connect"
+    },
+    {
+      "id": "mwi73657dj6f7b",
+      "text": "Add a Flyway migration for any new persistence column or table required to store the theme runway content and its saved timestamp (ADR-0010)"
+    },
+    {
+      "id": "mwi736577ih0b1",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build)"
+    }
+  ]
+}
