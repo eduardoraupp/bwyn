@@ -1,0 +1,59 @@
+{
+  "title": "The branch always wins",
+  "prompt": "# Story 3: The branch always wins\n\n- **Story**: XXX-branch-wins\n- **Created**: 2026-11-27\n- **Status**: Draft\n- **Demo**: open story 003 in two browsers (two people); in the first, change the story, save and sync; in the second, within 30 seconds,\n  see the story replaced and the notice \"Updated from story-003 and saved.\"; reload the second browser and see the new text is stored.\n\n## Story\n\nAs a team member, I want what was pushed to the branch of the story I have open to replace my copy and be saved straight away, so that\nwhen two of us touch the same story we never have a conflict to solve: the last push is the story.\n\n## Acceptance tests\n\nNoticing a push\n\n- [ ] **Given** a story or enabler is open and GitHub is connected, **Then** BWYN looks at the head of its branch every 30 seconds, and at\n  once when the window is used again.\n- [ ] **Given** the head is the commit this machine last pulled or pushed, **Then** nothing happens.\n- [ ] **Given** the head is another commit, **Then** BWYN downloads the document's files from the branch, replaces the open document with\n  them, saves it in the database, and remembers the head as the last commit it knows.\n- [ ] **Given** the document has no open branch, **Then** BWYN watches the base branch the same way, for the document's own files.\n\nReplacing\n\n- [ ] **Given** the branch changed the text, the meta.json, a diagram or the UI example, **Then** each of them is replaced here, the screen\n  shows the new version, and the Diagrams button shows the diagrams the story now holds.\n- [ ] **Given** a file of the document was deleted on the branch (for example the class diagram), **Then** it is deleted here too.\n- [ ] **Given** the story is in another theme folder on the branch, **Then** it moves to that theme here.\n- [ ] **Given** the replace worked, **Then** a notice under the header says \"Updated from story-003 and saved.\" and names the files, for\n  example \"story.md, diagrams/sequence.mmd\".\n- [ ] **Given** the user had unsaved changes in the text, **Then** they are replaced too, and the notice adds \"Your unsaved changes were\n  replaced.\"\n- [ ] **Given** a diagram or UI dialog was open, **Then** it closes, and the notice says so.\n- [ ] **Given** the page is reloaded after a replace, **Then** the new version is what shows: it was saved in the database.\n\nNever a conflict\n\n- [ ] **Given** the same file changed here and on the branch, **Then** the branch's version is kept and no conflict is shown.\n- [ ] **Given** a story that is not open, **Then** nothing is pulled for it until it is opened. **When** it is opened, **Then** its branch\n  is looked at at once.\n- [ ] **Given** GitHub cannot be reached, **Then** nothing changes here and BWYN tries again at the next look.\n\n## Business rules and constraints\n\n- **What is fetched always overwrites what is here.** There is no merge, no conflict and no Force pull for a story or an enabler.\n- **What is fetched is saved in the database at once.** The user does not press Save after a pull.\n- **The last commit known is remembered per machine**, so a push from this machine is never pulled back as if it were a teammate's.\n- **One person per branch is the way of working.** When two work on the same document, the one who pushed last wins and the other's copy\n  is replaced.\n\n## Out of scope\n\n- Telling who pushed, or showing what changed (a diff).\n- Keeping the replaced version anywhere to bring it back.\n- Pulling documents that are not open.\n\n## Tasks\n\n- [ ] Poll the head of the open document's branch (or of the base branch when it has none) every 30 seconds and when the window is used\n  again.\n- [ ] On a new head, download the document's files, replace them here (deleted files too, the theme folder too) and save them in the\n  database.\n- [ ] Remember the head as the last commit known for the document.\n- [ ] Show the notice, with the files and the unsaved changes that were replaced.\n- [ ] Remove conflicts, waiting and Force pull from the sync of stories and enablers.\n- [ ] Test a push from another machine, unsaved changes, a deleted diagram, a moved story, and a push from this machine that is not\n  pulled back.",
+  "createdAt": "2026-11-27",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwzeods2xbrmpx",
+      "text": "Add a backend outbound port `BranchHeadPort` with a method that returns the current head commit SHA for a given document's branch (or the base branch when the document has no open branch), implemented in the infrastructure layer as a GitHub API call (ADR-0017)"
+    },
+    {
+      "id": "mwzeods2f4d6x3",
+      "text": "Add a backend application-layer command handler `PullDocumentFromBranchHandler` that calls `BranchHeadPort`, compares the returned SHA with the stored last-known SHA, downloads changed and deleted files when they differ, persists the new content, updates the last-known SHA, and returns the list of affected files"
+    },
+    {
+      "id": "mwzeods2lhebho",
+      "text": "Add a Flyway migration that adds a `last_known_branch_sha` column (per document per installation) to the relevant table (ADR-0010)"
+    },
+    {
+      "id": "mwzeods25fnysl",
+      "text": "Expose a `POST /projects/{projectId}/documents/{documentId}/pull-if-changed` endpoint in `bwyn-rest` that delegates to the handler and returns the list of replaced files and a flag for whether unsaved changes were present (ADR-0014, ADR-0017)"
+    },
+    {
+      "id": "mwzeods2j4jmj4",
+      "text": "Write ArchUnit tests asserting that `BranchHeadPort` lives in the domain layer and its implementation lives in the infrastructure layer (ADR-0009)"
+    },
+    {
+      "id": "mwzeods2kzpbwo",
+      "text": "Write a Testcontainers integration test for the pull handler covering: head unchanged (no-op), head changed with file updates, head changed with a deleted file, and GitHub unreachable (ADR-0012)"
+    },
+    {
+      "id": "mwzeods2t4b4jn",
+      "text": "In the frontend ViewModel, add a polling effect that calls the pull endpoint every 30 seconds and immediately when the window regains focus, and exposes a `replaceNotice` observable (ADR-0007)"
+    },
+    {
+      "id": "mwzeods2uyscgg",
+      "text": "In the frontend ViewModel, handle the response: update the document state, close any open diagram or UI-example dialog, and set the notice text including the file list and the unsaved-changes warning when applicable"
+    },
+    {
+      "id": "mwzeods22fyf96",
+      "text": "Render the notice below the document header in the React component; dismiss it when the user navigates away (ADR-0007)"
+    },
+    {
+      "id": "mwzeods2vsfoaf",
+      "text": "Remove the conflict dialog, the \"waiting\" state, and the \"Force pull\" action from the story and enabler sync flow established in story 048"
+    },
+    {
+      "id": "mwzeods24poacd",
+      "text": "Write Jest unit tests for the ViewModel covering: no-op on matching SHA, replace with file list, replace with deleted file, replace with theme move, unsaved-changes warning, dialog close, and GitHub-unreachable no-op (ADR-0005, Principle: UI/Front end Tests pay only for what they assert)"
+    },
+    {
+      "id": "mwzeods2ayqs3f",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    }
+  ]
+}
