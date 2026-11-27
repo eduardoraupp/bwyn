@@ -1,0 +1,67 @@
+{
+  "title": "Delete a story or an enabler, here and on GitHub",
+  "prompt": "# Story 4: Delete a story or an enabler, here and on GitHub\n\n- **Story**: XXX-delete-document-with-pr\n- **Created**: 2026-11-27\n- **Status**: Draft\n- **Demo**: delete story 003, which is on main; see it go from the tree and the database, and pull request #13 on `story-003` that deletes\n  its folder; delete a story that was never synced and see no pull request.\n\n## Story\n\nAs a team member, I want Delete to remove a story or enabler from the project and to open the pull request that removes it from GitHub, so\nthat a deleted document does not come back with the next pull.\n\n## Acceptance tests\n\nConfirming\n\n- [ ] **Given** an open story or enabler, **When** the user presses Delete, **Then** a confirmation shows, as today, with what is removed\n  here, what happens on GitHub and the documents that link to it.\n- [ ] **When** the user presses Cancel, **Then** nothing changes.\n\nDeleting\n\n- [ ] **Given** GitHub is connected and the story is on the base branch, **When** the user confirms, **Then** a commit on `story-003` (made\n  from the base branch when the branch has no open pull request) deletes the story's folder, its pull request is titled \"BWYN: delete\n  story 003 Checkout form\", and the chat says \"Deleted the story \"Checkout form\" and its diagrams. Pull request #13 removes its 4 files\n  from acme/platform: <link>\".\n- [ ] **Given** the story is only on its branch (its pull request is open and it was never merged), **When** the user confirms, **Then**\n  the pull request is closed, the branch is deleted, and the chat says \"Its pull request #12 was closed and the branch story-003 deleted.\"\n- [ ] **Given** the story is neither on the base branch nor on a branch, **Then** no request opens, and the chat says \"It was not on\n  GitHub.\"\n- [ ] **Given** GitHub is not connected, **Then** the story is deleted here only, as today.\n- [ ] **Given** an enabler, **Then** the same happens with its two files and the branch `architectural-enabler-0004`.\n\nHere\n\n- [ ] **Given** the request to GitHub worked, **Then** the document is removed from the database, the tree and the screen, and the links of\n  other documents to it are removed.\n- [ ] **Given** the request to GitHub failed, **Then** nothing is deleted here, and the confirmation shows \"It could not be deleted from\n  GitHub, so nothing was deleted: <reason>\".\n\n## Business rules and constraints\n\n- **Delete is the one action that changes the database and GitHub together**, and GitHub goes first, so that a failure leaves everything\n  as it was.\n- **Nothing is deleted from the base branch directly.** It is deleted when the pull request is merged.\n- **The deletion uses the document's own branch**, so that one document still has one branch.\n\n## Out of scope\n\n- Undo, a bin, or bringing a deleted document back from GitHub.\n- Deleting a theme folder.\n\n## Tasks\n\n- [ ] Commit the deletion on the document's branch and open (or reuse) its pull request with the delete title.\n- [ ] Close the pull request and delete the branch for a document that is only on its branch.\n- [ ] Add the backend calls to close a pull request and delete a branch.\n- [ ] Keep the order: GitHub first, then the database; nothing here on a failure.\n- [ ] Test a document on the base branch, only on its branch, not on GitHub, and a failure.",
+  "createdAt": "2026-11-27",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mwzeqiooreb6d2",
+      "text": "Add a `DELETE /projects/{projectId}/stories/{storyId}` and a `DELETE /projects/{projectId}/enablers/{enablerId}` command handler in the application layer (`bwyn-application`) that orchestrates: resolve GitHub state → act on GitHub → delete from database (AE-0005, ADR-0017)"
+    },
+    {
+      "id": "mwzeqioo5b3pdr",
+      "text": "Implement a `GitHubDeletionPort` outbound port in `bwyn-core` with operations: push delete commit and open pull request, close pull request, delete branch"
+    },
+    {
+      "id": "mwzeqioo7gd45v",
+      "text": "Implement the `GitHubDeletionPort` adapter in `bwyn-infrastructure` using the existing GitHub API client"
+    },
+    {
+      "id": "mwzeqiooqfh5tm",
+      "text": "Add a `DELETE /projects/{projectId}/stories/{storyId}` and `DELETE /projects/{projectId}/enablers/{enablerId}` REST endpoint in `bwyn-rest` annotated with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014)"
+    },
+    {
+      "id": "mwzeqioo386epm",
+      "text": "Add a Flyway migration to add a `links` cascade-delete or cleanup step so that links pointing to the deleted document are removed in the same transaction (ADR-0010)"
+    },
+    {
+      "id": "mwzeqioogxerur",
+      "text": "Write unit tests for the delete command handler covering: document on base branch, document only on branch, document not on GitHub, GitHub failure (ADR-0009)"
+    },
+    {
+      "id": "mwzeqioouw09lx",
+      "text": "Write a `DeleteDocumentIT` integration test extending `PostgresIntegrationTest` that verifies the database row and its incoming links are removed on success and untouched on GitHub failure (ADR-0012)"
+    },
+    {
+      "id": "mwzeqiootqvmjf",
+      "text": "Add a `deleteDocument` use case in the `use-cases` layer of the frontend that calls the backend delete endpoint (AE-0002, ADR-0007)"
+    },
+    {
+      "id": "mwzeqioooqesa1",
+      "text": "Add a `DeleteDocumentViewModel` in the `interface-adapters` layer that resolves the list of linking documents and exposes `confirm()` and `cancel()` commands (AE-0002, ADR-0007)"
+    },
+    {
+      "id": "mwzeqiootvev6w",
+      "text": "Build the confirmation dialog React component in the `ui` layer, listing linked documents, the GitHub outcome, and the failure message when present (AE-0002, ADR-0007)"
+    },
+    {
+      "id": "mwzeqioogvib44",
+      "text": "Wire the Delete action into the action bar established by story 047, guarded by the confirmation dialog"
+    },
+    {
+      "id": "mwzeqioofbl1t8",
+      "text": "Remove the deleted document from the tree and close the file panel on success, and remove its links from the in-memory state of other open documents"
+    },
+    {
+      "id": "mwzeqiooh4cpxh",
+      "text": "Write Jest tests for `DeleteDocumentViewModel` using a test double for the use case, covering all four GitHub-state branches and the failure path (ADR-0005, Principle: UI/Front end Tests pay only for what they assert)"
+    },
+    {
+      "id": "mwzeqioobm7tqh",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    }
+  ]
+}
