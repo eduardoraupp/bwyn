@@ -54,6 +54,42 @@
     {
       "id": "mwzeods2ayqs3f",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    },
+    {
+      "id": "mx0n7o2g1jituh",
+      "text": "Add a backend outbound port `BranchHeadPort` with a method that returns the current head commit SHA for a given document's branch (or the base branch when the document has no open branch), implemented in the infrastructure layer as a GitHub API call (ADR-0017) _(Done with the existing outbound port `GitProviderPort.head()`, implemented by `GitHubProviderAdapter`, rather than a second port for the same provider.)_"
+    },
+    {
+      "id": "mx0n7o2gwgzykc",
+      "text": "Add a backend application-layer command handler `PullDocumentFromBranchHandler` that calls `BranchHeadPort`, compares the returned SHA with the stored last-known SHA, downloads changed and deleted files when they differ, persists the new content, updates the last-known SHA, and returns the list of affected files _(As `PullDocumentCommandHandler`, sharing `BranchPull` with the sync of story 048.)_"
+    },
+    {
+      "id": "mx0n7o2g66nswn",
+      "text": "Add a Flyway migration that adds a `last_known_branch_sha` column (per document per installation) to the relevant table (ADR-0010) _(Not needed: `git_document_sync.last_known_head` already exists from `V23__keep_document_branches.sql`.)_"
+    },
+    {
+      "id": "mx0n7o2gaqoof3",
+      "text": "Expose a `POST /projects/{projectId}/documents/{documentId}/pull-if-changed` endpoint in `bwyn-rest` that delegates to the handler and returns the list of replaced files and a flag for whether unsaved changes were present (ADR-0014, ADR-0017) _(As `POST /api/projects/{projectId}/git/{kind}/{id}/pull`; it returns the replaced files. Unsaved changes are only known in the browser, so the backend returns no flag for them.)_"
+    },
+    {
+      "id": "mx0n7o2gfqkpc2",
+      "text": "Write a Testcontainers integration test for the pull handler covering: head unchanged (no-op), head changed with file updates, head changed with a deleted file, and GitHub unreachable (ADR-0012) _(Partly done: `DocumentSyncIT` covers head unchanged, head changed, a theme move, the base branch and GitHub unreachable; the deleted-file case waits for diagram storage.)_"
+    },
+    {
+      "id": "mx0n7o2g6tn00n",
+      "text": "In the frontend ViewModel, handle the response: update the document state, close any open diagram or UI-example dialog, and set the notice text including the file list and the unsaved-changes warning when applicable _(Partly done: the document is read again and the notice lists the files; closing a dialog and the unsaved-changes warning wait for those features.)_"
+    },
+    {
+      "id": "mx0n7o2g3ga8gm",
+      "text": "Remove the conflict dialog, the \"waiting\" state, and the \"Force pull\" action from the story and enabler sync flow established in story 048 _(Nothing to remove: the sync of story 048 was built without them.)_"
+    },
+    {
+      "id": "mx0n7o2g6em0ys",
+      "text": "Write Jest unit tests for the ViewModel covering: no-op on matching SHA, replace with file list, replace with deleted file, replace with theme move, unsaved-changes warning, dialog close, and GitHub-unreachable no-op (ADR-0005, Principle: UI/Front end Tests pay only for what they assert) _(Partly done: `branch-always-wins.acceptance.test.tsx` and `document-sync.viewmodel.test.ts` cover no-op, replace with file list, theme move and unreachable; deleted file, unsaved changes and dialog close wait for those features.)_"
+    },
+    {
+      "id": "mx0n7o2g1lc78d",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration) _(`mvn verify` 5m59s plus Jest about 45 s on WSL.)_"
     }
   ]
 }
