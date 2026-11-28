@@ -102,3 +102,25 @@ As a team member, I want to generate a sequence or a class diagram of an open st
 - [ ] Show the Diagrams section in the story panel (sequence first); opening a stored diagram must not send a request; Regenerate and Fix must resume the conversation (ADR-0007, AE-0002).
 - [ ] Extend the sync adapter to write `diagrams/sequence.mmd` and `diagrams/class.mmd` in the story's folder on push, and to read them back on pull, storing the result without touching `story.md` (ADR-0017).
 - [ ] Write Jest tests covering: menu rendering, "In the story" chip, generate flow, Stop, Mermaid render error and Fix, Add / Replace / Remove, reload persistence, opening a stored diagram without a request, and the `.mmd` round-trip (Practice: Continuous integration, ADR-0005).
+
+## Reference: spike files
+
+The behaviour described here is the one of these files, under `bwyn-frontend/spikes/home-page/`. Use them as the reference when building
+the story.
+
+| File | What it holds |
+|---|---|
+| `builder/DiagramMenu.tsx` | `useDiagramSession` (open, insert, remove), `DiagramMenu` (the button and its menu), `SavedDiagrams` (the buttons in the story), `DiagramDialog` (the full screen) |
+| `builder/useDiagram.ts` | generate, load a stored diagram without a request, regenerate, fix, stop and reset; the streaming and its errors |
+| `builder/diagramPrompts.ts` | the two kinds and their texts, the C4 colours, the system prompt, the request, the fix request, `cleanSource` |
+| `builder/diagramRenderer.ts` | Mermaid loaded on first use, in strict mode and the C4 palette |
+| `builder/linkedDocs.ts` | the text of the linked documents and the ADRs reached through linked enablers |
+| `builder/prompt.ts` | `buildContext`, the project context with the principles and the architecture |
+| `builder/bedrockClient.ts` | `streamDraft`, the streamed request to Claude and its token usage |
+| `builder/types.ts` | `DiagramKind` and `Diagrams` (Mermaid source by kind) on `StoredStory` and `Entry` |
+| `builder/FileView.tsx` | where Diagrams sits in the bar, and where the diagrams and the full screen sit in the story |
+| `builder/BuilderWorkspace.tsx` | `onDiagramChange`, which stores or removes a diagram of the open story at once |
+| `builder/useBuilder.ts` | `updateItem`, and the deletion of a story with its diagrams |
+| `builder/repoFiles.ts` | `diagrams/<kind>.mmd` written on sync and read back on pull |
+| `useArchitecture.ts`, `usePrinciples.ts` | the architecture and principles sent with the request |
+| `icons.tsx` | `WorkflowIcon`, `SequenceDiagramIcon`, `ClassDiagramIcon` and the icons of the full screen |
