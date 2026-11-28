@@ -1,0 +1,75 @@
+{
+  "title": "Add a task from the document bar",
+  "prompt": "# Story: Add a task from the document bar\n\n- **Story**: XXX-add-task\n- **Created**: 2026-11-28\n- **Status**: Draft\n- **Demo**: open a story, press Add task, write a task and press Enter; reload and see it still there; edit it with its pencil; delete\n  another one with its bin; see the dot on Sync; sync and see the tasks in the story's `meta.json` on GitHub while `story.md` is unchanged.\n\n## Story\n\nAs a team member, I want to add a task to an open story from its bar, and to edit or delete any of its tasks from the task's own row, so\nthat the story always lists the work a pair must do to deliver it, kept with the story without having to edit its text.\n\n## Acceptance tests\n\nThe Add task button\n\n- [ ] **Given** an open story, **Then** the bar shows \"Add task\" with a plus icon as its first button, with the hint \"Add a task to this\n  story\".\n- [ ] **Given** an open architectural enabler, driver or ADR, **Then** there is no Add task button.\n\nAdding a task\n\n- [ ] **Given** an open story, **When** the user presses Add task, **Then** a field labelled \"New task\", with the placeholder \"Describe the\n  task\", opens below the task list, gets the focus, and is scrolled into view, with a \"Save task\" button (check) and a \"Cancel\" button\n  (cross).\n- [ ] **Given** a story with no task, **When** the user presses Add task, **Then** the section \"Tasks 0\" shows with the field.\n- [ ] **Given** the field is empty or holds only spaces, **Then** \"Save task\" is disabled and Enter does nothing.\n- [ ] **Given** the field holds a text, **When** the user presses Enter or \"Save task\", **Then** the task is added at the end of the list\n  with the text trimmed, the count goes up by one, and the field closes.\n- [ ] **Given** the field is open, **When** the user presses Escape or \"Cancel\", **Then** the field closes and nothing is added.\n- [ ] **Given** the user pressed Add task and then the pencil of a task, **Then** the new-task field closes and only the edited row is a\n  field.\n\nEach task has Edit and Delete\n\n- [ ] **Given** a story with tasks, **Then** the section shows \"Tasks\" and their count, and each task is a row with its text (long text\n  wraps), an \"Update task\" button (pencil) and a \"Remove task\" button (bin). Their accessible names are \"Update task: <text>\" and \"Remove\n  task: <text>\".\n- [ ] **When** the user presses the pencil of a task, **Then** the row becomes a field labelled \"Edit task\" holding the text of the task,\n  focused, with \"Save task\" and \"Cancel\". Only one task is edited at a time.\n- [ ] **Given** the edited text is not empty, **When** the user presses Enter or \"Save task\", **Then** the row shows the new text, trimmed,\n  in the same place in the list.\n- [ ] **Given** the edited text is empty, **Then** \"Save task\" is disabled. Emptying a task does not delete it; the bin does.\n- [ ] **When** the user presses Escape or \"Cancel\" while editing, **Then** the row shows its text as it was.\n- [ ] **When** the user presses the bin of a task, **Then** the task is removed at once, without a confirmation, and the count goes down\n  by one. If it was being edited, the edit ends.\n- [ ] **Given** the last task is removed and no field is open, **Then** the Tasks section is hidden.\n\nA task is stored with the story at once\n\n- [ ] **Given** the user added, edited or removed a task, **Then** the story's tasks are stored in the project's database at once, without\n  pressing Save, and no request is made to GitHub.\n- [ ] **Given** the user added a task, **When** the page is reloaded or the story is closed and opened again, **Then** the task is there,\n  with the same text and in the same order.\n- [ ] **Given** the text of the story has unsaved changes, **When** the user adds a task, **Then** the task is stored and the text keeps its\n  unsaved changes; Save still stores the text.\n- [ ] **Given** the user added, edited or removed a task, **Then** the Markdown text of the story is unchanged.\n- [ ] **Given** the story's tasks differ from what was last synced, **Then** the Sync button has its dot and the hint \"Saved here, not on\n  GitHub yet. Sync to push it.\"\n\nThe tasks of the text and the tasks of the list\n\n- [ ] **Given** a story created by the AI, **Then** its task list holds the tasks written under its `## Tasks`, in order (top-level items,\n  bulleted or numbered, with or without a checkbox, up to the next heading or horizontal rule).\n- [ ] **Given** the user saves the text and its `## Tasks` gained a task, **Then** that task is added at the end of the list. A task that is\n  already in the list (same text, ignoring case and extra spaces) is not added twice.\n- [ ] **Given** the user removed a task from the list, **When** the text is saved again without that line changing, **Then** the task does\n  not come back.\n\nOn GitHub\n\n- [ ] **Given** a story with tasks, **When** it is synced, **Then** its `meta.json` holds `\"tasks\": [{ \"id\": \"...\", \"text\": \"...\" }]` in the\n  order of the list, and `story.md` is not changed by them.\n- [ ] **Given** a story with no task, **Then** its `meta.json` has no `tasks` key.\n- [ ] **Given** a `meta.json` pulled from GitHub, **Then** its tasks replace the ones here; a task without an id or with an empty text is\n  skipped.\n\n## Business rules and constraints\n\n- **A task belongs to one story.** It has an id, given when it is created and kept when its text is edited, and a text. Nothing else (no\n  status, no owner, no checkbox) in this story.\n- **The order is the order of the list.** A new task goes at the end. Editing does not move a task.\n- **Tasks are stored on every change**, like the links, diagrams and UI example of the story. Only the text of the story waits for Save.\n- **Tasks are not part of the Markdown.** They live in the story's record in the database and in `meta.json` on GitHub.\n- **Only stories have tasks.** Enablers, drivers and ADRs do not.\n\n## Out of scope\n\n- Ticking a task as done, assigning it to someone or estimating it.\n- Reordering tasks by drag and drop.\n- Undo after deleting a task.\n- Writing the tasks back into the `## Tasks` of the text.\n- A count of tasks on the Add task button.\n\n## Tasks\n\n- [ ] Add `tasks` (id, text, order) to the story in the database, with the endpoint that replaces the tasks of a story.\n- [ ] Add the Add task button to the story's `DocumentActionBar`, opening the new-task field of the Tasks section.\n- [ ] Build the Tasks section below the text: heading with count, rows with Update and Remove, the shared task form (Enter, Escape, empty\n  disabled, trimmed text).\n- [ ] Store the tasks on every add, edit and remove, without touching the text or its unsaved changes.\n- [ ] Fill the list from `## Tasks` when the story is created, and add the tasks that a saved text gained, without duplicates and without\n  bringing back removed ones.\n- [ ] Write the tasks into `meta.json` on sync (only when there are some) and read them back on pull, skipping invalid ones.\n- [ ] Test adding, editing, cancelling, removing, reloading, the `## Tasks` parsing and the `meta.json` round trip.",
+  "createdAt": "2026-11-28",
+  "links": [
+    "enabler:0002-clean-architecture-folder-structure-for",
+    "enabler:0005-hexagonal-with-ddd-package-structure"
+  ],
+  "tasks": [
+    {
+      "id": "mx06xf8fawtpjb",
+      "text": "Add a `tasks` table (`id UUID`, `story_id`, `text`, `position`) to the database with a Flyway migration script in `bwyn-runtime` (ADR-0010)."
+    },
+    {
+      "id": "mx06xf8fabg8v4",
+      "text": "Define a `Task` value object and a `TaskRepository` port interface in `bwyn-core` (ADR-0017)."
+    },
+    {
+      "id": "mx06xf8frsejre",
+      "text": "Implement a `ReplaceStoryTasksCommand` and its handler in `bwyn-application` that replaces the full task list for a story (ADR-0017)."
+    },
+    {
+      "id": "mx06xf8fxuljcm",
+      "text": "Implement the `TaskRepository` outbound adapter using Spring Data JPA in `bwyn-infrastructure` (ADR-0011, ADR-0017)."
+    },
+    {
+      "id": "mx06xf8fyp4ple",
+      "text": "Add `PUT /stories/{id}/tasks` in `bwyn-rest`, annotated with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014), and a `GET /stories/{id}/tasks` endpoint that returns the ordered list."
+    },
+    {
+      "id": "mx06xf8gidzkmw",
+      "text": "Write a `TaskRepositoryIT` Testcontainers integration test verifying persist, replace, and load of tasks (ADR-0012)."
+    },
+    {
+      "id": "mx06xf8g0juhqy",
+      "text": "Add a `Task` entity model and a `TaskViewModel` in the frontend interface-adapters layer, with a use case that calls `PUT /stories/{id}/tasks` (ADR-0007, AE-0002)."
+    },
+    {
+      "id": "mx06xf8gksjf9f",
+      "text": "Register the `TaskViewModel` binding in the Inversify composition root (ADR-0006)."
+    },
+    {
+      "id": "mx06xf8gr2gcb5",
+      "text": "Build the `TasksSection` React component in the `ui` layer: heading with count, task rows with pencil and bin, the shared task form (Enter, Escape, empty-disabled, trimmed text) (ADR-0007)."
+    },
+    {
+      "id": "mx06xf8gocakcr",
+      "text": "Add the \"Add task\" button to `DocumentActionBar` for stories only, wired to open the new-task field in `TasksSection` (ADR-0007)."
+    },
+    {
+      "id": "mx06xf8gh714w3",
+      "text": "Implement the `## Tasks` parser (use case layer) that extracts top-level bulleted or numbered items under `## Tasks` up to the next heading or horizontal rule, and merges them into the list on story load and on text save without duplicates and without restoring removed tasks."
+    },
+    {
+      "id": "mx06xf8gk42j9r",
+      "text": "Implement the sync serialisation: write `tasks` into `meta.json` when the list is non-empty, omit the key when empty; read tasks back on pull, skipping entries without an id or with an empty text (ADR-0048 boundary)."
+    },
+    {
+      "id": "mx06xf8gr6kgpf",
+      "text": "Write Jest tests for `TasksSection`: add, edit, cancel, remove, count, section hidden when empty, only one field open at a time, no artificial delays (Principle: UI/Front end Tests pay only for what they assert)."
+    },
+    {
+      "id": "mx06xf8gbtd1ga",
+      "text": "Write Jest tests for the `## Tasks` parser: bulleted, numbered, with and without checkbox, stops at next heading, no duplicates, removed tasks do not return."
+    },
+    {
+      "id": "mx06xf8g3jtezs",
+      "text": "Write a Jest test for the `meta.json` round-trip: serialise tasks, deserialise, skip invalid entries."
+    },
+    {
+      "id": "mx06xf8g79ycgn",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    }
+  ]
+}
