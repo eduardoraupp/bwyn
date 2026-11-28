@@ -62,6 +62,38 @@
     {
       "id": "mwzeqioobm7tqh",
       "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration)"
+    },
+    {
+      "id": "mx0n74xc8pz6hb",
+      "text": "Add a `DELETE /projects/{projectId}/stories/{storyId}` and a `DELETE /projects/{projectId}/enablers/{enablerId}` command handler in the application layer (`bwyn-application`) that orchestrates: resolve GitHub state → act on GitHub → delete from database (AE-0005, ADR-0017) _(One `DeleteDocumentCommandHandler` for both kinds, with `DocumentDeletion` shared with the preview query `GetDocumentDeletionQueryHandler`.)_"
+    },
+    {
+      "id": "mx0n74xc8jz8tq",
+      "text": "Implement a `GitHubDeletionPort` outbound port in `bwyn-core` with operations: push delete commit and open pull request, close pull request, delete branch _(Done by adding `closePullRequest` and `deleteBranch` to the existing outbound port `GitProviderPort`; pushing the removal commit and opening the pull request reuse its `startBranch`, `commit` and `createPullRequest`.)_"
+    },
+    {
+      "id": "mx0n74xcwf6l40",
+      "text": "Implement the `GitHubDeletionPort` adapter in `bwyn-infrastructure` using the existing GitHub API client _(In `GitHubProviderAdapter`.)_"
+    },
+    {
+      "id": "mx0n74xcrdpygb",
+      "text": "Add a `DELETE /projects/{projectId}/stories/{storyId}` and `DELETE /projects/{projectId}/enablers/{enablerId}` REST endpoint in `bwyn-rest` annotated with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014) _(As `DELETE /api/projects/{projectId}/documents/{stories|architectural-enablers}/{id}`, plus `GET …/deletion-plan` for the confirmation, in `DocumentDeletionController`.)_"
+    },
+    {
+      "id": "mx0n74xcw69sf7",
+      "text": "Add a Flyway migration to add a `links` cascade-delete or cleanup step so that links pointing to the deleted document are removed in the same transaction (ADR-0010) _(Not needed: links are text references with no foreign key, so `DocumentRemovalRepositoryAdapter` removes them, the branch record and the message cards in the same transaction as the document.)_"
+    },
+    {
+      "id": "mx0n74xc46rv0p",
+      "text": "Write unit tests for the delete command handler covering: document on base branch, document only on branch, document not on GitHub, GitHub failure (ADR-0009) _(Covered by `DeleteDocumentIT` against Postgres and the fake GitHub, as the practices require integration and BDD tests rather than isolated unit tests.)_"
+    },
+    {
+      "id": "mx0n74xc04s7j6",
+      "text": "Write a `DeleteDocumentIT` integration test extending `PostgresIntegrationTest` that verifies the database row and its incoming links are removed on success and untouched on GitHub failure (ADR-0012) _(Extends `AbstractPostgresIT`.)_"
+    },
+    {
+      "id": "mx0n74xcr10268",
+      "text": "Verify the full build and test suite passes within the ten-minute budget (Practice: Ten-Minute Build, Practice: Continuous Integration) _(`mvn verify` 5m28s plus Jest about 45 s on WSL.)_"
     }
   ]
 }
