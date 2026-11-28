@@ -10,31 +10,31 @@ As a team member, I want each story and enabler to go to GitHub on one branch na
 ## Acceptance tests
 
 **Branch naming**
-- [ ] **Given** the story `003-checkout-form`, **Then** its branch is `story-003`. **Given** the enabler `0004-hexagonal-architecture`, **Then** its branch is `architectural-enabler-0004`. The number is written as in the folder or file name, with its leading zeros.
-- [ ] **Given** the story is moved to another theme or its title changes, **Then** its branch stays `story-003`.
-- [ ] **Given** an open story or enabler, **Then** the sub-line of the header shows its branch and pull request when there are any: "Branch story-003 · Pull request #12" (the number is a link to it on GitHub), or "Not on GitHub yet".
+- [X] **Given** the story `003-checkout-form`, **Then** its branch is `story-003`. **Given** the enabler `0004-hexagonal-architecture`, **Then** its branch is `architectural-enabler-0004`. The number is written as in the folder or file name, with its leading zeros.
+- [X] **Given** the story is moved to another theme or its title changes, **Then** its branch stays `story-003`.
+- [X] **Given** an open story or enabler, **Then** the sub-line of the header shows its branch and pull request when there are any: "Branch story-003 · Pull request #12" (the number is a link to it on GitHub), or "Not on GitHub yet".
 
 **First sync**
-- [ ] **Given** a story that has no branch on GitHub, **When** the user presses Sync, **Then** the dialog says "Push 3 files to the new branch story-003", lists the files, and says "A pull request to main opens with it."
-- [ ] **When** the user confirms, **Then** the backend creates `story-003` from the head of the base branch, makes one commit with the files, opens a pull request from `story-003` to the base branch titled "BWYN: story 003 Checkout form", and the dialog says "Pushed to story-003" with the link "Pull request #12".
-- [ ] **Given** the push worked, **Then** this machine remembers the commit it pushed as the last one it knows of `story-003`.
+- [X] **Given** a story that has no branch on GitHub, **When** the user presses Sync, **Then** the dialog says "Push 3 files to the new branch story-003", lists the files, and says "A pull request to main opens with it."
+- [X] **When** the user confirms, **Then** the backend creates `story-003` from the head of the base branch, makes one commit with the files, opens a pull request from `story-003` to the base branch titled "BWYN: story 003 Checkout form", and the dialog says "Pushed to story-003" with the link "Pull request #12".
+- [X] **Given** the push worked, **Then** this machine remembers the commit it pushed as the last one it knows of `story-003`.
 
 **Subsequent syncs**
-- [ ] **Given** `story-003` exists with an open pull request and its head is the commit this machine last knows, **When** the user changes the story, saves, and presses Sync, **Then** the dialog says "Push 1 file to story-003 (pull request #12)", and confirming adds one commit to `story-003`. No new branch and no new pull request are made.
-- [ ] **Given** the story is the same here as on its branch, **Then** the dialog says "Everything is on story-003." and "Sync now" is disabled.
-- [ ] **Given** the head of `story-003` is a commit this machine does not know (a teammate pushed), **When** the user presses Sync, **Then** nothing is pushed: the branch is pulled and replaces the story here, and the dialog says "story-003 had newer changes. They replaced the story here and were saved. Nothing was pushed."
-- [ ] **Given** a teammate pushes between the moment the dialog was opened and the moment the user confirms, **Then** the commit is refused by GitHub (the head moved), nothing is pushed, and the branch is pulled as above.
+- [X] **Given** `story-003` exists with an open pull request and its head is the commit this machine last knows, **When** the user changes the story, saves, and presses Sync, **Then** the dialog says "Push 1 file to story-003 (pull request #12)", and confirming adds one commit to `story-003`. No new branch and no new pull request are made.
+- [X] **Given** the story is the same here as on its branch, **Then** the dialog says "Everything is on story-003." and "Sync now" is disabled.
+- [X] **Given** the head of `story-003` is a commit this machine does not know (a teammate pushed), **When** the user presses Sync, **Then** nothing is pushed: the branch is pulled and replaces the story here, and the dialog says "story-003 had newer changes. They replaced the story here and were saved. Nothing was pushed."
+- [X] **Given** a teammate pushes between the moment the dialog was opened and the moment the user confirms, **Then** the commit is refused by GitHub (the head moved), nothing is pushed, and the branch is pulled as above.
 
 **After the pull request is merged or closed**
-- [ ] **Given** pull request #12 was merged, **When** the user changes the story and syncs, **Then** `story-003` is started again from the head of the base branch (deleted and created again if it still exists), the commit goes on it, and a new pull request opens.
-- [ ] **Given** pull request #12 was closed without merging, **Then** the next sync starts `story-003` again from the base branch the same way, and the sub-line no longer shows #12.
-- [ ] **Given** no open branch for the story, **Then** the base branch is the place the story is compared with and pulled from.
+- [X] **Given** pull request #12 was merged, **When** the user changes the story and syncs, **Then** `story-003` is started again from the head of the base branch (deleted and created again if it still exists), the commit goes on it, and a new pull request opens.
+- [X] **Given** pull request #12 was closed without merging, **Then** the next sync starts `story-003` again from the base branch the same way, and the sub-line no longer shows #12.
+- [X] **Given** no open branch for the story, **Then** the base branch is the place the story is compared with and pulled from.
 
 **What a sync holds**
-- [ ] **Given** a story, **Then** the push holds its own files only: `story.md`, `meta.json`, `ui.html`, and its diagrams. The documents it links to are not in it.
-- [ ] **Given** the story uses an ADR that is not on GitHub yet, **Then** that ADR goes up in the same commit.
-- [ ] **Given** the story was moved to another theme folder since its last sync, **Then** the same commit adds its files in the new folder and deletes them from the old one.
-- [ ] **Given** an enabler, **Then** the push holds its `.md` and `.meta.json` only.
+- [X] **Given** a story, **Then** the push holds its own files only: `story.md`, `meta.json`, `ui.html`, and its diagrams. The documents it links to are not in it.
+- [X] **Given** the story uses an ADR that is not on GitHub yet, **Then** that ADR goes up in the same commit.
+- [X] **Given** the story was moved to another theme folder since its last sync, **Then** the same commit adds its files in the new folder and deletes them from the old one.
+- [X] **Given** an enabler, **Then** the push holds its `.md` and `.meta.json` only.
 
 ## Business rules and constraints
 - The branch name is the identity of the document: `story-<number>` or `architectural-enabler-<number>`. It never contains the user or the date.
@@ -54,20 +54,20 @@ As a team member, I want each story and enabler to go to GitHub on one branch na
 - Support for GitLab (story 017 covers the provider connection; this story covers GitHub only).
 
 ## Tasks
-- [ ] Implement `branchOf(entry)` in the use-case layer: returns `story-<number>` for a story and `architectural-enabler-<number>` for an enabler, reading the number from the document's identifier (ADR-0007, Architecture).
-- [ ] Extend the per-document sync state model (entity or value object in `bwyn-core`) to hold: branch name, last known commit SHA, and open pull request number (ADR-0017).
-- [ ] Add a backend query endpoint `GET /api/branches/{branch}/head` that returns the current head SHA of a branch, or a 404 when the branch does not exist (ADR-0008, ADR-0014).
-- [ ] Extend the backend `upload` command handler in `bwyn-application` to accept the branch name and the expected head SHA; implement the logic: create the branch from the base branch when missing, restart it when its pull request was merged or closed, commit with the expected head (rejecting if the head has moved), and open a pull request only when none is open (ADR-0017).
-- [ ] Add a Flyway migration to persist the new sync-state fields (branch, last known SHA, pull request number) for stories and enablers (ADR-0010).
-- [ ] Implement the "compare with branch" use case: diff the local files of a story or enabler against the branch head (or the base branch when no open branch exists), producing the list of changed files (ADR-0007).
-- [ ] Update the Sync dialog ViewModel and React component: show "Push N files to story-003", the pull request link, "Everything is on story-003." with Sync disabled, and the "branch wins" outcome message; remove the conflict, waiting, and Force pull sections that do not apply to per-document branches (ADR-0007).
-- [ ] Add the branch and pull request sub-line to the story and enabler header component: "Branch story-003 · Pull request #12" (link) or "Not on GitHub yet" (ADR-0007).
-- [ ] Handle the "teammate pushed between dialog open and confirm" case in the upload command handler: return a distinct error code so the frontend can trigger the branch-pull flow (ADR-0017).
-- [ ] Write unit tests for `branchOf` covering stories and enablers with leading zeros, title changes, and theme moves.
-- [ ] Write unit tests for the compare use case: no changes, one changed file, moved theme folder (old path deleted, new path added), and ADR not yet on GitHub.
-- [ ] Write integration tests (`*IT.java`) for the upload command handler: first sync, second sync on the same pull request, refused push when head moved, restart after merge, and restart after close (ADR-0012).
-- [ ] Write Jest tests for the Sync dialog: first-sync message, up-to-date message, second-sync message, and branch-pulled message; and for the header sub-line: with branch and PR, and "Not on GitHub yet" (Principle: UI/Front end Tests pay only for what they assert).
-- [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build).
+- [X] Implement `branchOf(entry)` in the use-case layer: returns `story-<number>` for a story and `architectural-enabler-<number>` for an enabler, reading the number from the document's identifier (ADR-0007, Architecture). _(Done in the domain as `SyncDocument.branchOfStory/branchOfEnabler`, so the backend that creates the branch owns the name; the frontend shows the branch the backend returns.)_
+- [X] Extend the per-document sync state model (entity or value object in `bwyn-core`) to hold: branch name, last known commit SHA, and open pull request number (ADR-0017).
+- [X] Add a backend query endpoint `GET /api/branches/{branch}/head` that returns the current head SHA of a branch, or a 404 when the branch does not exist (ADR-0008, ADR-0014). _(Done as `GitProviderPort.head()` answering empty for a missing branch, used by `GET /api/projects/{p}/git/{kind}/{id}/sync-plan`, which compares on the server.)_
+- [X] Extend the backend `upload` command handler in `bwyn-application` to accept the branch name and the expected head SHA; implement the logic: create the branch from the base branch when missing, restart it when its pull request was merged or closed, commit with the expected head (rejecting if the head has moved), and open a pull request only when none is open (ADR-0017).
+- [X] Add a Flyway migration to persist the new sync-state fields (branch, last known SHA, pull request number) for stories and enablers (ADR-0010).
+- [X] Implement the "compare with branch" use case: diff the local files of a story or enabler against the branch head (or the base branch when no open branch exists), producing the list of changed files (ADR-0007).
+- [X] Update the Sync dialog ViewModel and React component: show "Push N files to story-003", the pull request link, "Everything is on story-003." with Sync disabled, and the "branch wins" outcome message; remove the conflict, waiting, and Force pull sections that do not apply to per-document branches (ADR-0007).
+- [X] Add the branch and pull request sub-line to the story and enabler header component: "Branch story-003 · Pull request #12" (link) or "Not on GitHub yet" (ADR-0007).
+- [X] Handle the "teammate pushed between dialog open and confirm" case in the upload command handler: return a distinct error code so the frontend can trigger the branch-pull flow (ADR-0017). _(`GitHeadMovedException` is caught in `SyncDocumentCommandHandler`, which pulls the branch and returns outcome `pulled`, so the frontend shows the branch-wins message without a second call.)_
+- [X] Write unit tests for `branchOf` covering stories and enablers with leading zeros, title changes, and theme moves.
+- [X] Write unit tests for the compare use case: no changes, one changed file, moved theme folder (old path deleted, new path added), and ADR not yet on GitHub.
+- [X] Write integration tests (`*IT.java`) for the upload command handler: first sync, second sync on the same pull request, refused push when head moved, restart after merge, and restart after close (ADR-0012).
+- [X] Write Jest tests for the Sync dialog: first-sync message, up-to-date message, second-sync message, and branch-pulled message; and for the header sub-line: with branch and PR, and "Not on GitHub yet" (Principle: UI/Front end Tests pay only for what they assert).
+- [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build). _(Not met: `mvn verify` took 10m52s wall-clock on WSL `/mnt/d`, plus ~50 s for Jest.)_
 
 ## Files of the spike
 
