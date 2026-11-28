@@ -54,6 +54,38 @@
     {
       "id": "mx0ird300pg7ls",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mx0nafy3k2kyyo",
+      "text": "Add a Flyway migration that keeps the time of the last sync with what the project knows of the branch of a document, and set it when a sync pushes or pulls (ADR-0010). _(`V26__remember_when_a_document_was_synced.sql`; set by `SyncDocumentCommandHandler` when it pushes or pulls.)_"
+    },
+    {
+      "id": "mx0nafy36uak1f",
+      "text": "Return with the comparison the head SHA it was made at, the time of the last sync, whether the repository listing was truncated, the repository and the base folder, and the details of each file of the story (path, what the sync does with it, SHA here, on the branch and at the last sync) (ADR-0017)."
+    },
+    {
+      "id": "mx0nafy3ag3vm1",
+      "text": "Turn the Sync dialog into a full screen with the frame of the diagram screen: header, scrolling body, footer with status and actions (ADR-0007). _(`SyncDialog` uses the `diagram-screen` classes of `DiagramDialog`; with two screens the frame is not yet extracted.)_"
+    },
+    {
+      "id": "mx0nafy38fecpe",
+      "text": "Spin the refresh icon of the Sync button while a comparison or a sync runs, and disable closing while busy (ADR-0007)."
+    },
+    {
+      "id": "mx0nafy35l4fwp",
+      "text": "Show the footer status, the truncated warning and the folded \"Details for each file\" section (ADR-0007)."
+    },
+    {
+      "id": "mx0nafy30kom20",
+      "text": "Write integration tests for the new fields of the comparison and the time of the last sync (ADR-0012). _(In `DocumentSyncIT`.)_"
+    },
+    {
+      "id": "mx0nafy381ddr3",
+      "text": "Write acceptance tests for the full screen: comparing and syncing states, the header line, the footer status, the truncated warning, the details section, closing disabled while busy, and the spinner (Principle: UI/Front end Tests pay only for what they assert). _(`sync-full-screen.acceptance.test.tsx`.)_"
+    },
+    {
+      "id": "mx0nafy3174yy2",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build). _(`mvn verify` 5m07s plus Jest about 52 s on WSL.)_"
     }
   ]
 }
