@@ -11,58 +11,58 @@ As a team member, I want to generate a sequence or a class diagram of an open st
 
 **The Diagrams button and its menu**
 
-- [ ] **Given** an open story, **Then** the bar shows "Diagrams" with the workflow icon and a down arrow.
-- [ ] **Given** an open architectural enabler, driver or ADR, **Then** there is no Diagrams button.
-- [ ] **When** the user presses Diagrams, **Then** a menu labelled "Diagrams" opens below it with two items in this order: "Sequence diagram" ("Who talks to whom, step by step. Not a C4 diagram, drawn in the C4 style.") and "Class diagram" ("The classes and interfaces behind the story (C4 code level)."), each with its icon.
-- [ ] **Given** the story holds a diagram of that kind, **Then** its item shows the chip "In the story" and the line "Open the diagram that the story holds." instead of the description.
-- [ ] **When** the user presses Escape, clicks outside the menu, or presses Diagrams again, **Then** the menu closes.
-- [ ] **When** the user picks an item, **Then** the menu closes and the full screen of that kind opens.
+- [X] **Given** an open story, **Then** the bar shows "Diagrams" with the workflow icon and a down arrow.
+- [X] **Given** an open architectural enabler, driver or ADR, **Then** there is no Diagrams button.
+- [X] **When** the user presses Diagrams, **Then** a menu labelled "Diagrams" opens below it with two items in this order: "Sequence diagram" ("Who talks to whom, step by step. Not a C4 diagram, drawn in the C4 style.") and "Class diagram" ("The classes and interfaces behind the story (C4 code level)."), each with its icon.
+- [X] **Given** the story holds a diagram of that kind, **Then** its item shows the chip "In the story" and the line "Open the diagram that the story holds." instead of the description.
+- [X] **When** the user presses Escape, clicks outside the menu, or presses Diagrams again, **Then** the menu closes.
+- [X] **When** the user picks an item, **Then** the menu closes and the full screen of that kind opens.
 
 **Generating a diagram on the full screen**
 
-- [ ] **Given** the story does not hold a diagram of the picked kind, **When** it is picked, **Then** a full-screen dialog opens above the builder with the icon and title of the kind, the chip "Generated", the path of the story, the C4 colour legend (Person, Software system, Container, Component, External), and "Drawing the diagram...", and a request is sent to Claude.
-- [ ] **Given** the request, **Then** it carries the kind, the path of the story, the text of the story as it is in the editor (even unsaved), the full text of the documents linked to it, the ADRs a linked enabler derives from, and the project context with its principles and its architecture; the system prompt asks for Mermaid only, in the C4 conventions, with at most eight elements.
-- [ ] **While** Claude answers, **Then** the Mermaid source shows as it streams, open, and the footer shows only "Stop".
-- [ ] **When** the user presses Stop, **Then** the request ends and the screen says "Stopped before the diagram was complete."
-- [ ] **When** the answer is complete, **Then** the source is cleaned of any code fence, the diagram is drawn on white with Mermaid in the C4 palette, fitted to the width, the source is folded, and the footer shows the input, output, cache read, and cache write tokens.
-- [ ] **Given** Claude returned nothing, **Then** the screen says "No diagram was received from the model."
-- [ ] **Given** the request failed, **Then** the screen shows its error.
-- [ ] **Given** Mermaid cannot draw the source, **Then** the screen says "The diagram could not be drawn: \<error\>", opens the source, and shows "Ask Claude to fix it", which sends the error back to Claude in the same conversation and draws the corrected source.
+- [X] **Given** the story does not hold a diagram of the picked kind, **When** it is picked, **Then** a full-screen dialog opens above the builder with the icon and title of the kind, the chip "Generated", the path of the story, the C4 colour legend (Person, Software system, Container, Component, External), and "Drawing the diagram...", and a request is sent to Claude.
+- [X] **Given** the request, **Then** it carries the kind, the path of the story, the text of the story as it is in the editor (even unsaved), the full text of the documents linked to it, the ADRs a linked enabler derives from, and the project context with its principles and its architecture; the system prompt asks for Mermaid only, in the C4 conventions, with at most eight elements. _(The browser sends the kind, the story and its text; the backend adds the linked documents, the ADRs reached through linked enablers, and the project context with the principles and the architecture, and sends the system prompt.)_
+- [X] **While** Claude answers, **Then** the Mermaid source shows as it streams, open, and the footer shows only "Stop".
+- [X] **When** the user presses Stop, **Then** the request ends and the screen says "Stopped before the diagram was complete."
+- [X] **When** the answer is complete, **Then** the source is cleaned of any code fence, the diagram is drawn on white with Mermaid in the C4 palette, fitted to the width, the source is folded, and the footer shows the input, output, cache read, and cache write tokens.
+- [X] **Given** Claude returned nothing, **Then** the screen says "No diagram was received from the model."
+- [X] **Given** the request failed, **Then** the screen shows its error.
+- [X] **Given** Mermaid cannot draw the source, **Then** the screen says "The diagram could not be drawn: \<error\>", opens the source, and shows "Ask Claude to fix it", which sends the error back to Claude in the same conversation and draws the corrected source.
 
 **What the full screen offers**
 
-- [ ] **Given** a drawn diagram, **Then** "Fit to width" and "Actual size" switch its size; "Fit to width" is the default.
-- [ ] **When** the user presses "Copy source", **Then** the Mermaid source is copied and the button says "Copied" for a moment.
-- [ ] **When** the user presses "Regenerate", **Then** the same request is sent again from scratch and the chip says "Generated".
-- [ ] **When** the user presses the close button or Escape, **Then** the full screen closes, any request in progress is stopped, and the story is unchanged.
+- [X] **Given** a drawn diagram, **Then** "Fit to width" and "Actual size" switch its size; "Fit to width" is the default.
+- [X] **When** the user presses "Copy source", **Then** the Mermaid source is copied and the button says "Copied" for a moment.
+- [X] **When** the user presses "Regenerate", **Then** the same request is sent again from scratch and the chip says "Generated".
+- [X] **When** the user presses the close button or Escape, **Then** the full screen closes, any request in progress is stopped, and the story is unchanged.
 
 **Adding the diagram to the story**
 
-- [ ] **Given** a drawn diagram and the story holds none of that kind, **Then** the main button says "Add to story"; **When** it is pressed, **Then** the diagram is stored with the story and the full screen closes.
-- [ ] **Given** the story holds a diagram of that kind and the one on screen is different, **Then** the main button says "Replace in story"; pressing it replaces the stored one.
-- [ ] **Given** the one on screen is the one the story holds, **Then** the main button says "In the story" and is disabled.
-- [ ] **Given** nothing is drawn yet, or the source does not render, **Then** the main button is disabled.
-- [ ] **Given** the story holds a diagram of that kind, **Then** "Remove from story" shows; **When** it is pressed, **Then** the diagram is removed from the story and the full screen closes.
+- [X] **Given** a drawn diagram and the story holds none of that kind, **Then** the main button says "Add to story"; **When** it is pressed, **Then** the diagram is stored with the story and the full screen closes.
+- [X] **Given** the story holds a diagram of that kind and the one on screen is different, **Then** the main button says "Replace in story"; pressing it replaces the stored one.
+- [X] **Given** the one on screen is the one the story holds, **Then** the main button says "In the story" and is disabled.
+- [X] **Given** nothing is drawn yet, or the source does not render, **Then** the main button is disabled.
+- [X] **Given** the story holds a diagram of that kind, **Then** "Remove from story" shows; **When** it is pressed, **Then** the diagram is removed from the story and the full screen closes.
 
 **The diagrams in the story**
 
-- [ ] **Given** the story holds one or more diagrams, **Then** below the header it shows the section "Diagrams" with one button per diagram, sequence first, each with the icon and label of its kind.
-- [ ] **Given** the story holds no diagram, **Then** the section is hidden.
-- [ ] **When** the user presses the button of a diagram, or picks a kind the story holds in the menu, **Then** the full screen opens with the stored diagram, the chip "From the story", and the footer "Drawn from the story. No request was made."; no request is sent.
-- [ ] **Given** the stored diagram is open, **When** the user presses Regenerate or "Ask Claude to fix it", **Then** Claude continues as if it had drawn the stored one and the chip changes to "Generated".
+- [X] **Given** the story holds one or more diagrams, **Then** below the header it shows the section "Diagrams" with one button per diagram, sequence first, each with the icon and label of its kind.
+- [X] **Given** the story holds no diagram, **Then** the section is hidden.
+- [X] **When** the user presses the button of a diagram, or picks a kind the story holds in the menu, **Then** the full screen opens with the stored diagram, the chip "From the story", and the footer "Drawn from the story. No request was made."; no request is sent.
+- [X] **Given** the stored diagram is open, **When** the user presses Regenerate or "Ask Claude to fix it", **Then** Claude continues as if it had drawn the stored one and the chip changes to "Generated".
 
 **A diagram is stored with the story at once**
 
-- [ ] **Given** the user added, replaced, or removed a diagram, **Then** the story's diagrams are stored in the project's database immediately, without pressing Save, and no request is made to GitHub.
-- [ ] **Given** the user added a diagram, **When** the page is reloaded or the story is closed and opened again, **Then** its button is in the story and it opens with the same source.
-- [ ] **Given** the text of the story has unsaved changes, **When** the user adds a diagram, **Then** the diagram is stored and the text keeps its unsaved changes.
-- [ ] **Given** the user added, replaced, or removed a diagram, **Then** the Markdown text of the story is unchanged.
-- [ ] **Given** the user deletes the story, **Then** its diagrams are deleted with it and the confirmation says so ("together with its diagrams").
+- [X] **Given** the user added, replaced, or removed a diagram, **Then** the story's diagrams are stored in the project's database immediately, without pressing Save, and no request is made to GitHub.
+- [X] **Given** the user added a diagram, **When** the page is reloaded or the story is closed and opened again, **Then** its button is in the story and it opens with the same source.
+- [ ] **Given** the text of the story has unsaved changes, **When** the user adds a diagram, **Then** the diagram is stored and the text keeps its unsaved changes. _(Not done: the panel is read-only, so there is no text editor that can hold unsaved changes yet. The request carries the text shown in the panel, and diagrams are stored apart from the text.)_
+- [X] **Given** the user added, replaced, or removed a diagram, **Then** the Markdown text of the story is unchanged.
+- [X] **Given** the user deletes the story, **Then** its diagrams are deleted with it and the confirmation says so ("together with its diagrams").
 
 **On GitHub**
 
-- [ ] **Given** a story with a diagram, **When** it is synced, **Then** the diagram is written as `diagrams/sequence.mmd` or `diagrams/class.mmd` in the story's folder, with the trimmed source and a final newline, and `story.md` is not changed by it.
-- [ ] **Given** a pull brings `diagrams/<kind>.mmd` for a story, **Then** that diagram is stored with the story and its button shows; a kind the pull does not bring is kept as it is locally.
+- [X] **Given** a story with a diagram, **When** it is synced, **Then** the diagram is written as `diagrams/sequence.mmd` or `diagrams/class.mmd` in the story's folder, with the trimmed source and a final newline, and `story.md` is not changed by it.
+- [X] **Given** a pull brings `diagrams/<kind>.mmd` for a story, **Then** that diagram is stored with the story and its button shows; a kind the pull does not bring is kept as it is locally.
 
 ## Business rules and constraints
 
@@ -89,19 +89,19 @@ As a team member, I want to generate a sequence or a class diagram of an open st
 
 ## Tasks
 
-- [ ] Add a `diagrams` column (Mermaid source keyed by kind: `sequence`, `class`) to the story entity in `bwyn-core` and write the Flyway migration that adds the `story_diagrams` table (ADR-0010, ADR-0017).
-- [ ] Implement the outbound adapter in `bwyn-infrastructure` that persists and retrieves diagrams for a story (ADR-0011, ADR-0017).
-- [ ] Implement the application-layer command handlers for set-diagram and remove-diagram in `bwyn-application`, and the inbound REST adapter endpoints in `bwyn-rest` with OpenAPI annotations (ADR-0008, ADR-0014, ADR-0017).
-- [ ] Extend the story deletion handler to cascade-delete diagrams and update the confirmation message to say "together with its diagrams" (ADR-0017).
-- [ ] Add `diagrams` to the story's domain model on the frontend (`entities` layer) and extend the `StoryRepository` port to load and save diagrams (ADR-0007, AE-0002).
-- [ ] Implement `DiagramViewModel` in the interface-adapter layer: holds the current kind, stored diagrams, generation state (idle / streaming / complete / error / stopped), source, token usage, and conversation history for Fix (ADR-0007, AE-0002).
-- [ ] Build the Diagrams button and its two-item menu in the `DocumentActionBar` UI component, showing the "In the story" chip for kinds the story already holds (ADR-0007, AE-0002).
-- [ ] Build the diagram full-screen dialog UI component: title, origin chip ("Generated" / "From the story"), C4 legend, streaming source view, Stop, Mermaid renderer (strict mode, lazy-loaded), render-error state with "Ask Claude to fix it", source fold/unfold, token footer, Fit to width / Actual size, Copy source, Regenerate, Close and Escape (ADR-0005, ADR-0007).
-- [ ] Implement the diagram request builder: assembles kind, story path, editor text, linked document texts, ADRs through linked enablers, principles, and architecture; sends to Claude with the C4 Mermaid system prompt; streams the answer; strips code fences (ADR-0007).
-- [ ] Implement "Add to story", "Replace in story", "In the story" (disabled), and "Remove from story" actions in the full-screen dialog, calling the ViewModel which calls the backend endpoint immediately (ADR-0007).
-- [ ] Show the Diagrams section in the story panel (sequence first); opening a stored diagram must not send a request; Regenerate and Fix must resume the conversation (ADR-0007, AE-0002).
-- [ ] Extend the sync adapter to write `diagrams/sequence.mmd` and `diagrams/class.mmd` in the story's folder on push, and to read them back on pull, storing the result without touching `story.md` (ADR-0017).
-- [ ] Write Jest tests covering: menu rendering, "In the story" chip, generate flow, Stop, Mermaid render error and Fix, Add / Replace / Remove, reload persistence, opening a stored diagram without a request, and the `.mmd` round-trip (Practice: Continuous integration, ADR-0005).
+- [X] Add a `diagrams` column (Mermaid source keyed by kind: `sequence`, `class`) to the story entity in `bwyn-core` and write the Flyway migration that adds the `story_diagrams` table (ADR-0010, ADR-0017). _(As the `story_diagram` table in `V25__keep_story_diagrams.sql`, whose `kind` accepts only `sequence` and `class`, and `diagrams` on `ApprovedStory`.)_
+- [X] Implement the outbound adapter in `bwyn-infrastructure` that persists and retrieves diagrams for a story (ADR-0011, ADR-0017). _(`StoryRepository.replaceDiagrams`, in `StoryRepositoryAdapter` with `StoryDiagramJpaRepository`.)_
+- [X] Implement the application-layer command handlers for set-diagram and remove-diagram in `bwyn-application`, and the inbound REST adapter endpoints in `bwyn-rest` with OpenAPI annotations (ADR-0008, ADR-0014, ADR-0017). _(`SetStoryDiagramCommandHandler`, `RemoveStoryDiagramCommandHandler`, and `PUT` / `DELETE /api/projects/{projectId}/stories/{id}/diagrams/{kind}`.)_
+- [X] Extend the story deletion handler to cascade-delete diagrams and update the confirmation message to say "together with its diagrams" (ADR-0017). _(The foreign key removes the diagrams with the story; the message and the confirmation say "together with its diagrams".)_
+- [X] Add `diagrams` to the story's domain model on the frontend (`entities` layer) and extend the `StoryRepository` port to load and save diagrams (ADR-0007, AE-0002).
+- [X] Implement `DiagramViewModel` in the interface-adapter layer: holds the current kind, stored diagrams, generation state (idle / streaming / complete / error / stopped), source, token usage, and conversation history for Fix (ADR-0007, AE-0002). _(As `StoryDiagramViewModel`; a stopped request is the error state with the message "Stopped before the diagram was complete.")_
+- [X] Build the Diagrams button and its two-item menu in the `DocumentActionBar` UI component, showing the "In the story" chip for kinds the story already holds (ADR-0007, AE-0002). _(The menu of story 047, now wired to the diagrams the story holds.)_
+- [X] Build the diagram full-screen dialog UI component: title, origin chip ("Generated" / "From the story"), C4 legend, streaming source view, Stop, Mermaid renderer (strict mode, lazy-loaded), render-error state with "Ask Claude to fix it", source fold/unfold, token footer, Fit to width / Actual size, Copy source, Regenerate, Close and Escape (ADR-0005, ADR-0007).
+- [X] Implement the diagram request builder: assembles kind, story path, editor text, linked document texts, ADRs through linked enablers, principles, and architecture; sends to Claude with the C4 Mermaid system prompt; streams the answer; strips code fences (ADR-0007). _(The request is built in the backend, which reads the linked documents (`DiagramPrompts`, document type `story-diagram` of the existing streaming endpoint); the frontend `DrawDiagramUseCase` streams it and `cleanSource` strips code fences.)_
+- [X] Implement "Add to story", "Replace in story", "In the story" (disabled), and "Remove from story" actions in the full-screen dialog, calling the ViewModel which calls the backend endpoint immediately (ADR-0007).
+- [X] Show the Diagrams section in the story panel (sequence first); opening a stored diagram must not send a request; Regenerate and Fix must resume the conversation (ADR-0007, AE-0002).
+- [X] Extend the sync adapter to write `diagrams/sequence.mmd` and `diagrams/class.mmd` in the story's folder on push, and to read them back on pull, storing the result without touching `story.md` (ADR-0017).
+- [X] Write Jest tests covering: menu rendering, "In the story" chip, generate flow, Stop, Mermaid render error and Fix, Add / Replace / Remove, reload persistence, opening a stored diagram without a request, and the `.mmd` round-trip (Practice: Continuous integration, ADR-0005). _(In `story-diagrams.acceptance.test.tsx`; the `.mmd` round-trip is tested in the backend, which writes and reads the files: `SyncDocumentTest` and `DocumentSyncIT`.)_
 
 ## Reference: spike files
 
