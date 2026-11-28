@@ -70,6 +70,58 @@
     {
       "id": "mx06xf8g79ycgn",
       "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build)."
+    },
+    {
+      "id": "mx0n9a4h8w95vf",
+      "text": "Add a `tasks` table (`id UUID`, `story_id`, `text`, `position`) to the database with a Flyway migration script in `bwyn-runtime` (ADR-0010). _(Done on the existing `story_task` table: `V24__give_story_tasks_an_id.sql` adds the stable `id`, given to existing rows.)_"
+    },
+    {
+      "id": "mx0n9a4hyb8kq6",
+      "text": "Define a `Task` value object and a `TaskRepository` port interface in `bwyn-core` (ADR-0017). _(As `StoryTask` in `bwyn-core`; `replaceTasks` is on the existing `StoryRepository` port, like `updateLinks`.)_"
+    },
+    {
+      "id": "mx0n9a4hyqx8he",
+      "text": "Implement the `TaskRepository` outbound adapter using Spring Data JPA in `bwyn-infrastructure` (ADR-0011, ADR-0017). _(In `StoryRepositoryAdapter` with `StoryTaskJpaRepository`.)_"
+    },
+    {
+      "id": "mx0n9a4h8nk4nh",
+      "text": "Add `PUT /stories/{id}/tasks` in `bwyn-rest`, annotated with OpenAPI `@Operation` and `@ApiResponse` (ADR-0014), and a `GET /stories/{id}/tasks` endpoint that returns the ordered list. _(As `PUT` and `GET /api/projects/{projectId}/stories/{id}/tasks`.)_"
+    },
+    {
+      "id": "mx0n9a4hwq0tii",
+      "text": "Write a `TaskRepositoryIT` Testcontainers integration test verifying persist, replace, and load of tasks (ADR-0012). _(As `StoryTasksIT`, plus the sync and pull cases in `DocumentSyncIT`.)_"
+    },
+    {
+      "id": "mx0n9a4hcv64qq",
+      "text": "Add a `Task` entity model and a `TaskViewModel` in the frontend interface-adapters layer, with a use case that calls `PUT /stories/{id}/tasks` (ADR-0007, AE-0002). _(`StoryTask` entity, `StoryTasksViewModel`, `ApprovedStoriesUseCase.replaceTasks`.)_"
+    },
+    {
+      "id": "mx0n9a4hdqo9zv",
+      "text": "Register the `TaskViewModel` binding in the Inversify composition root (ADR-0006). _(The view model is built in `index.tsx` from `container.resolve(ApprovedStoriesUseCase)`, as the other view models are; the gateway is bound in the composition root.)_"
+    },
+    {
+      "id": "mx0n9a4h7idmq3",
+      "text": "Implement the `## Tasks` parser (use case layer) that extracts top-level bulleted or numbered items under `## Tasks` up to the next heading or horizontal rule, and merges them into the list on story load and on text save without duplicates and without restoring removed tasks. _(Done in the backend domain, which owns the story: `StoryTasks.of` on approval and `StoryTasks.withGained` on every saved text, so the frontend does not parse the Markdown a second time.)_"
+    },
+    {
+      "id": "mx0n9a4heuhstd",
+      "text": "Implement the sync serialisation: write `tasks` into `meta.json` when the list is non-empty, omit the key when empty; read tasks back on pull, skipping entries without an id or with an empty text (ADR-0048 boundary). _(In `SyncDocument.ofStory` and `SyncDocument.tasksOf`, used by the pull in `DocumentSources`.)_"
+    },
+    {
+      "id": "mx0n9a4hsfd2qr",
+      "text": "Write Jest tests for `TasksSection`: add, edit, cancel, remove, count, section hidden when empty, only one field open at a time, no artificial delays (Principle: UI/Front end Tests pay only for what they assert). _(In `story-tasks.acceptance.test.tsx`.)_"
+    },
+    {
+      "id": "mx0n9a4hu4d2or",
+      "text": "Write Jest tests for the `## Tasks` parser: bulleted, numbered, with and without checkbox, stops at next heading, no duplicates, removed tasks do not return. _(As JUnit tests in `ApprovedStoryTest`, since the parser is in the backend.)_"
+    },
+    {
+      "id": "mx0n9a4hcj5ja9",
+      "text": "Write a Jest test for the `meta.json` round-trip: serialise tasks, deserialise, skip invalid entries. _(As JUnit tests in `SyncDocumentTest`, since `meta.json` is written and read in the backend.)_"
+    },
+    {
+      "id": "mx0n9a4hzcmfao",
+      "text": "Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build). _(`mvn verify` 5m46s plus Jest about 50 s on WSL.)_"
     }
   ]
 }
