@@ -1,0 +1,28 @@
+{
+  "title": "Verify ArchUnit fitness functions pass after adding a new backend endpoint",
+  "prompt": "remove this ○Verify that the ArchUnit fitness functions from AE-0001 continue to pass after the new backend endpoint is added.",
+  "createdAt": "2026-11-11",
+  "links": [],
+  "tasks": [
+    {
+      "id": "bc38627a-bfac-44d1-bbff-15be28fd6c50",
+      "text": "Add a minimal Spring MVC controller class in the `adapter.in` package of the `example` bounded context, implementing a single endpoint that returns a fixed response."
+    },
+    {
+      "id": "fbd92093-cf76-4e0f-888d-ffc331dc3df8",
+      "text": "Run `mvn verify` locally and confirm all existing ArchUnit rules from AE-0001 pass with the new controller present."
+    },
+    {
+      "id": "aa86cc41-c60d-454f-ac3f-bb498518975f",
+      "text": "Write a negative-path ArchUnit test (or temporarily introduce a violating class) that places a Spring annotation inside the `domain` package, confirm the rule fires and the build fails, then remove the violation."
+    },
+    {
+      "id": "a8e183d8-a6c7-465a-8182-c6bc11b01673",
+      "text": "Write a negative-path ArchUnit test (or temporarily introduce a violating class) that references an `adapter` class from the `application` package, confirm the rule fires and the build fails, then remove the violation."
+    },
+    {
+      "id": "a728ba3f-b588-4d65-bd87-6e232b1345f4",
+      "text": "Confirm `mvn verify` exits green with only the compliant controller in place."
+    }
+  ]
+}
