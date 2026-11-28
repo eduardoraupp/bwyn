@@ -90,3 +90,20 @@ As a team member, I want to add a task to an open story from its bar, and to edi
 - [ ] Write Jest tests for the `## Tasks` parser: bulleted, numbered, with and without checkbox, stops at next heading, no duplicates, removed tasks do not return.
 - [ ] Write a Jest test for the `meta.json` round-trip: serialise tasks, deserialise, skip invalid entries.
 - [ ] Verify the full build and test suite completes within the ten-minute budget (Practice: Ten-Minute Build).
+
+## Reference: spike files
+
+The behaviour described here is the one of these files, under `bwyn-frontend/spikes/home-page/`. Use them as the reference when building
+the story.
+
+| File | What it holds |
+|---|---|
+| `builder/Tasks.tsx` | `AddTaskButton` (the button of the bar), `TaskSection` (the list, its rows with Update and Remove), `TaskForm` (the field to add or edit, Enter, Escape, empty disabled) |
+| `builder/storyTasks.ts` | `tasksInMarkdown` (the tasks under `## Tasks`) and `withMarkdownTasks` (adds the ones a saved text gained, without duplicates and without bringing back removed ones) |
+| `builder/types.ts` | `StoryTask` (id and text) and the `tasks` of `StoredStory` and `Entry` |
+| `builder/FileView.tsx` | where Add task sits in the bar, and where the Tasks section sits below the text |
+| `builder/BuilderWorkspace.tsx` | `onTasksChange`, which stores the tasks of the open story at once; the tasks of a new story taken from its text |
+| `builder/useBuilder.ts` | `updateItem` and `applyEdit`, which store the tasks with the story and add the ones its text gained |
+| `builder/repoFiles.ts` | the `tasks` of `meta.json`: written only when there are some, read back skipping invalid ones, `pulledTasks` after a pull |
+| `builder/prompt.ts` | the instruction that makes the AI end a story with its `## Tasks` |
+| `icons.tsx` | `PlusIcon`, `PencilIcon`, `TrashIcon`, `CheckIcon`, `XIcon` |
