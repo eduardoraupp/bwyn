@@ -58,6 +58,38 @@
     {
       "id": "mx06zhy32s6ijt",
       "text": "Write Jest tests covering: menu rendering, \"In the story\" chip, generate flow, Stop, Mermaid render error and Fix, Add / Replace / Remove, reload persistence, opening a stored diagram without a request, and the `.mmd` round-trip (Practice: Continuous integration, ADR-0005)."
+    },
+    {
+      "id": "mx0n9tobrnrlvt",
+      "text": "Add a `diagrams` column (Mermaid source keyed by kind: `sequence`, `class`) to the story entity in `bwyn-core` and write the Flyway migration that adds the `story_diagrams` table (ADR-0010, ADR-0017). _(As the `story_diagram` table in `V25__keep_story_diagrams.sql`, whose `kind` accepts only `sequence` and `class`, and `diagrams` on `ApprovedStory`.)_"
+    },
+    {
+      "id": "mx0n9tobg9qyvr",
+      "text": "Implement the outbound adapter in `bwyn-infrastructure` that persists and retrieves diagrams for a story (ADR-0011, ADR-0017). _(`StoryRepository.replaceDiagrams`, in `StoryRepositoryAdapter` with `StoryDiagramJpaRepository`.)_"
+    },
+    {
+      "id": "mx0n9tobz2ftq8",
+      "text": "Implement the application-layer command handlers for set-diagram and remove-diagram in `bwyn-application`, and the inbound REST adapter endpoints in `bwyn-rest` with OpenAPI annotations (ADR-0008, ADR-0014, ADR-0017). _(`SetStoryDiagramCommandHandler`, `RemoveStoryDiagramCommandHandler`, and `PUT` / `DELETE /api/projects/{projectId}/stories/{id}/diagrams/{kind}`.)_"
+    },
+    {
+      "id": "mx0n9tobxkyuks",
+      "text": "Extend the story deletion handler to cascade-delete diagrams and update the confirmation message to say \"together with its diagrams\" (ADR-0017). _(The foreign key removes the diagrams with the story; the message and the confirmation say \"together with its diagrams\".)_"
+    },
+    {
+      "id": "mx0n9tobwgntfz",
+      "text": "Implement `DiagramViewModel` in the interface-adapter layer: holds the current kind, stored diagrams, generation state (idle / streaming / complete / error / stopped), source, token usage, and conversation history for Fix (ADR-0007, AE-0002). _(As `StoryDiagramViewModel`; a stopped request is the error state with the message \"Stopped before the diagram was complete.\")_"
+    },
+    {
+      "id": "mx0n9tobxcq8rw",
+      "text": "Build the Diagrams button and its two-item menu in the `DocumentActionBar` UI component, showing the \"In the story\" chip for kinds the story already holds (ADR-0007, AE-0002). _(The menu of story 047, now wired to the diagrams the story holds.)_"
+    },
+    {
+      "id": "mx0n9tob5pwhl1",
+      "text": "Implement the diagram request builder: assembles kind, story path, editor text, linked document texts, ADRs through linked enablers, principles, and architecture; sends to Claude with the C4 Mermaid system prompt; streams the answer; strips code fences (ADR-0007). _(The request is built in the backend, which reads the linked documents (`DiagramPrompts`, document type `story-diagram` of the existing streaming endpoint); the frontend `DrawDiagramUseCase` streams it and `cleanSource` strips code fences.)_"
+    },
+    {
+      "id": "mx0n9tobr5z5m5",
+      "text": "Write Jest tests covering: menu rendering, \"In the story\" chip, generate flow, Stop, Mermaid render error and Fix, Add / Replace / Remove, reload persistence, opening a stored diagram without a request, and the `.mmd` round-trip (Practice: Continuous integration, ADR-0005). _(In `story-diagrams.acceptance.test.tsx`; the `.mmd` round-trip is tested in the backend, which writes and reads the files: `SyncDocumentTest` and `DocumentSyncIT`.)_"
     }
   ]
 }
